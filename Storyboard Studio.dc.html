@@ -47,6 +47,7 @@
           <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">CHANNEL TEMPLATE</span><div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ idea.templates }}" as="it" hint-placeholder-count="6"><button onClick="{{ it.onClick }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button></sc-for></div></div>
           <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">THE IDEA</span><textarea value="{{ idea.text }}" onChange="{{ idea.onText }}" rows="3" placeholder="{{ idea.placeholder }}" style="resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:18px;line-height:1.5;padding:14px 16px" style-focus="border-color:#8DEBFF;outline:none"></textarea></div>
           <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">GAME OR SUBJECT · OPTIONAL</span><input value="{{ idea.game }}" onChange="{{ idea.onGame }}" placeholder="e.g. the exact Roblox experience name" style="height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:15px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none"></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">GEMINI API KEY · FOR IN-BROWSER AI</span><span style="font-size:11px;color:rgba(232,237,245,0.45)">Stays in this browser · or ask agent in chat</span></div><input type="password" value="{{ idea.geminiKey }}" onChange="{{ idea.onKey }}" placeholder="Paste your Gemini API key (optional if using MCP agent)" style="height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:15px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none"></div>
           <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">FORMAT</span><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <button onClick="{{ idea.generate }}" style="height:56px;padding:0 30px;border:none;border-radius:14px;background:#F4F7FC;color:#0A0C12;font-size:17px;font-weight:800;cursor:pointer">{{ idea.genLabel }}</button>
@@ -287,8 +288,67 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
-const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
+// Claude app completion with localhost studio-server and direct Gemini fallback
+const claudeComplete = async (req) => {
+  if (window.claude && typeof window.claude.complete === 'function') {
+    return window.claude.complete(req);
+  }
+  const key = (typeof localStorage !== 'undefined' && (localStorage.getItem('ds_gemini_key') || localStorage.getItem('ds_ai_key'))) || '';
+  try {
+    const res = await fetch('/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(key ? { 'x-api-key': key } : {}) },
+      body: JSON.stringify({ ...req, apiKey: key })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.text) return data.text;
+      if (data.content) return data.content;
+    } else {
+      const err = await res.json().catch(() => ({}));
+      if (err.error && !key) throw new Error(err.error);
+    }
+  } catch (netErr) {
+    if (!key) throw netErr;
+  }
+
+  if (key) {
+    const model = 'gemini-2.5-flash';
+    const systemPrompt = req.system || '';
+    const contents = (req.messages || []).map((m) => {
+      let parts = [];
+      if (typeof m.content === 'string') {
+        parts = [{ text: m.content }];
+      } else if (Array.isArray(m.content)) {
+        parts = m.content.map((p) => {
+          if (p.type === 'text') return { text: p.text };
+          if (p.type === 'image' && p.source) {
+            return { inlineData: { mimeType: p.source.media_type, data: p.source.data } };
+          }
+          return { text: JSON.stringify(p) };
+        });
+      }
+      return { role: m.role === 'assistant' ? 'model' : 'user', parts };
+    });
+
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...(systemPrompt ? { systemInstruction: { parts: [{ text: systemPrompt }] } } : {}),
+        contents,
+        generationConfig: { maxOutputTokens: req.max_tokens || 4096, temperature: 0.7 }
+      })
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error((j.error && j.error.message) || `Gemini error ${r.status}`);
+    const text = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).map((p) => p.text).join('');
+    if (!text) throw new Error('Gemini returned an empty response.');
+    return text;
+  }
+
+  throw new Error('On localhost, enter your Gemini API key in the studio settings, or ask your MCP agent in chat to build the storyboard.');
+};
 const SFX = ['none', 'sub_drop', 'whoosh_cinematic', 'whoosh_fast', 'pop', 'hit', 'blip', 'mouse_click'];
 const RATES = ['-10%', '-5%', '+0%', '+5%', '+10%'];
 const VCOL = { confirmed: 'oklch(0.78 0.15 150)', busted: 'oklch(0.7 0.19 25)', inconclusive: 'oklch(0.83 0.14 80)', pending: 'rgba(244,247,252,0.2)' };
@@ -718,7 +778,7 @@ class Component extends DCLogic {
     const g = G[n];
     return { steps, show, note: st.note, isIdea: n === 1, isBoard: n === 2, isPlayer: n >= 3,
       board: n === 2 ? this.boardVals(ep, L, shorts) : { facts: [], checks: [], cards: [] },
-      idea: { text: st.idea, onText: (e) => this.setState({ idea: e.target.value, genErr: '' }), game: st.game, onGame: (e) => this.setState({ game: e.target.value }),
+      idea: { text: st.idea, onText: (e) => this.setState({ idea: e.target.value, genErr: '' }), game: st.game, onGame: (e) => this.setState({ game: e.target.value }), geminiKey: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
         placeholder: this.tpl() ? 'e.g. ' + this.tpl().hook.patterns[0].replace(/\{(\w+)\}/g, (m, k) => ({ claim: 'hiding makes you safe', game: 'this game', n: 'ten', character: 'Milo', Character: 'Milo', thing: 'the moon key', Thing: 'The moon key', does: 'gets lost', Topic: 'The new rule' })[k] || 'this') : 'One sentence about the video',
         templates: st.niches ? st.niches.templates.map(x => ({ label: x.label, bg: x.id === st.tplId ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: x.id === st.tplId ? '#0A0C12' : '#F4F7FC', onClick: () => { try { localStorage.setItem('rhm_template', x.id); } catch (e) {} this.setState({ tplId: x.id }); } })) : [],
         generate: () => this.generateBoard(), genLabel: st.genBusy ? 'Writing the storyboard…' : '✦ Generate storyboard', useExisting: () => go(2), err: st.genErr }, hasPrev: n > 1, hasNext: n < 5, prevStep: () => go(n - 1), nextStep: () => go(n + 1), nextLabel: 'Next: ' + (LABELS[n] || '') + ' ›',

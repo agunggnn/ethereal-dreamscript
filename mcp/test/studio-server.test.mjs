@@ -68,3 +68,13 @@ test('PUT with a stale If-Match is refused, a current one saves', async () => {
   assert.equal(JSON.parse(await readFile(file, 'utf8')).title, 'fresh');
   assert.notEqual(fresh.headers.etag, etag);
 });
+
+test('POST /api/complete validates payload and requires key', async () => {
+  const bad = await request('/api/complete', { method: 'POST', body: 'invalid-json' });
+  assert.equal(bad.status, 400);
+  assert.match(bad.body, /invalid json/);
+
+  const noKey = await request('/api/complete', { method: 'POST', body: JSON.stringify({ system: 'hi', messages: [{ role: 'user', content: 'test' }] }) });
+  assert.equal(noKey.status, 400);
+  assert.match(noKey.body, /No AI API key found/);
+});

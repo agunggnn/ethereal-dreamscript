@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}button{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
+<div data-screen-label="Home" style="position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:#0A0C12">
+  <sc-for list="{{ walls }}" as="w" hint-placeholder-count="0"><div style="position:absolute;inset:0;background-image:{{ w.bgi }};background-size:cover;background-position:center;opacity:{{ w.op }};transform:scale({{ w.scale }});transition:opacity 0.9s ease,transform 9s cubic-bezier(.2,.7,.2,1)"></div></sc-for>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,12,18,0.94) 0%,rgba(10,12,18,0.62) 40%,rgba(10,12,18,0.08) 78%)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.75) 0%,rgba(10,12,18,0) 24%,rgba(10,12,18,0) 50%,rgba(10,12,18,0.97) 86%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:36px;padding:26px 56px 0">
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2"><button onClick="{{ tb.onClick }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:22px;font-weight:{{ tb.weight }};color:{{ tb.color }};letter-spacing:-0.01em">{{ tb.label }}</button></sc-for>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:18px">
+      <button onClick="{{ toggleSound }}" title="Navigation sounds" style="height:40px;padding:0 14px;border-radius:20px;border:none;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:600;cursor:pointer;opacity:{{ soundOpacity }}">♪ Sounds</button>
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1677FF,#8DEBFF);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#0A0C12">RH</div>
+      <span style="font-size:20px;font-weight:400;font-variant-numeric:tabular-nums">{{ clock }}</span>
+    </div>
+  </div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:14px;padding:26px 56px 0;height:172px;overflow-x:auto;scrollbar-width:none">
+    <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="0">
+      <div style="display:flex;align-items:center;gap:18px;flex:none">
+        <div onClick="{{ t.onClick }}" style="position:relative;flex:none;width:{{ t.size }};height:{{ t.size }};border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:{{ t.ring }};transition:width 0.25s cubic-bezier(.2,.8,.2,1),height 0.25s cubic-bezier(.2,.8,.2,1),box-shadow 0.25s">
+          <div style="position:absolute;inset:0;background-image:{{ t.bgi }};background-size:cover;background-position:{{ t.pos }}"></div>
+          <div style="position:absolute;inset:0;background:{{ t.tint }}"></div>
+          <span style="position:absolute;left:11px;bottom:9px;font-size:12px;font-weight:800;letter-spacing:0.06em;color:#fff">{{ t.mono }}</span>
+          <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:8px;right:8px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:{{ t.badgeBg }};color:#0A0C12;font-size:11px;font-weight:800;line-height:20px;text-align:center">{{ t.badge }}</span></sc-if>
+        </div>
+        <sc-if value="{{ t.focused }}" hint-placeholder-val="{{ false }}"><span style="font-size:20px;font-weight:600;white-space:nowrap;padding-right:12px">{{ t.label }}</span></sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;padding:16px 56px 0;max-width:860px;min-height:250px">
+    <span style="font-size:15px;font-weight:600;color:#8DEBFF">{{ cur.meta }}</span>
+    <h1 style="margin:0;font-size:68px;line-height:1;font-weight:300;letter-spacing:-0.03em;text-wrap:balance">{{ cur.title }}</h1>
+    <p style="margin:0;font-size:18px;line-height:1.5;color:rgba(232,237,245,0.82);max-width:600px;text-wrap:pretty">{{ cur.desc }}</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap">
+      <button onClick="{{ primary }}" style="height:56px;min-width:200px;padding:0 34px;border-radius:14px;border:none;background:#F4F7FC;color:#0A0C12;font-size:17px;font-weight:700;cursor:pointer;transition:transform 0.15s" style-hover="transform:scale(1.03)">{{ cur.primary }}</button>
+      <sc-if value="{{ cur.secondary }}" hint-placeholder-val="{{ false }}"><button onClick="{{ secondary }}" style="height:56px;padding:0 26px;border-radius:14px;border:none;background:rgba(244,247,252,0.14);color:#F4F7FC;font-size:16px;font-weight:600;cursor:pointer;backdrop-filter:blur(10px)" style-hover="background:rgba(244,247,252,0.24)">{{ cur.secondary }}</button></sc-if>
+      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;font-weight:600;color:#8DEBFF;padding-left:6px">{{ toast }}</span></sc-if>
+    </div>
+  </div>
+
+  <div style="position:relative;display:flex;flex-direction:column;gap:12px;padding:36px 56px 0">
+    <span style="font-size:16px;font-weight:600;color:rgba(232,237,245,0.75)">{{ cur.cardsLabel }}</span>
+    <div style="display:flex;gap:16px;overflow-x:auto;padding:6px 6px 10px;margin:0 -6px;scrollbar-width:none">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="0">
+        <div onClick="{{ c.onClick }}" style="position:relative;flex:none;width:300px;height:168px;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:{{ c.ring }};transition:box-shadow 0.2s,transform 0.2s" style-hover="transform:translateY(-3px)">
+          <div style="position:absolute;inset:0;background-image:{{ c.bgi }};background-size:cover;background-position:{{ c.pos }}"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,12,18,0.96) 32%,rgba(10,12,18,0.4))"></div>
+          <span style="position:absolute;top:14px;right:16px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:{{ c.color }}">{{ c.right }}</span>
+          <div style="position:absolute;left:18px;right:18px;bottom:16px;display:flex;flex-direction:column;gap:5px">
+            <span style="font-size:13px;font-weight:600;color:rgba(232,237,245,0.7)">{{ c.kicker }}</span>
+            <span style="font-size:18px;font-weight:700;line-height:1.2">{{ c.title }}</span>
+            <sc-if value="{{ c.hasBar }}" hint-placeholder-val="{{ false }}"><div style="height:4px;border-radius:2px;background:rgba(244,247,252,0.18);margin-top:5px"><div style="height:100%;border-radius:2px;width:{{ c.pct }};background:{{ c.color }}"></div></div></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position:relative;display:flex;gap:28px;padding:18px 56px 22px;font-size:13px;color:rgba(232,237,245,0.45)"><span>← → Move</span><span>↓ ↑ Cards</span><span>Enter Open</span><span style="margin-left:auto">en-US · YouTube first</span></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)', ICE = '#8DEBFF', MUTE = 'rgba(232,237,245,0.5)';
+const W = { city: 'assets/wall_megacity.jpg', star: 'assets/wall_starfall.jpg', aur: 'assets/wall_aurora.jpg', cit: 'assets/wall_citadel.jpg' };
+const WALLS = Object.values(W);
+const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); return m ? (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]) : 0; };
+const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';
+const TURNAROUND = 'Create a polished reference sheet for RHM_INVESTIGATOR_01, an original Roblox-inspired premium block avatar. Show front, three-quarter, side and back views at identical scale, plus neutral/curious/shocked/confident face expressions. Fixed design: messy black swept fringe with three distinct tufts; small silver-blue floating three-prong crown; cool-blue face accents; premium black techwear jacket/hoodie with white zipper and drawstrings, electric-blue piping and layered shoulder panels; asymmetrical utility straps; compact black backpack with a cyan-lit core; charcoal cargo pants; black-and-white high-top sneakers; exact cyan lantern. Neutral gray-blue studio background, clean lighting, orthographic-style views, all accessories visible, no perspective distortion, no brand logos, no text except simple view labels. Every view must be the same character.';
+const MCP_CONFIG = JSON.stringify({ mcpServers: { dreamscript: { command: 'node', args: ['<project>/mcp/server.mjs'], env: { DREAMSCRIPT_ROOT: '<project>' } } } }, null, 2);
+const CODEX_CONFIG = '[mcp_servers.dreamscript]\ncommand = "node"\nargs = ["<project>/mcp/server.mjs"]\nenv = { DREAMSCRIPT_ROOT = "<project>" }';
+const SAMPLE = { claim: 'hiding makes you safe', game: 'this game', character: 'Milo', thing: 'the moon key', Thing: 'The moon key', does: 'gets lost', n: 'ten', Topic: 'The new rule', Character: 'Milo' };
+const speakAs = (id, rate, text) => {
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1 + (parseFloat(rate || '0') || 0) / 100; u.lang = 'en-US';
+    const short = ((id || '').split('-')[2] || '').replace(/Multilingual|Neural/g, '');
+    const vs = speechSynthesis.getVoices();
+    u.voice = vs.find(v => short && v.name.includes(short) && /Online|Natural/i.test(v.name)) || vs.find(v => v.lang === 'en-US') || null;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+};
+
+class Component extends DCLogic {
+  state = { tab: 'create', focus: 0, row: 0, card: 0, ep: null, niches: null, voices: null, found: {}, now: new Date(), toast: '', sound: true, active: null };
+  async componentDidMount() {
+    try { this.setState({ sound: localStorage.getItem('ds_sound') !== 'off', active: localStorage.getItem('rhm_template') }); } catch (e) {}
+    this.onKey = (e) => {
+      const s = this.state, items = this.items(), cur = items[s.focus] || {};
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault(); const d = e.key === 'ArrowRight' ? 1 : -1;
+        if (s.row === 0) this.move(Math.max(0, Math.min(items.length - 1, s.focus + d)));
+        else { this.beep('blip'); this.setState({ card: Math.max(0, Math.min((cur.cards || []).length - 1, s.card + d)) }); }
+      }
+      if (e.key === 'ArrowDown' && s.row === 0 && (cur.cards || []).length) { e.preventDefault(); this.beep('blip'); this.setState({ row: 1, card: 0 }); }
+      if (e.key === 'ArrowUp' && s.row === 1) { e.preventDefault(); this.beep('blip'); this.setState({ row: 0 }); }
+      if (e.key === 'Escape') this.setState({ row: 0 });
+      if (e.key === 'Enter') { if (s.row === 0) this.run(cur.primaryFn); else this.run((cur.cards[s.card] || {}).fn); }
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.clock = setInterval(() => this.setState({ now: new Date() }), 20000);
+    try { speechSynthesis.onvoiceschanged = () => {}; } catch (e) {}
+    const get = async (p) => { try { return await (await fetch(p)).json(); } catch (e) { return null; } };
+    const [ep, niches, voices] = await Promise.all([get('production/ep01/episode.json'), get('templates/niches.json'), get('templates/voices.json')]);
+    let draft = null; try { draft = JSON.parse(localStorage.getItem('ds_ep01_draft') || 'null'); } catch (e) {}
+    const E = draft || ep;
+    this.setState({ ep: E, niches, voices });
+    if (E) {
+      const files = [...E.scenes, ...E.shorts.scenes].map(s => s.footage).concat(Object.values(E.ingredients || {}).map(i => i.file));
+      const found = {};
+      await Promise.all(files.map(async f => { try { found[f] = (await fetch(f, { method: 'HEAD' })).ok; } catch (e) { found[f] = false; } }));
+      this.setState({ found });
+    }
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); clearInterval(this.clock); }
+  beep(name) { if (!this.state.sound) return; try { const a = new Audio('sfx/' + name + '.wav'); a.volume = name === 'blip' ? 0.1 : 0.22; a.play().catch(() => {}); } catch (e) {} }
+  move(i) { if (i !== this.state.focus) this.beep('blip'); this.setState({ focus: i, row: 0, card: 0 }); }
+  run(fn) { if (fn) { this.beep('mouse_click'); fn(); } }
+  go(url) { setTimeout(() => { window.location.href = url; }, 120); }
+  copy(text, msg) { navigator.clipboard.writeText(text).then(() => { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2400); }); }
+  card(kicker, title, right, ratio, color, img, pos, fn) { return { kicker, title, right, ratio, color, img, pos, fn }; }
+  voice(id) { const v = this.state.voices; return v ? v.voices.find(x => x.id === id) : null; }
+
+  stats() {
+    const ep = this.state.ep, f = this.state.found;
+    if (!ep) return null;
+    const L = ep.scenes, S = ep.shorts.scenes, has = (s) => !!f[s.footage], myths = L.filter(s => s.kind === 'myth');
+    return { L, S, myths, longFoot: L.filter(has).length, shortFoot: S.filter(has).length,
+      longLines: L.filter(s => !s.narrationIsDirection).length, shortLines: S.filter(s => !s.narrationIsDirection).length,
+      verdicts: myths.filter(s => s.verdict && s.verdict !== 'pending').length,
+      longDur: L.reduce((a, s) => a + secs(s.time), 0), shortDur: S.reduce((a, s) => a + secs(s.time), 0),
+      ingr: Object.entries(ep.ingredients || {}).map(([k, v]) => ({ k, ...v, ok: !!f[v.file] })) };
+  }
+
+  items() { return this.state.tab === 'library' ? this.library() : this.create(); }
+
+  create() {
+    const st = this.stats(), ep = this.state.ep, c = this.card.bind(this);
+    const vo = ep ? this.voice(ep.voice.id) : null;
+    const studio = () => this.go('Storyboard Studio.dc.html'), short = () => this.go('Storyboard Studio.dc.html?t=shorts');
+    const ingrMissing = st ? st.ingr.filter(i => !i.ok).length : 0;
+    const tpl = this.state.niches && this.state.active ? this.state.niches.templates.find(t => t.id === this.state.active) : null;
+    const stepGo = (k) => () => this.go('Storyboard Studio.dc.html?step=' + k);
+    return [
+      { id: 'new', mono: 'NEW', label: 'Create a video', wall: W.star, pos: '40% 40%', hue: 210,
+        meta: 'Guided · 5 steps',
+        title: 'Make a video in 5 steps', desc: 'Write one sentence. AI writes the storyboard and draws every scene, the character and the thumbnail. Keep the images that work, redo the rest.',
+        primary: 'Start', primaryFn: stepGo(1), cardsLabel: 'The 5 steps',
+        cards: [
+          c('Step 1', 'Idea', 'one sentence', null, ICE, W.star, '20% 50%', stepGo(1)),
+          c('Step 2', 'Storyboard', st ? st.longLines + '/' + st.L.length + ' lines' : '', st ? st.longLines / st.L.length : 0, WARN, W.city, '30% 50%', stepGo(2)),
+          c('Step 3', 'Visuals', st ? st.longFoot + '/' + st.L.length + ' clips' : '', st ? st.longFoot / st.L.length : 0, st && st.longFoot ? WARN : BAD, W.cit, '50% 40%', stepGo(3)),
+          c('Step 4', 'Voice & sound', vo ? vo.name : '', null, ICE, W.aur, '40% 50%', stepGo(4)),
+          c('Step 5', 'Export', 'agent', null, ICE, W.star, '80% 50%', stepGo(5))
+        ] },
+      { id: 'loop', mono: 'LOOP', label: 'Music & wallpaper', wall: W.aur, pos: '60% 40%', hue: 180,
+        meta: 'New template · Music & Live Wallpaper',
+        title: 'Ambient music videos', desc: 'Pick or generate a wallpaper, add live motion, generate original music or upload your own, then record a seamless loop.',
+        primary: 'Open Loop Studio', primaryFn: () => this.go('Loop Studio.dc.html'), cardsLabel: 'Inside',
+        cards: [
+          c('Wallpaper', 'Stock, upload or AI', '', null, ICE, W.aur, '30% 50%', () => this.go('Loop Studio.dc.html')),
+          c('Motion', 'Zoom, rain, snow, fireflies', '', null, ICE, W.star, '60% 40%', () => this.go('Loop Studio.dc.html')),
+          c('Music', 'Generated in the browser · no claims', '', null, ICE, W.cit, '40% 60%', () => this.go('Loop Studio.dc.html')),
+          c('Export', 'WebM loop → 1 h with FFmpeg', '', null, ICE, W.city, '50% 50%', () => this.go('Loop Studio.dc.html'))
+        ] },
+      { id: 'channel', mono: 'YT', label: 'Channel', wall: W.cit, pos: '30% 40%', hue: 25,
+        meta: 'Grow · Stats · Learn',
+        title: 'Run the channel from zero', desc: 'Brand kit, a first-10-videos plan, read-only YouTube stats, and rules learned from your own results that feed every new storyboard.',
+        primary: 'Open Channel', primaryFn: () => this.go('Channel.dc.html'), cardsLabel: 'Stages',
+        cards: [
+          c('Grow', 'Brand kit + first 10 videos', '', null, ICE, W.cit, '30% 40%', () => this.go('Channel.dc.html')),
+          c('Stats', 'Connect YouTube (read-only)', '', null, ICE, W.star, '50% 50%', () => this.go('Channel.dc.html?tab=stats')),
+          c('Learn', 'Rules from real results', '', null, ICE, W.aur, '70% 50%', () => this.go('Channel.dc.html?tab=learn'))
+        ] },
+      { id: 'ep', mono: 'EP01', label: 'Episode 01', wall: W.city, pos: '30% 50%', hue: 250,
+        meta: st ? `YouTube 16:9 · ${fmt(st.longDur)} · ${st.L.length} scenes` : 'Loading…',
+        title: 'I Tested 10 Roblox Horror Myths', desc: 'Built from storyboard.md. Edit every scene, voice, sound and visual, alone or with the agent.',
+        primary: 'Open in Studio', primaryFn: studio, secondary: 'Short version', secondaryFn: short, cardsLabel: 'Progress',
+        cards: st ? [
+          c('Footage', 'Gameplay clips', `${st.longFoot}/${st.L.length}`, st.longFoot / st.L.length, st.longFoot ? WARN : BAD, W.city, '15% 40%', studio),
+          c('Script', 'Final voice lines', `${st.longLines}/${st.L.length}`, st.longLines / st.L.length, st.longLines === st.L.length ? OK : WARN, W.star, '60% 30%', studio),
+          c('Evidence', 'Verdicts', `${st.verdicts}/${st.myths.length}`, st.verdicts / st.myths.length, st.verdicts ? WARN : MUTE, W.aur, '40% 60%', studio),
+          c('Voice', vo ? `${vo.name} · ${vo.tone}` : ep.voice.id, ep.voice.rate, null, ICE, W.cit, '70% 40%', () => this.go('Audio Lab.dc.html'))
+        ] : [] },
+      { id: 'short', mono: 'S01', label: 'Short · Myth 2', wall: W.city, pos: '80% 40%', hue: 210,
+        meta: st ? `YouTube Shorts 9:16 · ${fmt(st.shortDur)} · target 25–35s` : 'Loading…',
+        title: ep ? ep.shorts.title : 'Short', desc: 'One test in about 33 seconds: hook, setup, attempt, replay, verdict. It can ship before the long episode.',
+        primary: 'Open Short in Studio', primaryFn: short, cardsLabel: 'Progress',
+        cards: st ? [
+          c('Length', fmt(st.shortDur), '25–35s', Math.min(1, st.shortDur / 35), st.shortDur >= 25 && st.shortDur <= 35 ? OK : WARN, W.city, '80% 40%', short),
+          c('Footage', 'Gameplay clips', `${st.shortFoot}/${st.S.length}`, st.shortFoot / st.S.length, st.shortFoot ? WARN : BAD, W.aur, '20% 50%', short),
+          c('Script', 'Final voice lines', `${st.shortLines}/${st.S.length}`, st.shortLines / st.S.length, st.shortLines === st.S.length ? OK : WARN, W.star, '30% 50%', short)
+        ] : [] },
+      { id: 'char', mono: 'CHAR', label: 'Character', wall: W.cit, pos: '50% 30%', hue: 190, badge: ingrMissing ? String(ingrMissing) : '', badgeBg: WARN,
+        meta: 'RHM_INVESTIGATOR_01 · reference images for Flow / Veo',
+        title: 'Lock the look first', desc: 'Every generated shot reuses the same references, so the character stays the same from scene to scene.',
+        primary: 'Copy turnaround prompt', primaryFn: () => this.copy(TURNAROUND, 'Prompt copied · paste into Gemini or Flow'), cardsLabel: 'Ingredients',
+        cards: st ? st.ingr.map((i, n) => c(i.ok ? 'Ready' : 'Missing', i.k, i.file.split('/').pop(), null, i.ok ? OK : WARN, [W.cit, W.city, W.star][n % 3], '50% 40%', () => this.copy(i.file, 'Save the image at ' + i.file))) : [] },
+      { id: 'tpl', mono: 'TPL', label: 'Templates', wall: W.star, pos: '50% 50%', hue: 280,
+        meta: tpl ? 'Active · ' + tpl.label : '6 niche templates · en-US',
+        title: 'Channel templates', desc: 'Concept, hook, structure, voice, sound, thumbnail and benchmarks in one package. Make new ones from videos you like.',
+        primary: 'Browse templates', primaryFn: () => this.setState({ tab: 'library', focus: 0, row: 0 }), secondary: 'Template factory', secondaryFn: () => this.go('Template Hub.dc.html?tab=factory'), cardsLabel: 'Tools',
+        cards: [
+          c('Library', '6 templates', '', null, ICE, W.star, '30% 50%', () => this.setState({ tab: 'library', focus: 0, row: 0 })),
+          c('Factory', 'Template from a video', '', null, ICE, W.aur, '60% 40%', () => this.go('Template Hub.dc.html?tab=factory')),
+          c('Inspector', 'Benchmark a channel', '', null, ICE, W.cit, '40% 60%', () => this.go('Template Hub.dc.html?tab=inspect'))
+        ] },
+      { id: 'audio', mono: 'AUD', label: 'Audio Lab', wall: W.aur, pos: '50% 50%', hue: 160,
+        meta: this.state.voices ? `${this.state.voices.voices.length} voices · 7 SFX · 1 music bed` : 'Loading…',
+        title: 'Voices, SFX and music', desc: 'Hear every free en-US neural voice on your own line, then set it for the episode.',
+        primary: 'Open Audio Lab', primaryFn: () => this.go('Audio Lab.dc.html'), secondary: 'Hear episode voice', secondaryFn: () => ep && speakAs(ep.voice.id, ep.voice.rate, ep.scenes[0].narration), cardsLabel: 'Library',
+        cards: [
+          c('Voices', 'edge-tts · free', this.state.voices ? String(this.state.voices.voices.length) : '', null, ICE, W.aur, '30% 50%', () => this.go('Audio Lab.dc.html')),
+          c('Sound effects', 'From media-fabric', '7', null, ICE, W.star, '70% 50%', () => this.go('Audio Lab.dc.html?tab=sfx')),
+          c('Music', 'Warm pad · −22 dB', '1', null, ICE, W.cit, '20% 50%', () => this.go('Audio Lab.dc.html?tab=music'))
+        ] },
+      { id: 'inspect', mono: 'VS', label: 'Competitors', wall: W.cit, pos: '20% 60%', hue: 25,
+        meta: 'Benchmark before you copy',
+        title: 'Learn from the best videos', desc: 'Paste a channel\u2019s popular videos. Get the pattern behind the winners and original ideas that follow it.',
+        primary: 'Open inspector', primaryFn: () => this.go('Template Hub.dc.html?tab=inspect'), cardsLabel: 'Tools',
+        cards: [
+          c('Inspector', 'Channel benchmark', '', null, ICE, W.cit, '20% 60%', () => this.go('Template Hub.dc.html?tab=inspect')),
+          c('Factory', 'Turn a video into a template', '', null, ICE, W.star, '60% 40%', () => this.go('Template Hub.dc.html?tab=factory'))
+        ] },
+      { id: 'agent', mono: 'MCP', label: 'Agents', wall: W.cit, pos: '70% 30%', hue: 200,
+        meta: 'MCP server · 11 tools · writes episode.json',
+        title: 'Let any agent run it', desc: 'Claude Code, Codex, Claude Desktop or Cursor can read templates, edit scenes, pick voices and synthesize narration.',
+        primary: 'Copy MCP config', primaryFn: () => this.copy(MCP_CONFIG, 'Config copied · replace <project> with your path'), secondary: 'Setup guide', secondaryFn: () => this.go('mcp/README.md'), cardsLabel: 'Connect',
+        cards: [
+          c('Claude / Cursor', 'mcpServers JSON', 'copy', null, ICE, W.cit, '70% 30%', () => this.copy(MCP_CONFIG, 'JSON config copied')),
+          c('Codex', 'config.toml block', 'copy', null, ICE, W.star, '40% 50%', () => this.copy(CODEX_CONFIG, 'Codex config copied')),
+          c('In-browser', 'Studio agent', 'live', null, OK, W.city, '50% 50%', studio)
+        ] },
+      { id: 'render', mono: 'MP4', label: 'Render', wall: W.star, pos: '80% 60%', hue: 70,
+        meta: 'Local · edge-tts → mix → Remotion',
+        title: 'From storyboard to MP4', desc: 'Voice runs today through the MCP tool. The video step needs one Remotion composition for episodes.',
+        primary: 'Copy render steps', primaryFn: () => this.copy('1. synthesize_voice (MCP) → production/ep01/voice/<scene>.mp3 + .srt\n2. Mix SFX + music, master to -14 LUFS (media-fabric audio rules)\n3. Remotion composition reads episode.json + voice files → MP4\n4. Bundle MP4 + SRT + thumbnail + upload text', 'Render steps copied'), cardsLabel: 'Pipeline',
+        cards: [
+          c('Step 1', 'Voice per scene', 'ready', 1, OK, W.aur, '50% 50%', () => this.go('mcp/README.md')),
+          c('Step 2', 'Mix and master', 'ready', 1, OK, W.star, '30% 50%', () => this.go('Audio Lab.dc.html?tab=music')),
+          c('Step 3', 'Episode composition', 'to build', 0.15, WARN, W.city, '60% 50%', () => this.go('production/AUDIT.md')),
+          c('Step 4', 'YouTube upload', 'not connected', 0, BAD, W.cit, '50% 50%', () => this.go('production/AUDIT.md'))
+        ] },
+      { id: 'system', mono: 'SYS', label: 'System', wall: W.aur, pos: '80% 40%', hue: 25, badge: '3', badgeBg: BAD,
+        meta: 'From production/AUDIT.md',
+        title: 'What still blocks an upload', desc: 'The tools work. What\u2019s missing is footage, the character image and a YouTube connection.',
+        primary: 'Open audit', primaryFn: () => this.go('production/AUDIT.md'), cardsLabel: 'Blockers',
+        cards: [
+          c('Missing', 'Gameplay footage', st ? `${st.longFoot} clips` : '', 0, BAD, W.city, '20% 50%', studio),
+          c('Missing', 'Character master PNG', ingrMissing ? 'missing' : 'ready', ingrMissing ? 0 : 1, ingrMissing ? BAD : OK, W.cit, '50% 30%', () => this.setState({ focus: 2 })),
+          c('Not connected', 'YouTube upload', 'credentials', 0, BAD, W.star, '50% 50%', () => this.copy('npm run credentials:setup', 'Command copied'))
+        ] }
+    ];
+  }
+
+  library() {
+    const n = this.state.niches; if (!n) return [];
+    const c = this.card.bind(this);
+    return n.templates.map(t => {
+      const vo = this.voice(t.voice.id), hook = t.hook.patterns[0].replace(/\{(\w+)\}/g, (m, k) => SAMPLE[k] || 'this');
+      const active = this.state.active === t.id;
+      return { id: t.id, mono: t.label.split(' ').map(w => w[0]).join('').toUpperCase(), label: t.label, wall: t.bg, pos: '50% 50%', hue: t.hue, badge: active ? '✓' : '', badgeBg: ICE,
+        meta: (active ? 'Active · ' : '') + (vo ? vo.name : t.voice.id) + ' voice · hook ≤ ' + t.hook.maxSec + 's',
+        title: t.label, desc: t.concept,
+        primary: active ? 'Open template' : 'Use this template', primaryFn: () => { try { localStorage.setItem('rhm_template', t.id); } catch (e) {} this.setState({ active: t.id }); this.go('Template Hub.dc.html?tab=tpl'); },
+        secondary: 'Hear the hook', secondaryFn: () => speakAs(t.voice.id, t.voice.rate, hook), cardsLabel: 'Inside this template',
+        cards: [
+          c('Hook', hook, t.hook.maxSec + 's', null, ICE, t.bg, '20% 50%', () => speakAs(t.voice.id, t.voice.rate, hook)),
+          c('Voice', vo ? vo.name + ' · ' + vo.tone : t.voice.id, t.voice.rate, null, ICE, t.bg, '50% 30%', () => speakAs(t.voice.id, t.voice.rate, hook)),
+          c('Music', t.music.mood, '', null, ICE, t.bg, '80% 50%', () => this.copy(t.music.mood, 'Music brief copied')),
+          c('Thumbnail', t.thumbnail.rules, '', null, ICE, t.bg, '50% 80%', () => this.copy(t.thumbnail.rules, 'Thumbnail rule copied'))
+        ] };
+    });
+  }
+
+  renderVals() {
+    const s = this.state, items = this.items();
+    const cur = items[Math.min(s.focus, items.length - 1)] || { title: 'Loading…', meta: '', desc: '', primary: '…', cards: [], wall: W.city };
+    return {
+      walls: WALLS.map(src => ({ src, bgi: "url('" + src + "')", op: src === cur.wall ? 0.7 : 0, scale: src === cur.wall ? 1.08 : 1.0 })),
+      tabs: [['create', 'Create'], ['library', 'Library']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#F4F7FC' : 'rgba(232,237,245,0.5)', onClick: () => { this.beep('blip'); this.setState({ tab: id, focus: 0, row: 0, card: 0 }); } })),
+      toggleSound: () => { const v = !s.sound; try { localStorage.setItem('ds_sound', v ? 'on' : 'off'); } catch (e) {} this.setState({ sound: v }); },
+      soundOpacity: s.sound ? 1 : 0.45,
+      clock: s.now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+      tiles: items.map((t, i) => {
+        const f = i === s.focus;
+        return { mono: t.mono, label: t.label, wall: t.wall, bgi: "url('" + t.wall + "')", pos: t.pos, badge: t.badge || '', badgeBg: t.badgeBg || WARN, focused: f,
+          size: f ? '124px' : '92px',
+          tint: `linear-gradient(160deg, oklch(0.45 0.12 ${t.hue} / ${f ? 0.25 : 0.55}), oklch(0.15 0.04 ${t.hue} / 0.75))`,
+          ring: f && s.row === 0 ? '0 0 0 3px #0A0C12, 0 0 0 6px #F4F7FC, 0 18px 40px rgba(0,0,0,0.5)' : (f ? '0 0 0 3px #0A0C12, 0 0 0 5px rgba(244,247,252,0.35)' : '0 6px 16px rgba(0,0,0,0.35)'),
+          onClick: () => (f ? this.run(t.primaryFn) : this.move(i)) };
+      }),
+      cur,
+      primary: () => this.run(cur.primaryFn), secondary: () => this.run(cur.secondaryFn),
+      cards: (cur.cards || []).map((c, i) => ({ ...c, bgi: "url('" + c.img + "')", hasBar: c.ratio !== null && c.ratio !== undefined, pct: Math.round((c.ratio || 0) * 100) + '%',
+        ring: s.row === 1 && s.card === i ? '0 0 0 3px #0A0C12, 0 0 0 6px #F4F7FC' : '0 10px 30px rgba(0,0,0,0.35)',
+        onClick: () => { this.setState({ row: 1, card: i }); this.run(c.fn); } })),
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

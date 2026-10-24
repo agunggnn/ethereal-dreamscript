@@ -1,0 +1,17 @@
+{
+  "name": "dreamscript-mcp",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "dreamscript-mcp": "server.mjs"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "studio": "node studio-server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "zod": "^3.23.8"
+  }
+}

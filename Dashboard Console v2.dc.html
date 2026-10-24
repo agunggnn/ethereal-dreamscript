@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}body{margin:0;background:#0b0d12;color:#f3f4f6;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#f5c27a}a:hover{color:#fff}input{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
+<div data-screen-label="Console home" style="position:relative;min-height:100vh;overflow:hidden;background:#0b0d12;display:flex;flex-direction:column">
+  <sc-for list="{{ bgs }}" as="b" hint-placeholder-count="0">
+    <img src="{{ b.src }}" alt="" style="position:absolute;top:0;right:0;width:78%;height:82%;object-fit:cover;opacity:{{ b.opacity }};transition:opacity 0.6s ease">
+  </sc-for>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,#0b0d12 14%,rgba(11,13,18,0.75) 45%,rgba(11,13,18,0.15) 80%),linear-gradient(to right,#0b0d12 18%,rgba(11,13,18,0.7) 45%,rgba(11,13,18,0) 75%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:36px 64px 0;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:32px;font-size:18px;font-weight:600"><span style="color:#fff">Studio</span><span style="color:rgba(255,255,255,0.45)">Library</span></div>
+    <div style="display:flex;align-items:center;gap:26px;font-size:15px;color:rgba(255,255,255,0.8);flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:oklch(0.75 0.14 150)"></span>pc-main worker</span>
+      <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:oklch(0.75 0.14 25)"></span>2 checks</span>
+      <span style="font-variant-numeric:tabular-nums">7:03 PM</span>
+      <span style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">AG</span>
+    </div>
+  </div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:16px;padding:52px 64px 0;min-height:240px;overflow-x:auto;scrollbar-width:none">
+    <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="7">
+      <div onClick="{{ t.onClick }}" style="{{ t.style }}">
+        <sc-if value="{{ t.img }}" hint-placeholder-val="{{ false }}"><img src="{{ t.img }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></sc-if>
+        <sc-if value="{{ t.img }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75),rgba(0,0,0,0) 60%)"></div></sc-if>
+        <sc-if value="{{ t.noImg }}" hint-placeholder-val="{{ true }}"><span style="font-size:{{ t.glyphSize }};line-height:1;color:#fff;font-weight:500">{{ t.glyph }}</span></sc-if>
+        <span style="position:absolute;left:14px;bottom:12px;font-size:13px;font-weight:600;color:#fff">{{ t.label }}</span>
+        <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:{{ t.badgeBg }};color:#0b0d12;font:700 12px/22px 'Manrope',sans-serif;text-align:center">{{ t.badge }}</span></sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position:relative;padding:38px 64px 0;display:flex;flex-direction:column;gap:14px;max-width:820px">
+    <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.65)">{{ cur.meta }}</div>
+    <h1 style="margin:0;font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-0.02em;text-wrap:balance">{{ cur.title }}</h1>
+    <p style="margin:0;font-size:19px;line-height:1.5;color:rgba(255,255,255,0.8);text-wrap:pretty">{{ cur.desc }}</p>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:10px">
+      <button onClick="{{ openCur }}" style="height:52px;padding:0 34px;border-radius:26px;border:none;background:#fff;color:#0b0d12;font:700 17px 'Manrope',sans-serif;cursor:pointer;transition:transform 0.15s" style-hover="transform:scale(1.04)">{{ cur.primary }}</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,0.14);color:#fff;font:700 18px 'Manrope',sans-serif;cursor:pointer" style-hover="background:rgba(255,255,255,0.24)">···</button>
+    </div>
+  </div>
+
+  <div style="position:relative;padding:40px 64px 56px">
+    <sc-if value="{{ is.create }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Formats · templates/formats.json</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;max-width:1200px">
+          <sc-for list="{{ formats }}" as="f" hint-placeholder-count="6">
+            <div onClick="{{ f.onClick }}" style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:background 0.15s" style-hover="background:rgba(255,255,255,0.14)">
+              <span style="font-size:17px;font-weight:700">{{ f.label }}</span><span style="font-size:13px;line-height:1.45;color:rgba(255,255,255,0.6)">{{ f.flow }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.jobs }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;max-width:1000px">
+        <sc-for list="{{ ledger }}" as="j" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+            <span style="justify-self:start;padding:5px 12px;border-radius:14px;font-size:13px;font-weight:700;background:{{ j.chipBg }};color:{{ j.chipFg }}">{{ j.status }}</span>
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:16px;font-weight:600">{{ j.spec }}</span><span style="font:400 13px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.55);overflow:hidden;text-overflow:ellipsis">{{ j.detail }}</span></div>
+            <sc-if value="{{ j.resumable }}" hint-placeholder-val="{{ false }}"><button onClick="{{ j.onResume }}" style="height:40px;padding:0 20px;border-radius:20px;border:none;background:#fff;color:#0b0d12;font:700 14px 'Manrope',sans-serif;cursor:pointer">Resume</button></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.storyboard }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">3-way thumbnails · pick one for YouTube Test &amp; Compare, or upload all three</div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,280px));gap:16px">
+          <sc-for list="{{ thumbs }}" as="th" hint-placeholder-count="3">
+            <div onClick="{{ th.onClick }}" style="display:flex;flex-direction:column;gap:8px;cursor:pointer">
+              <img src="{{ th.src }}" alt="Thumbnail {{ th.v }}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;outline:{{ th.outline }};outline-offset:3px">
+              <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.8)">{{ th.v }} · {{ th.name }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.library }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;max-width:1200px">
+        <sc-for list="{{ bundles }}" as="bd" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <img src="{{ bd.img }}" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:rgba(255,255,255,0.06)">
+            <span style="font-size:16px;font-weight:600">{{ bd.title }}</span><span style="font-size:13px;color:rgba(255,255,255,0.55)">{{ bd.meta }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.health }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:8px 40px;max-width:1100px">
+        <sc-for list="{{ checks }}" as="c" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:24px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+            <span style="font-size:16px;font-weight:700;color:{{ c.color }}">{{ c.mark }}</span>
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ c.name }}</span><span style="font-size:13px;color:rgba(255,255,255,0.55)">{{ c.note }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.connect }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:inline-flex;align-self:flex-start;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;font:500 15px 'JetBrains Mono',monospace">POST /mcp/command · service: "media"</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;max-width:1000px">
+          <sc-for list="{{ enabledTools }}" as="tl" hint-placeholder-count="6"><span style="background:rgba(255,255,255,0.08);border-radius:18px;padding:7px 14px;font:500 13px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.85)">{{ tl.name }}</span></sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.settings }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;max-width:1200px">
+        <sc-for list="{{ settings }}" as="st" hint-placeholder-count="6">
+          <div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:rgba(255,255,255,0.55)">{{ st.k }}</span><span style="font-size:17px;font-weight:600">{{ st.v }}</span></div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:relative;margin-top:auto;padding:0 64px 28px;display:flex;gap:28px;font-size:13px;color:rgba(255,255,255,0.45)"><span>← → Move</span><span>Enter Open</span><span>Esc Back</span></div>
+
+  <sc-if value="{{ screens.create }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="New reel" style="position:absolute;inset:0;background:rgba(8,10,14,0.93);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:36px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;flex-direction:column;gap:32px;max-width:920px">
+        <h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">New reel</h1>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Source</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ sources }}" as="so" hint-placeholder-count="3"><button onClick="{{ so.onClick }}" style="height:56px;padding:0 22px;border-radius:14px;border:none;font:600 15px 'Manrope',sans-serif;cursor:pointer;background:{{ so.bg }};color:{{ so.fg }}">{{ so.name }}</button></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">{{ sourceLabel }}</span>
+          <input value="{{ topic }}" onChange="{{ onTopic }}" placeholder="{{ sourcePlaceholder }}" style="height:64px;border-radius:14px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:19px;padding:0 22px;outline:none" style-focus="border-color:#fff">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Format</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ formatPills }}" as="fp" hint-placeholder-count="6"><button onClick="{{ fp.onClick }}" style="height:44px;padding:0 20px;border-radius:22px;border:none;font:600 15px 'Manrope',sans-serif;cursor:pointer;background:{{ fp.bg }};color:{{ fp.fg }}">{{ fp.name }}</button></sc-for>
+          </div>
+          <span style="font-size:14px;color:rgba(255,255,255,0.5)">{{ formatFlow }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Platform · sets the CTA and safe zone</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ platforms }}" as="pl" hint-placeholder-count="4"><button onClick="{{ pl.onClick }}" style="height:56px;min-width:130px;padding:0 20px;border-radius:14px;border:none;font:600 15px 'Manrope',sans-serif;cursor:pointer;background:{{ pl.bg }};color:{{ pl.fg }}">{{ pl.name }}</button></sc-for>
+          </div>
+          <span style="font-size:14px;color:rgba(255,255,255,0.5)">CTA on screen: {{ ctaText }}</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <button onClick="{{ startStoryboard }}" style="height:56px;padding:0 34px;border-radius:28px;border:none;background:#fff;color:#0b0d12;font:700 17px 'Manrope',sans-serif;cursor:pointer">Storyboard first · ~5s</button>
+          <button onClick="{{ startProduce }}" style="height:56px;padding:0 30px;border-radius:28px;border:none;background:rgba(255,255,255,0.14);color:#fff;font:700 17px 'Manrope',sans-serif;cursor:pointer">Produce now · ~40s</button>
+          <span style="font-size:14px;color:rgba(255,255,255,0.5)">Lint runs first. Specs with TODO can't produce.</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ screens.job }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Live job" style="position:absolute;inset:0;background:rgba(8,10,14,0.94);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:34px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">{{ jobMeta }}</span>
+        <h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">{{ jobTitle }}</h1>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:26px;max-width:1300px">
+        <sc-for list="{{ lanes }}" as="ln" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:500 13px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.5)">{{ ln.name }}</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+              <sc-for list="{{ ln.steps }}" as="st" hint-placeholder-count="3">
+                <div style="border-radius:16px;padding:16px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;background:{{ st.cardBg }};outline:{{ st.outline }};outline-offset:3px;transition:all 0.3s">
+                  <span style="font:500 12px 'JetBrains Mono',monospace;color:{{ st.color }}">{{ st.num }}</span>
+                  <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:700;color:{{ st.color }}">{{ st.name }}</span><span style="font-size:12px;color:rgba(255,255,255,0.55)">{{ st.state }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;max-width:1000px;font:400 13px/1.6 'JetBrains Mono',monospace;color:rgba(255,255,255,0.7)">
+        <sc-for list="{{ logs }}" as="lg" hint-placeholder-count="3"><div>{{ lg }}</div></sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ screens.review }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Storyboard gate" style="position:absolute;inset:0;background:rgba(8,10,14,0.95);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:28px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;max-width:1300px">
+        <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Review before rendering · review_jujur · shopee · 7 beats</span><h1 style="margin:0;font-size:44px;font-weight:700;letter-spacing:-0.02em">SKIN1004 Toning Toner</h1></div>
+        <div style="display:flex;gap:12px"><button onClick="{{ goCreate }}" style="height:52px;padding:0 26px;border-radius:26px;border:none;background:rgba(255,255,255,0.14);color:#fff;font:700 16px 'Manrope',sans-serif;cursor:pointer">Edit spec</button><button onClick="{{ startProduce }}" style="height:52px;padding:0 32px;border-radius:26px;border:none;background:#fff;color:#0b0d12;font:700 16px 'Manrope',sans-serif;cursor:pointer">Looks good · Produce</button></div>
+      </div>
+      <img src="assets/skin1004_storyboard.png" alt="Storyboard contact sheet" style="width:100%;max-width:1300px;border-radius:16px;background:rgba(255,255,255,0.05)">
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:1300px">
+        <sc-for list="{{ thumbs }}" as="th" hint-placeholder-count="3">
+          <div onClick="{{ th.onClick }}" style="display:flex;flex-direction:column;gap:8px;cursor:pointer">
+            <img src="{{ th.src }}" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;outline:{{ th.outline }};outline-offset:3px">
+            <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.8)">{{ th.v }} · {{ th.name }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ screens.connect }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Connect MCP" style="position:absolute;inset:0;background:rgba(8,10,14,0.94);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:34px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">One entry point for Claude, Telegram and the YouTube agent</span><h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">MCP · AegisBrain</h1></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:28px;max-width:1300px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Actions</span>
+          <div style="display:flex;flex-direction:column;background:rgba(255,255,255,0.05);border-radius:16px;padding:6px 18px">
+            <sc-for list="{{ tools }}" as="tl" hint-placeholder-count="9">
+              <div onClick="{{ tl.onClick }}" style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.07);cursor:pointer">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font:500 14px 'JetBrains Mono',monospace">{{ tl.name }}</span><span style="font-size:13px;color:rgba(255,255,255,0.5)">{{ tl.desc }}</span></div>
+                <span style="width:40px;height:24px;border-radius:12px;background:{{ tl.bg }};position:relative"><span style="position:absolute;top:3px;left:{{ tl.knob }};width:18px;height:18px;border-radius:50%;background:#fff"></span></span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Example call</span>
+          <pre style="margin:0;background:rgba(255,255,255,0.05);border-radius:16px;padding:20px;font:400 13px/1.6 'JetBrains Mono',monospace;color:rgba(255,255,255,0.85);white-space:pre-wrap;word-break:break-all">{{ snippet }}</pre>
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6);margin-top:8px">Recent calls</span>
+          <div style="display:flex;flex-direction:column;gap:8px;font:400 13px/1.5 'JetBrains Mono',monospace">
+            <sc-for list="{{ calls }}" as="cl" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:52px 1fr auto;gap:12px;color:rgba(255,255,255,0.75)"><span>{{ cl.t }}</span><span>{{ cl.what }}</span><span style="color:{{ cl.color }}">{{ cl.res }}</span></div></sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IMG = { star: 'assets/wall_starfall.jpg', city: 'assets/wall_megacity.jpg', aurora: 'assets/wall_aurora.jpg', citadel: 'assets/wall_citadel.jpg', sb: 'assets/skin1004_storyboard.png', tA: 'assets/skin1004_thumb_A.png', tB: 'assets/skin1004_thumb_B.png', tC: 'assets/skin1004_thumb_C.png', desk: 'assets/deskmat_thumb_A.png' };
+const TILES = [
+  { id: 'create', glyph: '+', label: 'New reel', bg: IMG.star, meta: 'YouTube agent writes the brief · media-fabric renders it', title: 'Make a new reel', desc: 'Start from a Strategy topic, an affiliator product, or one sentence. It becomes a spec v2 with 4–7 beats.', primary: 'Start', screen: 'create' },
+  { id: 'jobs', glyph: '▶', label: 'Jobs', bg: IMG.city, meta: 'status_ledger.json · 1 interrupted', title: 'Production jobs', desc: 'Every stage is written to the ledger, so a crash or PC restart leaves a resumable job instead of a lost one.', primary: 'Open live job', screen: 'job' },
+  { id: 'storyboard', glyph: '▦', label: 'Storyboard', img: IMG.sb, bg: IMG.sb, meta: 'Gate 2 · waiting for review', title: 'SKIN1004 Toning Toner', desc: 'Contact sheet of all 7 beats plus three thumbnails, ready in about 5 seconds. Approve it before the full render.', primary: 'Review', screen: 'review' },
+  { id: 'library', glyph: '≡', label: 'Library', img: IMG.tA, bg: IMG.tA, meta: 'output/bundles · 5 bundles', title: 'Release bundles', desc: 'Each bundle has the MP4, captions, three thumbnails and upload packs for TikTok/Shopee, Threads/X and YouTube.', primary: 'Open library' },
+  { id: 'health', glyph: '✓', label: 'Health', bg: IMG.aurora, meta: '8 of 10 ready', title: 'Pipeline health', desc: 'Rendering works end to end. Google Drive sync is skipped and YouTube upload is not connected.', primary: 'Fix issues' },
+  { id: 'connect', glyph: '⇄', label: 'Connect', bg: IMG.citadel, meta: 'AegisBrain MCP · Telegram · Claude', title: 'MCP server', desc: 'Outside agents call one endpoint. AegisBrain queues the job and the Jagdpanzer worker runs it on pc-main.', primary: 'Manage', screen: 'connect' },
+  { id: 'settings', glyph: '⚙', label: 'Settings', bg: IMG.star, meta: 'Providers · Voice · Audio · Sync', title: 'Settings', desc: 'Shared by both systems. Change the voice or loudness here and both pipelines pick it up.', primary: 'Open settings' }
+];
+const FORMATS = [
+  ['masalah_solusi', 'Masalah → Solusi', 'hook → masalah → reveal → bukti → cara → harga → cta'],
+  ['tiga_alasan', '3 Alasan Aku Checkout', 'hook → poin ×3 → harga → cta'],
+  ['review_jujur', 'Review Jujur (Plus-Minus)', 'hook → reveal → bukti → plus/minus → verdict → harga → cta'],
+  ['versus_dupe', 'Versus / Dupe', 'hook → versus → bukti → verdict → harga → cta'],
+  ['pov', 'POV / Storytime', 'hook POV → masalah → reveal → cara → harga → cta'],
+  ['demo_before_after', 'Demo Before → After', 'hook hasil → versus → cara → bukti → harga → cta']
+];
+const PLATFORMS = { tiktok: ['TikTok', 'KLIK KERANJANG KUNING'], shopee: ['Shopee Video', 'KLIK PRODUK DI BAWAH'], reels: ['Reels', 'LINK DI BIO'], shorts: ['YouTube Shorts', 'LINK DI KOMEN'] };
+const LANES = [
+  { name: 'youtube-automation-agent · brief', steps: ['Strategy', 'Script', 'SEO'] },
+  { name: 'media-fabric · render (status_ledger stages)', steps: ['Lint', 'Initializing', 'TTS', 'Audio mix', 'Rendering video', 'Packaging'] },
+  { name: 'distribute', steps: ['Drive sync', 'Publish', 'Analytics'] }
+];
+const ALL = LANES.flatMap(l => l.steps);
+const LOGS = ['strategy     topic + format review_jujur', 'script       7 beats · say + onScreen', 'seo          youtubeTitle, 5 tags, hashtags', 'lint         0 errors · 0 claim warnings', 'ledger       running · pid 24848', 'tts          id-ID-GadisNeural +12% · 7 beats', 'audio_mix    warm_pad · -14 LUFS', 'remotion     AffiliateReel 1080×1920 · 901 frames', 'packaging    thumbnails A/B/C · storyboard · captions', 'gdrive       push bundle', 'publish      queued · private', 'analytics    tracking after upload'];
+const TOOLS = [
+  ['media.new', 'Scaffold a spec v2 from a format'],
+  ['media.lint', 'Check claims, prices, 6-word cap, TODOs'],
+  ['media.storyboard', 'Contact sheet + 3 thumbnails (~5s)'],
+  ['media.thumbnail', 'Regenerate one variant with a style'],
+  ['media.produce', 'Full render + bundle (~40s)'],
+  ['media.status', 'Read status_ledger.json'],
+  ['yt.generate_content', 'Strategy → Script → SEO brief'],
+  ['yt.get_schedule', 'Upcoming publishes'],
+  ['yt.publish_content', 'Upload a bundle to YouTube']
+];
+
+class Component extends DCLogic {
+  state = { focus: 0, screen: 'home', source: 'strategy', topic: '', format: 'review_jujur', platform: 'shopee', thumb: 'A', step: 0, running: false, jobTitle: 'SKIN1004 Toning Toner', resumed: false, toolsOff: { 'yt.publish_content': true } };
+
+  componentDidMount() {
+    this.onKey = (e) => {
+      if (e.target && e.target.tagName === 'INPUT') { if (e.key === 'Escape') this.setState({ screen: 'home' }); return; }
+      if (this.state.screen !== 'home') { if (e.key === 'Escape' || e.key === 'Backspace') this.setState({ screen: 'home' }); return; }
+      if (e.key === 'ArrowRight') this.setState(s => ({ focus: Math.min(TILES.length - 1, s.focus + 1) }));
+      if (e.key === 'ArrowLeft') this.setState(s => ({ focus: Math.max(0, s.focus - 1) }));
+      if (e.key === 'Enter') this.open(this.state.focus);
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.timer = setInterval(() => { if (this.state.running && this.state.step < ALL.length) this.setState(s => ({ step: s.step + 1 })); }, 1600);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); clearInterval(this.timer); }
+  open(i) { const t = TILES[i]; if (t.screen) this.setState({ screen: t.screen }); }
+  produce(from) { this.setState(s => ({ screen: 'job', running: true, step: from || 0, focus: 1, jobTitle: s.topic.trim() || 'SKIN1004 Toning Toner' })); }
+
+  renderVals() {
+    const s = this.state;
+    const cur = TILES[s.focus];
+    const live = s.running && s.step < ALL.length;
+    const done = s.running && s.step >= ALL.length;
+    const sel = (on) => ({ bg: on ? '#fff' : 'rgba(255,255,255,0.1)', fg: on ? '#0b0d12' : '#fff' });
+    let n = 0;
+    const lanes = LANES.map(l => ({ name: l.name, steps: l.steps.map(name => { const i = n++; const d = s.running && i < s.step, a = live && i === s.step; return { name, num: String(i + 1).padStart(2, '0'), state: d ? 'Done' : a ? 'Working…' : 'Waiting', color: d || a ? '#fff' : 'rgba(255,255,255,0.4)', cardBg: a ? 'oklch(0.36 0.07 70)' : d ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', outline: a ? '2px solid oklch(0.78 0.14 70)' : '2px solid transparent' }; }) }));
+    const fmt = FORMATS.find(f => f[0] === s.format);
+    const isOn = (k) => !s.toolsOff[k];
+    const chip = (st) => ({ completed: ['oklch(0.75 0.14 150)', '#0b0d12'], running: ['oklch(0.78 0.14 70)', '#0b0d12'], interrupted: ['oklch(0.75 0.14 25)', '#0b0d12'] })[st];
+    const ledger = [
+      s.running ? { spec: s.jobTitle, status: done ? 'completed' : 'running', detail: done ? 'reel_new · completed · bundle ready' : `reel_new · stage=${ALL[s.step].toLowerCase().replace(' ', '_')}` } : null,
+      { spec: 'skin1004-centella-toner', status: 'completed', detail: 'reel_1792320291 · 30.03s · 901 frames · gdrive skipped' },
+      { spec: 'skin1004-centella-toner', status: s.resumed ? 'completed' : 'interrupted', detail: s.resumed ? 'reel_1792318801 · resumed · completed' : 'reel_1792318801 · PID 40624 exited during rendering_video', resumable: !s.resumed }
+    ].filter(Boolean).map(j => ({ ...j, chipBg: chip(j.status)[0], chipFg: chip(j.status)[1], onResume: () => { this.setState({ resumed: true }); } }));
+    return {
+      bgs: TILES.map((t, i) => ({ src: t.bg, opacity: i === s.focus ? 0.9 : 0 })),
+      tiles: TILES.map((t, i) => {
+        const f = i === s.focus, size = f ? 184 : 136;
+        const badge = t.id === 'jobs' && !s.resumed ? '1' : t.id === 'health' ? '2' : t.id === 'storyboard' ? '!' : '';
+        return { glyph: t.glyph, label: t.label, img: t.img || '', noImg: !t.img, glyphSize: f ? '56px' : '40px', badge, badgeBg: t.id === 'storyboard' ? 'oklch(0.78 0.14 70)' : 'oklch(0.75 0.14 25)',
+          onClick: () => (f ? this.open(i) : this.setState({ focus: i })),
+          style: { position: 'relative', flex: 'none', width: size + 'px', height: size + 'px', borderRadius: '18px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.25s cubic-bezier(.2,.8,.2,1)', background: f ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.09)', backdropFilter: 'blur(12px)', boxShadow: f ? '0 0 0 3px #0b0d12, 0 0 0 6px #fff, 0 24px 60px rgba(0,0,0,0.5)' : 'none' } };
+      }),
+      cur: { ...cur, meta: cur.id === 'jobs' && s.running ? (live ? `Running · ${ALL[s.step]} · step ${s.step + 1} of ${ALL.length}` : 'Finished · bundle ready') : cur.meta },
+      openCur: () => this.open(s.focus),
+      is: Object.fromEntries(TILES.map((t, i) => [t.id, i === s.focus])),
+      screens: { create: s.screen === 'create', job: s.screen === 'job', review: s.screen === 'review', connect: s.screen === 'connect' },
+      goHome: () => this.setState({ screen: 'home' }),
+      goCreate: () => this.setState({ screen: 'create' }),
+      formats: FORMATS.map(([id, label, flow]) => ({ label, flow, onClick: () => this.setState({ format: id, screen: 'create' }) })),
+      ledger,
+      thumbs: [['A', 'Split versus', IMG.tA], ['B', 'Big score / price', IMG.tB], ['C', 'Bold hook', IMG.tC]].map(([v, name, src]) => ({ v, name, src, outline: s.thumb === v ? '3px solid #fff' : '3px solid transparent', onClick: () => this.setState({ thumb: v }) })),
+      bundles: [
+        { title: 'SKIN1004 Centella Toner', meta: '17 Oct · 24 files · TikTok/Shopee · Threads · YouTube', img: IMG.tA },
+        { title: 'SKIN1004 affiliate (v1)', meta: '16 Oct · legacy card template', img: IMG.tB },
+        { title: 'Desk mat kulit PU', meta: '16 Oct · full bundle', img: IMG.desk }
+      ],
+      checks: [
+        ['AI provider (script, strategy, SEO)', 'Gemini 3.1 Pro · youtube-automation-agent', true],
+        ['Reel spec linter', 'reel_spec.py · claim guard + 6-word cap', true],
+        ['Voice', 'Edge-TTS id-ID-GadisNeural', true],
+        ['SFX + BGM + mastering', 'warm_pad · -14 LUFS EBU R128', true],
+        ['Video render', 'Remotion 4.0 · AffiliateReel', true],
+        ['FFmpeg / ffprobe', 'Shared by both systems', true],
+        ['Jagdpanzer worker', 'pc-main · pull-only, zero inbound ports', true],
+        ['AegisBrain control plane', 'MCP + Telegram /media', true],
+        ['Google Drive sync', 'Last run skipped · python engine/media_cli.py gdrive login', false],
+        ['YouTube upload', 'Not connected · npm run credentials:setup', false]
+      ].map(([name, note, ok]) => ({ name, note, mark: ok ? '✓' : '✗', color: ok ? 'oklch(0.75 0.14 150)' : 'oklch(0.75 0.14 25)' })),
+      enabledTools: TOOLS.filter(([k]) => isOn(k)).map(([name]) => ({ name })),
+      settings: [['AI provider', 'Gemini 3.1 Pro'], ['Voice', 'id-ID-GadisNeural · +12%'], ['Loudness', '-14 LUFS'], ['BGM', 'warm_pad'], ['Default privacy', 'Private'], ['Bundle sync', 'G:\\My Drive\\MediaFabric']].map(([k, v]) => ({ k, v })),
+      sources: [['strategy', 'Strategy agent picks'], ['affiliator', 'Affiliator product'], ['sentence', 'One sentence']].map(([id, name]) => ({ name, ...sel(s.source === id), onClick: () => this.setState({ source: id }) })),
+      sourceLabel: { strategy: 'Topic (optional)', affiliator: 'Product ID from affiliator', sentence: 'Describe the product' }[s.source],
+      sourcePlaceholder: { strategy: 'Leave empty and the Strategy agent picks one', affiliator: 'prod_003', sentence: 'Mini Sealer Snack harga 25 ribu, rapet dalam 3 detik…' }[s.source],
+      topic: s.topic, onTopic: (e) => this.setState({ topic: e.target.value }),
+      formatPills: FORMATS.map(([id, label]) => ({ name: label, ...sel(id === s.format), onClick: () => this.setState({ format: id }) })),
+      formatFlow: fmt[2],
+      platforms: Object.entries(PLATFORMS).map(([id, [name]]) => ({ name, ...sel(id === s.platform), onClick: () => this.setState({ platform: id }) })),
+      ctaText: PLATFORMS[s.platform][1],
+      startStoryboard: () => this.setState({ screen: 'review', focus: 2 }),
+      startProduce: () => this.produce(0),
+      lanes,
+      jobMeta: live ? `${ALL[s.step]} · step ${s.step + 1} of ${ALL.length} · ${fmt[1]} · ${PLATFORMS[s.platform][0]}` : done ? 'Finished · bundle ready in output/bundles' : 'No job running · start one from New reel',
+      jobTitle: s.jobTitle,
+      logs: s.running ? LOGS.slice(0, Math.min(s.step + (live ? 1 : 0), LOGS.length)).map((l, i) => `${l}${live && i === s.step ? ' …' : ''}`) : [],
+      tools: TOOLS.map(([name, desc]) => ({ name, desc, bg: isOn(name) ? 'oklch(0.6 0.14 150)' : 'rgba(255,255,255,0.2)', knob: isOn(name) ? '19px' : '3px', onClick: () => this.setState(p => ({ toolsOff: { ...p.toolsOff, [name]: !p.toolsOff[name] } })) })),
+      snippet: JSON.stringify({ service: 'media', action: 'produce', payload: { spec: 'templates/reels/skin1004-centella-toner.json' }, idempotency_key: 'mcp_…', callback_url: 'optional' }, null, 2),
+      calls: [
+        { t: '10:20', what: 'Claude → media.produce(skin1004)', res: 'interrupted', color: 'oklch(0.75 0.14 25)' },
+        { t: '10:44', what: 'Telegram → media.produce(skin1004)', res: 'completed', color: 'oklch(0.75 0.14 150)' },
+        { t: '19:02', what: 'Claude → media.status()', res: 'ok', color: 'oklch(0.75 0.14 150)' },
+        { t: '19:03', what: 'Claude → yt.publish_content(41)', res: 'off · needs approval', color: 'oklch(0.78 0.14 70)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

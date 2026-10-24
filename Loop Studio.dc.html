@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:{{ accent }};text-decoration:none}a:hover{color:#fff}button,input,textarea{font-family:inherit}</style></helmet>
+<div data-screen-label="Loop Studio" style="position:relative;min-height:100vh;background:#0A0C12;overflow:hidden">
+  <sc-if value="{{ showTrash }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeTrash }}" style="position:fixed;inset:0;z-index:50;background:rgba(5,6,10,0.72);display:flex;align-items:center;justify-content:center;padding:24px">
+      <div onClick="{{ stopProp }}" style="width:min(720px,100%);max-height:80vh;overflow:auto;background:#141821;border:1px solid rgba(244,247,252,0.1);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,0.6)">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:26px;font-weight:600">Trash</span><span style="font-size:13px;color:rgba(232,237,245,0.6)">Items are deleted for good after 7 days.</span><button onClick="{{ closeTrash }}" style="margin-left:auto;height:36px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Close</button></div>
+        <sc-for list="{{ trashItems }}" as="ti" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:10px;border-radius:14px;background:rgba(244,247,252,0.05)"><div style="aspect-ratio:16/9;border-radius:8px;background:{{ ti.bg }};background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:{{ accent }}">{{ ti.badge }}</div><div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ti.name }}</span><span style="font-size:12px;color:rgba(232,237,245,0.55)">{{ ti.when }}</span></div><div style="display:flex;gap:6px"><button onClick="{{ ti.restore }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:12.5px;font-weight:700;cursor:pointer">Restore</button><button onClick="{{ ti.purge }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.08);color:oklch(0.75 0.17 25);font-size:12.5px;font-weight:700;cursor:pointer">Delete forever</button></div></div></sc-for>
+        <sc-if value="{{ trashEmpty }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:rgba(232,237,245,0.6)">Trash is empty.</span></sc-if>
+        <sc-if value="{{ trashHas }}" hint-placeholder-val="{{ false }}"><button onClick="{{ emptyTrash }}" style="align-self:flex-start;height:38px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.08);color:oklch(0.75 0.17 25);font-size:12.5px;font-weight:700;cursor:pointer">Empty trash now</button></sc-if>
+      </div>
+    </div>
+  </sc-if>
+  <div style="position:absolute;inset:-60px;background-image:{{ themeBg }};background-size:cover;background-position:center;opacity:{{ themeOpacity }};filter:blur(40px);transition:opacity 0.4s"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.5),rgba(10,12,18,0.92) 60%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:16px;padding:20px 32px;flex-wrap:wrap">
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <div style="display:flex;flex-direction:column;gap:3px;flex:1 1 260px;min-width:220px">
+      <span style="font-size:13px;font-weight:600;color:{{ accent }}">Music &amp; Live Wallpaper template</span>
+      <span style="font-size:22px;font-weight:600;letter-spacing:-0.01em">Loop Studio</span>
+    </div>
+    <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:14px;padding:4px">
+      <sc-for list="{{ formats }}" as="fm" hint-placeholder-count="2"><button onClick="{{ fm.onClick }}" style="height:36px;padding:0 16px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:{{ fm.bg }};color:{{ fm.fg }}">{{ fm.label }}</button></sc-for>
+    </div>
+    <button onClick="{{ togglePlay }}" style="height:44px;padding:0 22px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:#F4F7FC;color:#0A0C12">{{ playLabel }}</button>
+  </div>
+
+  <div style="position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,400px);gap:24px;padding:0 32px 28px">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div style="display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,0.6);border-radius:22px;padding:{{ pad }};box-shadow:0 30px 80px rgba(0,0,0,0.5);min-height:320px">
+        <div ref="{{ stageRef }}" onClick="{{ onStageClick }}" onPointerDown="{{ onStageDown }}" onPointerMove="{{ onStageMove }}" onPointerUp="{{ onStageUp }}" style="touch-action:none;position:relative;width:{{ viewW }};height:{{ viewH }};max-width:100%;max-height:66vh;aspect-ratio:{{ ar }};cursor:{{ stageCursor }}">
+          <canvas ref="{{ canvasRef }}" width="{{ cw }}" height="{{ ch }}" style="display:block;width:100%;height:100%;border-radius:{{ radius }};background:#000"></canvas>
+          <sc-if value="{{ showElems }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;overflow:hidden;border-radius:{{ radius }};pointer-events:none"><div style="position:absolute;inset:0;transform:scale(1.08);background-image:{{ elemBg }};background-size:100% 100%;opacity:0.45;mix-blend-mode:screen"></div></div><sc-for list="{{ elemTags }}" as="et" hint-placeholder-count="0"><span style="position:absolute;left:{{ et.left }};top:{{ et.top }};transform:translate(-50%,-50%);font-size:11px;font-weight:800;background:rgba(10,12,18,0.85);color:{{ et.pal }};padding:3px 7px;border-radius:7px;pointer-events:none;white-space:nowrap">{{ et.text }}</span></sc-for></sc-if>
+          {{ pathOverlay }}
+          <sc-for list="{{ markers }}" as="mk" hint-placeholder-count="0"><div onPointerDown="{{ mk.onDown }}" style="position:absolute;left:{{ mk.left }};top:{{ mk.top }};width:{{ mk.size }};aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:2px {{ mk.dash }} {{ mk.color }};background:{{ mk.fill }};pointer-events:{{ mk.pe }};cursor:{{ mk.cursor }}"><span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;font-size:11px;font-weight:800;background:rgba(10,12,18,0.85);color:{{ mk.color }};padding:2px 6px;border-radius:6px">{{ mk.label }}</span></div></sc-for>
+          <sc-if value="{{ stageHint }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:13px;font-weight:800;background:rgba(10,12,18,0.85);padding:6px 12px;border-radius:10px;pointer-events:none;white-space:nowrap">{{ stageHint }}</span></sc-if>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:rgba(232,237,245,0.65)">
+        <span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-weight:600;color:#F4F7FC"><span style="width:8px;height:8px;border-radius:50%;background:{{ dot }}"></span>{{ status }}</span>
+        <span>Loop {{ loopSec }}s · everything repeats seamlessly, so the clip can be extended to hours.</span>
+      </div>
+      <div style="background:{{ panelBg }};border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:{{ panelBlur }}">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">WALLPAPER</span><button onClick="{{ openTrash }}" style="margin-left:auto;height:30px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.08);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Trash ({{ trashCount }})</button></div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:{{ accent }}">AEGIS REALMS · 4K</span><div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:10px;padding:3px"><sc-for list="{{ realmModes }}" as="rm" hint-placeholder-count="2"><button onClick="{{ rm.onClick }}" style="height:28px;padding:0 10px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:{{ rm.bg }};color:{{ rm.fg }}">{{ rm.label }}</button></sc-for></div><span style="font-size:12px;color:rgba(232,237,245,0.55)">{{ realmNote }}</span></div>
+        <div style="display:flex;gap:10px;overflow-x:auto;padding:4px">
+          <sc-for list="{{ realms }}" as="rl" hint-placeholder-count="0"><div onClick="{{ rl.onClick }}" title="{{ rl.name }}" style="position:relative;flex:none;width:150px;aspect-ratio:16/9;border-radius:12px;cursor:pointer;background:{{ rl.bg }};background-size:cover;background-position:center;box-shadow:{{ rl.ring }}"><span style="position:absolute;left:6px;bottom:6px;right:6px;font-size:10.5px;font-weight:800;background:rgba(10,12,18,0.78);padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rl.name }}</span></div></sc-for>
+        </div>
+        <div style="display:flex;gap:10px;overflow-x:auto;padding:4px">
+          <sc-for list="{{ walls }}" as="w" hint-placeholder-count="0"><div style="position:relative;flex:none;width:150px;aspect-ratio:16/9"><div onClick="{{ w.onClick }}" style="position:absolute;inset:0;border-radius:12px;cursor:pointer;background:{{ w.bg }};background-size:cover;background-position:center;box-shadow:{{ w.ring }}"></div><sc-if value="{{ w.isVideo }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:6px;bottom:6px;font-size:10px;font-weight:800;background:rgba(10,12,18,0.75);padding:2px 6px;border-radius:6px">VIDEO</span></sc-if><sc-if value="{{ w.canDelete }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.del }}" title="Move to Trash" style="position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(10,12,18,0.78);color:#F4F7FC;font-size:15px;line-height:26px;padding:0;cursor:pointer">×</button></sc-if></div></sc-for>
+          <label style="flex:none;width:150px;aspect-ratio:16/9;border-radius:12px;cursor:pointer;background:rgba(244,247,252,0.06);border:1px dashed rgba(244,247,252,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700">+ Upload<span style="font-size:11px;font-weight:500;color:rgba(232,237,245,0.55)">image or video</span><input type="file" accept="image/*,video/*" onChange="{{ onUpload }}" style="display:none"></label>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ styles }}" as="sy" hint-placeholder-count="6"><button onClick="{{ sy.onClick }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ sy.bg }};color:{{ sy.fg }}">{{ sy.label }}</button></sc-for></div>
+        <textarea value="{{ wallPrompt }}" onChange="{{ onWallPrompt }}" rows="3" placeholder="Describe a wallpaper, e.g. cozy fantasy library at night, rain on tall windows" style="resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:12px;color:#F4F7FC;font-size:14px;line-height:1.5;padding:10px 12px" style-focus="border-color:{{ accent }};outline:none"></textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button onClick="{{ improve }}" style="height:42px;padding:0 14px;border:none;border-radius:12px;background:{{ accentSoft }};color:{{ accent }};font-size:13.5px;font-weight:800;cursor:pointer">{{ improveLabel }}</button>
+          <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:12px;padding:3px"><sc-for list="{{ engines }}" as="en" hint-placeholder-count="2"><button onClick="{{ en.onClick }}" style="height:36px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
+          <sc-if value="{{ needsKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ geminiKey }}" onChange="{{ onKey }}" placeholder="Gemini API key" style="width:190px;height:42px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:12px;color:#F4F7FC;font-size:13px;padding:0 12px"></sc-if>
+          <button onClick="{{ genWall }}" style="margin-left:auto;height:42px;padding:0 18px;border:none;border-radius:12px;background:{{ accent }};color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ genWallLabel }}</button>
+        </div>
+        <span style="font-size:12px;line-height:1.5;color:rgba(232,237,245,0.55)">{{ engineNote }}</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:{{ panelBg }};border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:{{ panelBlur }}">
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">MOTION · PICK ANY</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ fx }}" as="x" hint-placeholder-count="7"><button onClick="{{ x.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:{{ x.bg }};color:{{ x.fg }}">{{ x.label }}</button></sc-for></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:600;width:70px">Intensity</span><input type="range" min="0.2" max="1.6" step="0.1" value="{{ intensity }}" onChange="{{ onIntensity }}" style="flex:1;accent-color:{{ accent }}"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid rgba(244,247,252,0.08)">
+          <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:{{ accent }}">✦ AI MOTION · DESCRIBE IT</span>
+          <span style="font-size:12.5px;line-height:1.5;color:rgba(232,237,245,0.6)">Drag any circle or line to move it. Map positions are shown at the start of the loop; motion follows the picture as it zooms. The AI can't see the picture, so it gets a map: bright spots found in the image (S1, S2…) and spots you mark (M1, M2…). Name a mark, e.g. "lantern", then say "embers rising from the lantern".</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button onClick="{{ toggleMap }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ mapBg }};color:{{ mapFg }}">{{ mapLabel }}</button><button onClick="{{ toggleMark }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ markBg }};color:{{ markFg }}">{{ markLabel }}</button><button onClick="{{ toggleElems }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ elemBtnBg }};color:{{ elemBtnFg }}">◧ Elements</button><button onClick="{{ toggleDraw }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ drawBg }};color:{{ drawFg }}">{{ drawLabel }}</button><span style="font-size:12px;color:rgba(232,237,245,0.55)">{{ mapSummary }}</span></div>
+          <sc-if value="{{ showElems }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:12px;background:rgba(244,247,252,0.04)">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:rgba(232,237,245,0.6)">ELEMENTS</span><button onClick="{{ nameElems }}" style="margin-left:auto;height:28px;padding:0 10px;border:none;border-radius:8px;background:{{ accentSoft }};color:{{ accent }};font-size:12px;font-weight:800;cursor:pointer">{{ nameLabel }}</button></div>
+            <sc-for list="{{ elemList }}" as="el" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:12px 26px 1fr 38px;gap:8px;align-items:center"><span style="width:12px;height:12px;border-radius:3px;background:{{ el.pal }}"></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ el.id }}</span><input value="{{ el.label }}" onChange="{{ el.onLabel }}" placeholder="e.g. sky" style="height:30px;min-width:0;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right;color:rgba(232,237,245,0.6)">{{ el.cover }}</span></div></sc-for>
+            <span style="font-size:12px;line-height:1.45;color:rgba(232,237,245,0.55)">{{ elemNote }}</span>
+          </div></sc-if>
+          <sc-for list="{{ markList }}" as="ml" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:48px 1fr 64px auto 26px;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:oklch(0.83 0.14 80)">{{ ml.id }}</span><input value="{{ ml.label }}" onChange="{{ ml.onLabel }}" placeholder="{{ ml.ph }}" style="height:32px;min-width:0;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 10px"><input type="range" min="0.005" max="0.3" step="0.005" value="{{ ml.r }}" onChange="{{ ml.onR }}" title="Size" style="width:100%;accent-color:{{ accent }}"><button onClick="{{ ml.find }}" disabled="{{ ml.noFind }}" title="Find spots that look like this one" style="height:28px;padding:0 8px;border:none;border-radius:8px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">⌕ Similar</button><button onClick="{{ ml.del }}" title="Remove mark" style="width:26px;height:26px;border:none;border-radius:50%;background:rgba(244,247,252,0.08);color:#F4F7FC;font-size:14px;cursor:pointer;padding:0">×</button></div></sc-for>
+          <sc-if value="{{ hasMatch }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,200,107,0.08);border:1px solid rgba(255,200,107,0.3)">
+            <span style="font-size:13px;font-weight:700;line-height:1.4">{{ matchText }}</span>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;width:62px;color:rgba(232,237,245,0.7)">Similarity</span><input type="range" min="0.5" max="0.95" step="0.01" value="{{ matchThr }}" onChange="{{ onMatchThr }}" style="flex:1;min-width:0;accent-color:oklch(0.83 0.14 80)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;width:38px;text-align:right">{{ matchThrShow }}</span></div>
+            <div style="display:flex;gap:6px"><button onClick="{{ acceptMatch }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:oklch(0.83 0.14 80);color:#0A0C12;font-size:12.5px;font-weight:800;cursor:pointer">{{ acceptLabel }}</button><button onClick="{{ cancelMatch }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Cancel</button></div>
+          </div></sc-if>
+          <div style="display:flex;gap:8px"><input value="{{ motionPrompt }}" onChange="{{ onMotionPrompt }}" onKeyDown="{{ onMotionKey }}" placeholder="e.g. cherry petals drifting left, lanterns glowing softly" style="flex:1;min-width:0;height:42px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:12px;color:#F4F7FC;font-size:13.5px;padding:0 12px" style-focus="border-color:{{ accent }};outline:none"><button onClick="{{ createMotion }}" style="height:42px;padding:0 14px;border:none;border-radius:12px;background:{{ accent }};color:#0A0C12;font-size:13.5px;font-weight:800;cursor:pointer;flex:none">{{ motionLabel }}</button></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ presets }}" as="pr" hint-placeholder-count="0"><div style="display:flex;align-items:center;border-radius:10px;background:{{ pr.bg }}"><button onClick="{{ pr.onClick }}" style="height:34px;padding:0 4px 0 12px;border:none;background:none;color:{{ pr.fg }};font-size:13px;font-weight:700;cursor:pointer">✦ {{ pr.name }}</button><button onClick="{{ pr.del }}" title="Move to Trash" style="height:34px;width:30px;border:none;background:none;color:{{ pr.fg }};opacity:0.6;cursor:pointer;font-size:15px">×</button></div></sc-for></div>
+          <sc-if value="{{ hasAI }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ layers }}" as="ly" hint-placeholder-count="0">
+                <div style="display:flex;flex-direction:column;gap:7px;padding:10px 12px;border-radius:12px;background:rgba(244,247,252,0.05)">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:700;flex:1">{{ ly.title }}</span><input type="color" value="{{ ly.hex }}" onChange="{{ ly.onColor }}" title="Colour" style="width:30px;height:26px;border:none;background:none;padding:0;cursor:pointer"><button onClick="{{ ly.del }}" title="Remove layer" style="width:26px;height:26px;border:none;border-radius:50%;background:rgba(244,247,252,0.08);color:#F4F7FC;font-size:14px;cursor:pointer;padding:0">×</button></div>
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;width:62px;color:rgba(232,237,245,0.7)">Place at</span><select value="{{ ly.anchor }}" onChange="{{ ly.onAnchor }}" style="flex:1;min-width:0;height:30px;background:#161A24;border:1px solid rgba(244,247,252,0.12);border-radius:8px;color:#F4F7FC;font-size:12.5px;padding:0 6px"><sc-for list="{{ anchorOpts }}" as="ao" hint-placeholder-count="0"><option value="{{ ao.id }}">{{ ao.label }}</option></sc-for></select></div>
+                  <sc-for list="{{ ly.ctl }}" as="ct" hint-placeholder-count="0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;width:62px;color:rgba(232,237,245,0.7)">{{ ct.label }}</span><input type="range" min="{{ ct.min }}" max="{{ ct.max }}" step="{{ ct.step }}" value="{{ ct.value }}" onChange="{{ ct.onChange }}" style="flex:1;min-width:0;accent-color:{{ accent }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;width:38px;text-align:right;color:rgba(232,237,245,0.7)">{{ ct.show }}</span></div></sc-for>
+                </div>
+              </sc-for>
+              <div style="display:flex;gap:8px"><input value="{{ adjustPrompt }}" onChange="{{ onAdjustPrompt }}" onKeyDown="{{ onAdjustKey }}" placeholder="Adjust: e.g. fewer petals, only around M1" style="flex:1;min-width:0;height:40px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 10px" style-focus="border-color:#8DEBFF;outline:none"><button onClick="{{ adjust }}" style="height:40px;padding:0 12px;border:none;border-radius:10px;background:{{ accentSoft }};color:{{ accent }};font-size:13px;font-weight:800;cursor:pointer;flex:none">{{ adjustLabel }}</button></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasVideoPrompt }}" hint-placeholder-val="{{ false }}"><button onClick="{{ copyVideoPrompt }}" style="align-self:flex-start;height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Copy animate prompt for Veo / Kling</button></sc-if>
+        </div>
+      </div>
+
+      <div style="background:{{ panelBg }};border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:{{ panelBlur }}">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">MUSIC</span>
+          <div style="margin-left:auto;display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:10px;padding:3px"><sc-for list="{{ musicModes }}" as="mm" hint-placeholder-count="2"><button onClick="{{ mm.onClick }}" style="height:30px;padding:0 12px;border:none;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;background:{{ mm.bg }};color:{{ mm.fg }}">{{ mm.label }}</button></sc-for></div>
+        </div>
+        <sc-if value="{{ isGen }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><sc-for list="{{ moods }}" as="md" hint-placeholder-count="5"><button onClick="{{ md.onClick }}" style="height:40px;padding:0 10px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;text-align:left;background:{{ md.bg }};color:{{ md.fg }}">{{ md.label }}</button></sc-for></div>
+            <div style="display:flex;gap:8px;align-items:center"><button onClick="{{ newSeed }}" style="height:36px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">↻ New melody</button><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(232,237,245,0.5)">seed {{ seed }}</span></div>
+            <span style="font-size:12.5px;line-height:1.5;color:rgba(232,237,245,0.6)">Generated live in your browser from synth pads, bass, a soft melody and rain. It’s original, so there’s no copyright claim. It loops exactly with the picture.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <label style="height:44px;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ uploadLabel }}<input type="file" accept="audio/*" onChange="{{ onMusic }}" style="display:none"></label>
+            <span style="font-size:12.5px;line-height:1.5;color:rgba(232,237,245,0.6)">Use tracks you own or are licensed to monetize, such as the YouTube Audio Library or AI music whose plan allows commercial use. Don't use game soundtracks.</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:600;width:70px">Volume</span><input type="range" min="0" max="1" step="0.05" value="{{ volume }}" onChange="{{ onVolume }}" style="flex:1;accent-color:{{ accent }}"></div>
+      </div>
+
+      <div style="background:linear-gradient(160deg,{{ accentGlow }},rgba(22,26,36,0.82) 70%);border:1px solid {{ accentLine }};border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:{{ panelBlur }}">
+        <span style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:{{ accent }}">EXPORT</span>
+        <div style="display:flex;gap:6px;align-items:center"><span style="font-size:13px;font-weight:600">Loop length</span><sc-for list="{{ loops }}" as="lp" hint-placeholder-count="3"><button onClick="{{ lp.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;background:{{ lp.bg }};color:{{ lp.fg }}">{{ lp.label }}</button></sc-for></div>
+        <button onClick="{{ record }}" style="height:50px;border:none;border-radius:14px;background:{{ recBg }};color:#0A0C12;font-size:15px;font-weight:800;cursor:pointer">{{ recLabel }}</button>
+        <sc-if value="{{ hasFile }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="{{ fileUrl }}" download="{{ fileName }}" style="height:44px;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">↓ Download {{ fileName }}</a>
+            <span style="font-size:12.5px;color:rgba(232,237,245,0.7)">Make it 1 hour on your computer (FFmpeg):</span>
+            <pre style="margin:0;white-space:pre-wrap;word-break:break-all;background:rgba(10,12,18,0.6);border-radius:10px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.5;color:rgba(232,237,245,0.85)">{{ ffmpeg }}</pre>
+            <button onClick="{{ copyFfmpeg }}" style="align-self:flex-start;height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Copy command</button>
+          </div>
+        </sc-if>
+        <button onClick="{{ writeMeta }}" style="height:40px;border:none;border-radius:12px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ metaLabel }}</button>
+        <sc-if value="{{ meta }}" hint-placeholder-val="{{ false }}"><pre style="margin:0;white-space:pre-wrap;font-family:'Manrope',sans-serif;font-size:13px;line-height:1.55;color:rgba(232,237,245,0.88)">{{ meta }}</pre></sc-if>
+        <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:600;color:{{ accent }}">{{ note }}</span></sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Aurora&quot;,&quot;Starfall&quot;,&quot;Citadel&quot;,&quot;Megacity&quot;],&quot;default&quot;:&quot;Aurora&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#8DEBFF&quot;,&quot;#B79CFF&quot;,&quot;#FFC86B&quot;,&quot;#7CF0B0&quot;],&quot;default&quot;:&quot;#8DEBFF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;glass&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+const AEGIS = [['01', 'Citadel Twilight', '01_citadel_twilight'], ['02', 'Mystical Forest Shrine', '02_mystical_forest_shrine'], ['03', 'Mountain Aurora Fortress', '03_mountain_aurora_fortress', '03_mountain_aurora_snow'], ['04', 'Celestial Dunes Oasis', '04_celestial_dunes_oasis'], ['05', 'Floating Sky Citadel', '05_floating_sky_citadel'], ['06', 'Volcanic Obsidian Forge', '06_volcanic_obsidian_forge'], ['07', 'Sunken Coral Atlantis', '07_sunken_coral_atlantis'], ['08', 'Cyber Aegis Megacity', '08_cyber_aegis_megacity'], ['09', 'Autumn Dragon Valley', '09_autumn_dragon_valley'], ['10', 'Celestial Starfall Spire', '10_celestial_starfall_spire']].map(([id, name, base, live]) => ({ id, name, jpg: 'aegis/' + base + '_4k.jpg', mp4: 'aegis/' + (live || base) + '_live.mp4' }));
+const WALLS = ['assets/wall_aurora.jpg', 'assets/wall_starfall.jpg', 'assets/wall_citadel.jpg', 'assets/wall_megacity.jpg'];
+const FX = [['zoom', 'Slow zoom'], ['drift', 'Drift'], ['rain', 'Rain'], ['snow', 'Snow'], ['fireflies', 'Fireflies'], ['flicker', 'Light flicker'], ['vignette', 'Vignette']];
+const MOODS = {
+  night: { label: 'Calm night', root: 57, scale: [0, 2, 3, 5, 7, 8, 10], prog: [0, 5, 3, 4], cutoff: 1100, rain: 0, wave: 'sine' },
+  lofi: { label: 'Rainy lofi', root: 53, scale: [0, 2, 4, 5, 7, 9, 11], prog: [1, 4, 0, 5], cutoff: 1400, rain: 0.22, wave: 'triangle' },
+  dungeon: { label: 'Dungeon ambience', root: 50, scale: [0, 1, 3, 5, 7, 8, 10], prog: [0, 0, 1, 5], cutoff: 700, rain: 0, wave: 'sawtooth' },
+  space: { label: 'Space drift', root: 55, scale: [0, 2, 4, 6, 7, 9, 11], prog: [0, 1, 4, 3], cutoff: 1800, rain: 0, wave: 'sine' },
+  village: { label: 'Cozy village', root: 60, scale: [0, 2, 4, 7, 9, 12, 14], prog: [0, 3, 4, 2], cutoff: 2200, rain: 0.08, wave: 'triangle' }
+};
+const rng = (a) => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+const TRASH_DAYS = 7;
+const STYLES = { painterly: ['Painterly fantasy', 'painterly fantasy concept art, matte painting, rich brushwork'], anime: ['Anime background', 'anime background art, soft cel shading, luminous sky, clean painted details'], cinematic: ['Cinematic 3D', 'cinematic 3D render, volumetric lighting, depth of field, ray-traced glow'], pixel: ['Pixel art', '16-bit pixel art, crisp pixels, limited palette'], watercolor: ['Watercolor', 'watercolor illustration, soft washes, paper texture'], photo: ['Photoreal', 'photorealistic, 35mm lens, natural light, high dynamic range'] };
+const db = { p: null,
+  open() { return this.p || (this.p = new Promise((res, rej) => { const r = indexedDB.open('ds_loop', 1); r.onupgradeneeded = () => r.result.createObjectStore('items', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); })); },
+  async all() { const d = await this.open(); return new Promise(res => { const q = d.transaction('items').objectStore('items').getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => res([]); }); },
+  async put(v) { const d = await this.open(); return new Promise(res => { const t = d.transaction('items', 'readwrite'); t.objectStore('items').put(v); t.oncomplete = res; t.onerror = res; }); },
+  async del(id) { const d = await this.open(); return new Promise(res => { const t = d.transaction('items', 'readwrite'); t.objectStore('items').delete(id); t.oncomplete = res; t.onerror = res; }); } };
+const cl = (v, a, b, d) => { v = +v; return isFinite(v) ? Math.min(b, Math.max(a, v)) : d; };
+const pair = (x, a, b, d0, d1) => [cl((x || [])[0], a, b, d0), cl((x || [])[1], a, b, d1)];
+const clampRecipe = (r) => ({
+  name: String(r.name || 'AI motion').slice(0, 24),
+  camera: { zoom: cl(r.camera && r.camera.zoom, 0, 0.08, 0), driftX: cl(r.camera && r.camera.driftX, 0, 0.04, 0), driftY: cl(r.camera && r.camera.driftY, 0, 0.03, 0) },
+  layers: (Array.isArray(r.layers) ? r.layers : []).slice(0, 6).map(l => { const anchor = /^[SME]\d{1,2}\*?$/.test(l.anchor || '') ? l.anchor : '';
+    return l.type === 'fog' ? { type: 'fog', color: String(l.color || 'rgba(200,220,255,1)'), opacity: cl(l.opacity, 0.02, 0.5, 0.15), speed: Math.round(cl(l.speed, 0, 3, 1)), height: pair(l.height, 0, 1, 0.5, 1) }
+    : l.type === 'light' ? { type: 'light', anchor, color: String(l.color || '#ffcc88'), amount: cl(l.amount, 0, 0.3, 0.08), pulse: Math.round(cl(l.pulse, 0, 12, 2)), x: cl(l.x, 0, 1, 0.5), y: cl(l.y, 0, 1, 0.5), radius: cl(l.radius, 0, 1, 0) }
+    : { type: 'particles', anchor, shape: ['dot', 'streak', 'petal', 'glow', 'star'].includes(l.shape) ? l.shape : 'dot', count: Math.round(cl(l.count, 1, 300, 60)), color: String(l.color || '#ffffff'), size: pair(l.size, 0.5, 40, 2, 4), opacity: cl(l.opacity, 0.05, 1, 0.7), direction: cl(l.direction, 0, 360, 90), speed: Math.round(cl(l.speed, 0, 12, 2)), sway: cl(l.sway, 0, 60, 0), twinkle: cl(l.twinkle, 0, 1, 0), spin: Math.round(cl(l.spin, 0, 3, 0)), spread: cl(l.spread, 0.5, 4, 1), travel: cl(l.travel, 0.05, 1, 0.25), area: pair(l.area, 0, 1, 0, 1), xRange: pair(l.xRange, 0, 1, 0, 1), blend: l.blend === 'add' ? 'add' : 'normal' }; }),
+  videoPrompt: String(r.videoPrompt || '') });
+const hexOf = (c) => { if (/^#[0-9a-f]{6}$/i.test(c || '')) return c; const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/i.exec(c || ''); return m ? '#' + [m[1], m[2], m[3]].map(v => (+v).toString(16).padStart(2, '0')).join('') : '#ffffff'; };
+const MOTION_SYS = 'You design subtle, seamlessly looping motion for one specific wallpaper in an ambient music video. You only configure this engine and you cannot see the image, so rely on the SCENE CONTEXT you are given (bright spots S1.., creator marks M1.., colour bands, horizon). Return ONLY JSON: {"name":"2-3 words","camera":{"zoom":0-0.08,"driftX":0-0.04,"driftY":0-0.03},"layers":[up to 6 of: {"type":"particles","shape":"dot|streak|petal|glow|star","anchor":"S1|M1|M1*|E1|empty" (M1* = M1 plus its similar copies; E1 = an element region, particles stay inside its shape),"spread":0.5-4 (area around the anchor, in anchor radii),"travel":0.05-1 (anchored moving particles: distance before fading, fraction of height),"count":1-300,"color":"#hex","size":[min,max] px 0.5-40,"opacity":0.05-1,"direction":degrees (90 falls down, 270 rises, 0 moves right, 180 moves left),"speed":0-12 whole laps per loop (0 stays in place),"sway":0-60 px,"twinkle":0-1,"spin":0-3,"area":[top,bottom] 0-1 (used when no anchor),"xRange":[left,right] 0-1 (used when no anchor),"blend":"add|normal"} | {"type":"fog","color":"#hex","opacity":0.02-0.5,"speed":0-3,"height":[top,bottom]} | {"type":"light","anchor":"S1|M1|M1*|E1|empty" (M1* = M1 plus its similar copies; E1 = an element region, particles stay inside its shape),"color":"#hex","amount":0-0.3,"pulse":0-12 whole pulses per loop,"x":0-1,"y":0-1,"radius":0-1 (0 tints the whole screen)}],"videoPrompt":"image-to-video prompt for Veo or Kling describing the same motion on this exact wallpaper, camera locked or very slow push-in, seamless loop, no new objects"}. Marks are circles or drawn LINES. Particles anchored to a line flow along it from its first to its last point when speed > 0 (rivers, waterfalls, wind, light trails) or are scattered along it when speed is 0 (fireflies over a hedge, sparkles on a roof edge); spread sets the width around the line; lights on a line glow along its length. Use element anchors for area effects: rain or stars only over the sky element, mist over water or ground, fireflies over grass. Marks carry a kind tag (light source, water, structure...) that tells you what they are. Rules: when the request names a thing that matches a mark label, anchor to that mark, and when it says all or every (all lanterns, every window) use the group anchor like M1*; glows, candle or window flicker, embers, smoke and sparkles sit on the matching mark or the best warm bright spot; stars and aurora stay above the horizon, fireflies and ground fog below it; rain and snow cover the full width unless the request limits them; use colours taken from the spot and band colours so motion blends into the art; prefer a few precise layers; rain about speed 6-10, snow 1-3, petals 1-2, embers 1-3 with travel 0.15-0.35; nothing flashes faster than 3 times per second.';
+
+class Component extends DCLogic {
+  state = { realm: null, realmLive: true, elems: (() => { try { return JSON.parse(localStorage.getItem('ds_loop_elements') || '{}'); } catch (e) { return {}; } })(), showElems: false, naming: false, recog: null, visionUsed: null, drawMode: false, draftPts: null, sceneMap: null, showMap: false, markMode: false, marks: (() => { try { return JSON.parse(localStorage.getItem('ds_loop_marks') || '{}'); } catch (e) { return {}; } })(), adjustPrompt: '', adjustBusy: false, items: [], showTrash: false, style: 'painterly', engine: 'pollinations', geminiKey: '', improving: false, motionPrompt: '', motionBusy: false, ai: null, aiId: null, tall: false, wall: WALLS[0], custom: [], fx: { zoom: true, drift: true, fireflies: true, vignette: true }, intensity: 1, musicMode: 'gen', mood: 'night', seed: 7, volume: 0.7, loop: 60, playing: false, rec: null, fileUrl: '', fileName: '', wallPrompt: '', genBusy: false, meta: '', metaBusy: false, note: '', musicName: '' };
+  canvasRef = (el) => { this.canvas = el; };
+  componentDidMount() {
+    this.media = null; this.urls = {}; this.loadWall(this.state.wall);
+    try { this.setState({ engine: localStorage.getItem('ds_img_engine') || 'pollinations', geminiKey: localStorage.getItem('ds_gemini_key') || '' }); } catch (e) {}
+    this.loadItems();
+    this.t0 = performance.now();
+    const frame = () => { this.draw(); this.raf = requestAnimationFrame(frame); };
+    this.raf = requestAnimationFrame(frame);
+    this.onKey = (e) => { if (e.key === 'Escape' && !/INPUT|TEXTAREA/.test(e.target.tagName)) location.href = 'Home.dc.html'; };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); window.removeEventListener('keydown', this.onKey); this.stopAudio(); }
+  flash(msg) { this.setState({ note: msg }); clearTimeout(this.nt); this.nt = setTimeout(() => this.setState({ note: '' }), 3000); }
+
+  async loadItems() {
+    let items = []; try { items = await db.all(); } catch (e) {}
+    const now = Date.now(), keep = [];
+    for (const it of items) { if (it.deletedAt && now - it.deletedAt > TRASH_DAYS * 864e5) await db.del(it.id); else keep.push(it); }
+    keep.sort((a, b) => b.createdAt - a.createdAt);
+    this.setState({ items: keep });
+  }
+  srcOf(it) { if (it.url) return it.url; if (!it.blob) return ''; return this.urls[it.id] || (this.urls[it.id] = URL.createObjectURL(it.blob)); }
+  async addItem(it) { const full = { id: 'i' + Date.now() + Math.floor(Math.random() * 1000), createdAt: Date.now(), deletedAt: null, ...it }; await db.put(full); this.setState(s => ({ items: [full, ...s.items] })); return full; }
+  async patchItem(id, patch) { const it = this.state.items.find(x => x.id === id); if (!it) return; const n = { ...it, ...patch }; await db.put(n); this.setState(s => ({ items: s.items.map(x => x.id === id ? n : x) })); }
+  trashItem(it) {
+    if (it.type === 'wall' && this.state.wall === this.srcOf(it)) { this.setState({ wall: WALLS[0] }); this.loadWall(WALLS[0]); }
+    if (it.type === 'motion' && this.state.aiId === it.id) this.setState({ ai: null, aiId: null });
+    this.patchItem(it.id, { deletedAt: Date.now() }); this.flash('Moved to Trash. It is deleted for good after ' + TRASH_DAYS + ' days.');
+  }
+  async purge(id) { await db.del(id); if (this.urls[id]) { URL.revokeObjectURL(this.urls[id]); delete this.urls[id]; } this.setState(s => ({ items: s.items.filter(x => x.id !== id) })); }
+  async improvePrompt() {
+    const s = this.state; if (!s.wallPrompt.trim() || s.improving) return;
+    this.setState({ improving: true });
+    try {
+      const out = await window.claude.complete({ system: 'You write image prompts for Flux and Gemini image models that produce premium wallpapers for a looping ambient music video. Return ONE paragraph, max 110 words, no preamble, no quotes. Include: subject and setting; a wide composition with one clear focal point and separate foreground, midground and background layers (they make the motion look deep); time of day and lighting (rim light, volumetric light, warm glow sources); atmosphere (mist, rain, floating particles); a tight colour palette; the art style; quality terms (highly detailed, sharp focus, 4k). Keep calm empty areas. No text, no watermark, no logos, no people in focus.', max_tokens: 400,
+        messages: [{ role: 'user', content: 'Idea: ' + s.wallPrompt + '\nStyle: ' + (STYLES[s.style] ? STYLES[s.style][0] : 'any') + '\nFormat: ' + (s.tall ? 'vertical 9:16' : 'wide 16:9') + (s.fx.rain ? '\nIt will have animated rain.' : '') + (s.fx.snow ? '\nIt will have animated snow.' : '') }] });
+      this.setState({ wallPrompt: out.trim().replace(/^"|"$/g, ''), improving: false });
+    } catch (e) { this.setState({ improving: false }); this.flash('Could not improve the prompt: ' + (e.message || e)); }
+  }
+  async createMotion() {
+    const s = this.state; if (!s.motionPrompt.trim() || s.motionBusy) return;
+    this.setState({ motionBusy: true });
+    try {
+      const cur = s.items.find(x => x.type === 'wall' && this.srcOf(x) === s.wall);
+      const text = await window.claude.complete({ system: MOTION_SYS, max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nMotion request: ' + s.motionPrompt }] });
+      const r = clampRecipe(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)));
+      const it = await this.addItem({ type: 'motion', name: r.name, recipe: r, prompt: s.motionPrompt });
+      this.setState({ ai: r, aiId: it.id, motionBusy: false, motionPrompt: '' });
+    } catch (e) { this.setState({ motionBusy: false }); this.flash('Could not create the motion: ' + (e.message || e)); }
+  }
+  analyze(m) {
+    try {
+      const tall = this.state.tall, gw = tall ? 36 : 64, gh = tall ? 64 : 36, c = document.createElement('canvas'); c.width = gw; c.height = gh;
+      const g = c.getContext('2d'), mw = m.naturalWidth || m.videoWidth, mh = m.naturalHeight || m.videoHeight; if (!mw) return;
+      const k = Math.max(gw / mw, gh / mh); g.drawImage(m, (gw - mw * k) / 2, (gh - mh * k) / 2, mw * k, mh * k);
+      const d = g.getImageData(0, 0, gw, gh).data, N = gw * gh, L = new Float32Array(N);
+      let sum = 0; for (let i = 0; i < N; i++) { L[i] = (0.2126 * d[i * 4] + 0.7152 * d[i * 4 + 1] + 0.0722 * d[i * 4 + 2]) / 255; sum += L[i]; }
+      const mean = sum / N; let v = 0; for (let i = 0; i < N; i++) v += (L[i] - mean) * (L[i] - mean);
+      const th = Math.max(0.5, mean + 1.5 * Math.sqrt(v / N)), hex = (i) => '#' + [0, 1, 2].map(q => d[i * 4 + q].toString(16).padStart(2, '0')).join('');
+      const cand = [];
+      for (let y = 1; y < gh - 1; y++) for (let x = 1; x < gw - 1; x++) { const i = y * gw + x, l = L[i]; if (l < th) continue; let top = true; for (let dy = -1; dy <= 1 && top; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && L[(y + dy) * gw + x + dx] > l) { top = false; break; } if (top) cand.push({ x, y, l, i }); }
+      cand.sort((a, b) => b.l - a.l);
+      const spots = [];
+      for (const q of cand) { const fx = (q.x + 0.5) / gw, fy = (q.y + 0.5) / gh; if (spots.some(s2 => Math.hypot(s2.x - fx, (s2.y - fy) * gh / gw) < 0.08)) continue;
+        let n = 0; for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) { const xx = q.x + dx, yy = q.y + dy; if (xx >= 0 && yy >= 0 && xx < gw && yy < gh && L[yy * gw + xx] > q.l * 0.8) n++; }
+        const r = Math.min(0.2, Math.max(0.02, Math.sqrt(n) / gw * 0.7)), rr = d[q.i * 4], bb = d[q.i * 4 + 2];
+        spots.push({ id: 'S' + (spots.length + 1), x: +fx.toFixed(2), y: +fy.toFixed(2), r: +r.toFixed(2), color: hex(q.i), tone: rr > bb + 20 ? 'warm' : bb > rr + 20 ? 'cool' : 'neutral' }); if (spots.length >= 6) break; }
+      const bands = [0, 1, 2, 3].map(b => { let R = 0, G = 0, B = 0, l = 0, n = 0; for (let y = Math.floor(b * gh / 4); y < Math.floor((b + 1) * gh / 4); y++) for (let x = 0; x < gw; x++) { const i = y * gw + x; R += d[i * 4]; G += d[i * 4 + 1]; B += d[i * 4 + 2]; l += L[i]; n++; } return { from: b * 25, to: (b + 1) * 25, color: '#' + [R, G, B].map(z => Math.round(z / n).toString(16).padStart(2, '0')).join(''), lum: +(l / n).toFixed(2) }; });
+      let best = 0, hy = 0.5; for (let y = Math.floor(gh * 0.2); y < Math.floor(gh * 0.8); y++) { let diff = 0; for (let x = 0; x < gw; x++) diff += Math.abs(L[y * gw + x] - L[(y - 1) * gw + x]); if (diff > best) { best = diff; hy = y / gh; } }
+      const hw = tall ? 72 : 128, hh = tall ? 128 : 72, c2 = document.createElement('canvas'); c2.width = hw; c2.height = hh; const g2 = c2.getContext('2d'), k2 = Math.max(hw / mw, hh / mh);
+      g2.drawImage(m, (hw - mw * k2) / 2, (hh - mh * k2) / 2, mw * k2, mh * k2); this.pix = { w: hw, h: hh, d: g2.getImageData(0, 0, hw, hh).data };
+      const K = 5, F = new Float32Array(N * 5);
+      for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) { const i = y * gw + x, tx = (x < gw - 1 ? Math.abs(L[i] - L[i + 1]) : 0) + (y < gh - 1 ? Math.abs(L[i] - L[i + gw]) : 0); F[i * 5] = d[i * 4] / 255; F[i * 5 + 1] = d[i * 4 + 1] / 255; F[i * 5 + 2] = d[i * 4 + 2] / 255; F[i * 5 + 3] = (y / gh) * 0.6; F[i * 5 + 4] = Math.min(1, tx * 4) * 0.5; }
+      const order = Array.from({ length: N }, (_, i) => i).sort((a, b) => L[a] - L[b]);
+      const C = []; for (let c = 0; c < K; c++) { const i = order[Math.floor((c + 0.5) / K * N)]; C.push(Array.from(F.slice(i * 5, i * 5 + 5))); }
+      const asg = new Int8Array(N);
+      for (let it = 0; it < 10; it++) { const S = C.map(() => [0, 0, 0, 0, 0, 0]);
+        for (let i = 0; i < N; i++) { let bi = 0, bd = 1e9; for (let c = 0; c < K; c++) { let dd = 0; for (let q = 0; q < 5; q++) { const t = F[i * 5 + q] - C[c][q]; dd += t * t; } if (dd < bd) { bd = dd; bi = c; } } asg[i] = bi; const s2 = S[bi]; for (let q = 0; q < 5; q++) s2[q] += F[i * 5 + q]; s2[5]++; }
+        S.forEach((s2, c) => { if (s2[5]) for (let q = 0; q < 5; q++) C[c][q] = s2[q] / s2[5]; }); }
+      const smo = new Int8Array(N); for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) { const cnt = [0, 0, 0, 0, 0]; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < gw && yy < gh) cnt[asg[yy * gw + xx]]++; } smo[y * gw + x] = cnt.indexOf(Math.max.apply(null, cnt)); }
+      const cells = Array.from({ length: K }, () => []); for (let i = 0; i < N; i++) cells[smo[i]].push(i);
+      const PAL = ['#5EC8FF', '#FFC86B', '#7CF0B0', '#FF7AA8', '#B79CFF'];
+      const regions = cells.map((cs, c) => { if (cs.length < N * 0.02) return null; let sx = 0, sy = 0, l = gw, r = 0, t = gh, b = 0, R2 = 0, G2 = 0, B2 = 0, tx = 0;
+        cs.forEach(i => { const x = i % gw, y = Math.floor(i / gw); sx += x; sy += y; l = Math.min(l, x); r = Math.max(r, x); t = Math.min(t, y); b = Math.max(b, y); R2 += d[i * 4]; G2 += d[i * 4 + 1]; B2 += d[i * 4 + 2]; tx += F[i * 5 + 4]; }); const n = cs.length;
+        let bi = cs[0], bd = 1e9; cs.forEach(i => { const ddx = i % gw - sx / n, ddy = Math.floor(i / gw) - sy / n, dd = ddx * ddx + ddy * ddy; if (dd < bd) { bd = dd; bi = i; } });
+        return { ri: c, tx: +(((bi % gw) + 0.5) / gw).toFixed(3), ty: +((Math.floor(bi / gw) + 0.5) / gh).toFixed(3), x: +((sx / n + 0.5) / gw).toFixed(2), y: +((sy / n + 0.5) / gh).toFixed(2), left: +(l / gw).toFixed(2), right: +((r + 1) / gw).toFixed(2), top: +(t / gh).toFixed(2), bottom: +((b + 1) / gh).toFixed(2), cover: Math.round(n / N * 100), color: '#' + [R2, G2, B2].map(z => Math.round(z / n).toString(16).padStart(2, '0')).join(''), texture: +(tx / n * 2).toFixed(2), pal: PAL[c] }; })
+        .filter(Boolean).sort((a, b) => a.y - b.y).map((rg, i) => ({ ...rg, id: 'E' + (i + 1) }));
+      this.seg = { gw, gh, assign: smo, cells };
+      const ec = document.createElement('canvas'); ec.width = gw; ec.height = gh; const eg = ec.getContext('2d'), palOf = {}; regions.forEach(rg => { palOf[rg.ri] = rg.pal; });
+      for (let i = 0; i < N; i++) { if (!palOf[smo[i]]) continue; eg.fillStyle = palOf[smo[i]]; eg.fillRect(i % gw, Math.floor(i / gw), 1, 1); }
+      this.setState({ sceneMap: { spots, bands, horizon: +hy.toFixed(2), regions }, match: null });
+      ec.toBlob(bl => { if (!bl) return; if (this.elemObj) URL.revokeObjectURL(this.elemObj); this.elemObj = URL.createObjectURL(bl); this.setState({ elemUrl: this.elemObj }); });
+    } catch (e) { this.pix = null; this.setState({ sceneMap: null, match: null }); }
+  }
+  wallKey() { if (this.state.realm) return 'aegis:' + this.state.realm; const it = this.state.items.find(x => x.type === 'wall' && this.srcOf(x) === this.state.wall); return it ? it.id : this.state.wall; }
+  curMarks() { return this.state.marks[this.wallKey()] || []; }
+  setMarks(list) { const marks = { ...this.state.marks, [this.wallKey()]: list }; try { localStorage.setItem('ds_loop_marks', JSON.stringify(marks)); } catch (e) {} this.setState({ marks }); }
+  anchorOf(id) { if (!id) return null; if (id[0] === 'M') return this.curMarks().find(k => k.id === id) || null; const m = this.state.sceneMap; return m ? m.spots.find(k => k.id === id) || null : null; }
+  toImg(e) { const rc = this.stageEl.getBoundingClientRect(), sx = (e.clientX - rc.left) / rc.width, sy = (e.clientY - rc.top) / rc.height; return [Math.min(1, Math.max(0, 0.5 + (sx - 0.5) / 1.08)), Math.min(1, Math.max(0, 0.5 + (sy - 0.5) / 1.08))]; }
+  pathPoint(mk, t, W, H) {
+    const P = mk.pts; if (!P || P.length < 2) return [P ? P[0][0] : 0.5, P ? P[0][1] : 0.5, 0, 1];
+    let tot = 0; const seg = []; for (let i = 1; i < P.length; i++) { const L = Math.hypot((P[i][0] - P[i - 1][0]) * W, (P[i][1] - P[i - 1][1]) * H); seg.push(L); tot += L; }
+    let dd = Math.min(0.9999, Math.max(0, t)) * tot;
+    for (let i = 0; i < seg.length; i++) { if (dd <= seg[i] || i === seg.length - 1) { const u = seg[i] ? dd / seg[i] : 0, a = P[i], b = P[i + 1], vx = (b[0] - a[0]) * W, vy = (b[1] - a[1]) * H, l = Math.hypot(vx, vy) || 1; return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, -vy / l, vx / l]; } dd -= seg[i]; }
+    return [P[0][0], P[0][1], 0, 1];
+  }
+  expand(As, W, H) { return As.flatMap(a => a.type === 'path' ? [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const q = this.pathPoint(a, i / 7, W, H); return { x: q[0], y: q[1], r: a.r }; }) : [a]); }
+  anchorsOf(id) {
+    if (!id) return []; const grp = id.slice(-1) === '*', base = grp ? id.slice(0, -1) : id;
+    if (base[0] === 'E') { const sm = this.state.sceneMap, rg = sm && sm.regions ? sm.regions.find(k => k.id === base) : null; return rg && this.seg ? [{ type: 'region', ri: rg.ri, x: rg.x, y: rg.y, r: (rg.right - rg.left) * 0.3, left: rg.left, right: rg.right, top: rg.top, bottom: rg.bottom }] : []; }
+    if (base[0] === 'M') { const ms = this.curMarks(); return ms.filter(k => k.id === base || (grp && k.group === base)); }
+    const m = this.state.sceneMap, sp = m ? m.spots.find(k => k.id === base) : null; return sp ? [sp] : [];
+  }
+  findSimilar(id, thr) {
+    const P = this.pix; if (!P) { this.flash('This image can\'t be scanned because its host blocks pixel reading. Download it and use + Upload.'); return; }
+    const mk = this.curMarks().find(k => k.id === id); if (!mk) return;
+    const { w, h, d } = P, rad = Math.max(2, Math.round(mk.r * w)), side = rad * 2;
+    const desc = (cx, cy) => { const hist = new Float32Array(64), grid = new Float32Array(9), cnt = new Float32Array(9); let n = 0, lum = 0;
+      for (let y = 0; y < side; y++) for (let x = 0; x < side; x++) { const xx = cx - rad + x, yy = cy - rad + y; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+        const i = (yy * w + xx) * 4, R = d[i], G = d[i + 1], B = d[i + 2], l = (0.2126 * R + 0.7152 * G + 0.0722 * B) / 255, gi = Math.min(2, Math.floor(y * 3 / side)) * 3 + Math.min(2, Math.floor(x * 3 / side));
+        hist[(R >> 6) * 16 + (G >> 6) * 4 + (B >> 6)]++; grid[gi] += l; cnt[gi]++; lum += l; n++; }
+      if (!n) return null; for (let q = 0; q < 64; q++) hist[q] /= n; const gm = lum / n; for (let q = 0; q < 9; q++) grid[q] = (cnt[q] ? grid[q] / cnt[q] : gm) - gm; return { hist, grid, lum: gm }; };
+    const ref = desc(Math.round(mk.x * w), Math.round(mk.y * h)); if (!ref) return;
+    const step = Math.max(1, Math.round(rad / 2)), found = [];
+    for (let cy = rad; cy <= h - rad; cy += step) for (let cx = rad; cx <= w - rad; cx += step) {
+      const D = desc(cx, cy); if (!D) continue; let hi = 0, gd = 0;
+      for (let q = 0; q < 64; q++) hi += Math.min(ref.hist[q], D.hist[q]);
+      for (let q = 0; q < 9; q++) gd += Math.abs(ref.grid[q] - D.grid[q]);
+      const score = hi * 0.6 + Math.max(0, 1 - gd / 9 * 4) * 0.25 + Math.max(0, 1 - Math.abs(ref.lum - D.lum) * 4) * 0.15;
+      if (score >= thr) found.push({ x: cx / w, y: cy / h, score });
+    }
+    found.sort((a, b) => b.score - a.score);
+    const minD = rad * 2.2 / w, dist = (a, b) => Math.hypot(a.x - b.x, (a.y - b.y) * h / w), all = this.curMarks(), keep = [];
+    for (const c of found) { if (all.some(k => dist(c, k) < minD) || keep.some(k => dist(c, k) < minD)) continue; keep.push({ ...c, r: mk.r }); if (keep.length >= 12) break; }
+    this.setState({ match: { from: id, thr, list: keep }, showMap: true });
+    if (!keep.length) this.flash('Nothing similar at ' + Math.round(thr * 100) + '%. Lower the Similarity slider.');
+  }
+  elemLabels() { return this.state.elems[this.wallKey()] || {}; }
+  setElemLabels(o) { const all = { ...this.state.elems, [this.wallKey()]: o }; try { localStorage.setItem('ds_loop_elements', JSON.stringify(all)); } catch (e) {} this.setState({ elems: all }); }
+  cropFor(mk) {
+    try { const m = this.media; if (!m) return null; const mw = m.naturalWidth || m.videoWidth, mh = m.naturalHeight || m.videoHeight; if (!mw) return null;
+      const tall = this.state.tall, tw = tall ? 288 : 512, th = tall ? 512 : 288, c = document.createElement('canvas'); c.width = tw; c.height = th; const g = c.getContext('2d'), k = Math.max(tw / mw, th / mh);
+      g.drawImage(m, (tw - mw * k) / 2, (th - mh * k) / 2, mw * k, mh * k);
+      if (mk) { g.strokeStyle = '#ff2d55'; g.lineWidth = 3; g.beginPath(); if (mk.type === 'path') mk.pts.forEach(([x, y], i) => i ? g.lineTo(x * tw, y * th) : g.moveTo(x * tw, y * th)); else g.arc(mk.x * tw, mk.y * th, Math.max(5, mk.r * tw), 0, Math.PI * 2); g.stroke(); }
+      return c.toDataURL('image/jpeg', 0.85); } catch (e) { return null; }
+  }
+  async askVision(system, text, dataUrl, max) {
+    if (dataUrl && this.visionOk !== false) {
+      try { const out = await window.claude.complete({ system, max_tokens: max, messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } }, { type: 'text', text }] }] }); this.visionOk = true; return { out, vision: true }; }
+      catch (e) { this.visionOk = false; }
+    }
+    return { out: await window.claude.complete({ system, max_tokens: max, messages: [{ role: 'user', content: text }] }), vision: false };
+  }
+  describeMark(mk) {
+    const P = this.pix, S = this.seg, sm = this.state.sceneMap, lab = this.elemLabels(), pts = mk.type === 'path' ? mk.pts : [[mk.x, mk.y]];
+    let R = 0, G = 0, B = 0, n = 0, tex = 0; const reg = {};
+    if (P) { const rad = Math.max(1, Math.round(mk.r * P.w)); pts.forEach(([fx, fy]) => { const cx = Math.round(fx * P.w), cy = Math.round(fy * P.h); for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) { if (dx * dx + dy * dy > rad * rad) continue; const xx = cx + dx, yy = cy + dy; if (xx < 1 || yy < 1 || xx >= P.w || yy >= P.h) continue; const i = (yy * P.w + xx) * 4; R += P.d[i]; G += P.d[i + 1]; B += P.d[i + 2]; tex += Math.abs(P.d[i] - P.d[i - 4]) + Math.abs(P.d[i + 1] - P.d[i - P.w * 4 + 1]); n++; } }); }
+    if (S) pts.forEach(([fx, fy]) => { const ri = S.assign[Math.min(S.gh - 1, Math.floor(fy * S.gh)) * S.gw + Math.min(S.gw - 1, Math.floor(fx * S.gw))]; reg[ri] = (reg[ri] || 0) + 1; });
+    const top = Object.keys(reg).sort((a, b) => reg[b] - reg[a])[0], rg = sm && sm.regions ? sm.regions.find(r => String(r.ri) === top) : null, parts = [];
+    if (mk.type === 'path') { const a = pts[0], b = pts[pts.length - 1], ang = Math.abs(Math.atan2((b[1] - a[1]) * 9, (b[0] - a[0]) * 16) * 180 / Math.PI); parts.push('drawn from (' + a.map(v => v.toFixed(2)).join(',') + ') to (' + b.map(v => v.toFixed(2)).join(',') + '), ' + (ang < 25 || ang > 155 ? 'mostly horizontal' : ang > 65 && ang < 115 ? 'mostly vertical' : 'diagonal')); }
+    else parts.push('centre (' + mk.x.toFixed(2) + ',' + mk.y.toFixed(2) + '), radius ' + mk.r.toFixed(3) + ' of the width');
+    if (n) { const r = R / n, g = G / n, b = B / n, mx = Math.max(r, g, b), mn = Math.min(r, g, b); parts.push('average colour #' + [r, g, b].map(z => Math.round(z).toString(16).padStart(2, '0')).join('') + ', brightness ' + ((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255).toFixed(2) + ', saturation ' + (mx ? (mx - mn) / mx : 0).toFixed(2) + ', texture ' + (tex / n / 255).toFixed(2)); }
+    if (sm) parts.push((pts[0][1] < sm.horizon ? 'above' : 'below') + ' the horizon at y=' + sm.horizon);
+    if (rg) parts.push('inside element ' + rg.id + (lab[rg.id] ? ' "' + lab[rg.id] + '"' : ''));
+    return { text: parts.join('; '), element: rg ? rg.id : '' };
+  }
+  wallDesc() { const s = this.state, cur = s.items.find(x => x.type === 'wall' && this.srcOf(x) === s.wall); return (cur && cur.prompt) || (s.wall.indexOf('assets/') === 0 ? 'stock fantasy wallpaper' : 'uploaded image'); }
+  async nameElements() {
+    const s = this.state, m = s.sceneMap; if (!m || !m.regions || s.naming) return;
+    this.setState({ naming: true });
+    const txt = 'Wallpaper: ' + this.wallDesc() + '\nHorizon near y=' + m.horizon + '\nRegions (x and y are 0-1, y from the top): ' + m.regions.map(r => r.id + ': centre (' + r.x + ',' + r.y + '), box x ' + r.left + '-' + r.right + ' y ' + r.top + '-' + r.bottom + ', covers ' + r.cover + '%, colour ' + r.color + ', texture ' + r.texture).join('; ') + '\nBright spots: ' + (m.spots.map(p => p.id + ' (' + p.x + ',' + p.y + ') ' + p.tone).join('; ') || 'none');
+    try {
+      const res = await this.askVision('You label the parts of a wallpaper for an animation tool. Give each region a short element name of 1-3 words, like sky, clouds, distant mountains, river, lake, stone path, grass, forest, castle wall, floor, window light. Return ONLY JSON: {"E1":"name",...}. If an image is attached, use it. Otherwise infer from position, colour, texture and the wallpaper description.', txt, this.cropFor(null), 400);
+      const j = JSON.parse(res.out.slice(res.out.indexOf('{'), res.out.lastIndexOf('}') + 1)), o = {}; Object.keys(j).forEach(k => { if (/^E\d+$/.test(k)) o[k] = String(j[k]).slice(0, 30); });
+      this.setElemLabels(o); this.setState({ naming: false, visionUsed: res.vision });
+    } catch (e) { this.setState({ naming: false }); this.flash('Could not name elements: ' + (e.message || e)); }
+  }
+  async recognize(mk) {
+    this.setState({ recog: mk.id });
+    const sm = this.state.sceneMap, desc = this.describeMark(mk), lab = this.elemLabels();
+    const txt = 'Wallpaper: ' + this.wallDesc() + '\nThe creator marked a ' + (mk.type === 'path' ? 'LINE' : 'CIRCLE') + ': ' + desc.text + '\nElements: ' + (sm && sm.regions ? sm.regions.map(r => r.id + ' "' + (lab[r.id] || '?') + '" box x ' + r.left + '-' + r.right + ' y ' + r.top + '-' + r.bottom).join('; ') : 'unknown') + '\nOther marks: ' + (this.curMarks().filter(k => k.id !== mk.id && k.label).map(k => k.id + ' ' + k.label).join(', ') || 'none');
+    try {
+      const res = await this.askVision('You identify what a creator marked on a wallpaper so an animation AI can refer to it by name. If an image is attached, the mark is outlined in red. Return ONLY JSON: {"label":"1-3 words, e.g. lantern, river, window, chimney, waterfall","kind":"light source|water|sky|fire|plant|structure|path|ground|creature|object|weather","confidence":0-1}. Without an image, infer from colour, brightness, position and the wallpaper description, and lower the confidence.', txt, this.cropFor(mk), 200);
+      const j = JSON.parse(res.out.slice(res.out.indexOf('{'), res.out.lastIndexOf('}') + 1));
+      this.setMarks(this.curMarks().map(z => z.id === mk.id ? { ...z, label: z.label || String(j.label || '').slice(0, 30), kind: String(j.kind || '').slice(0, 20), conf: +j.confidence || 0, ai: true, element: desc.element } : z));
+      this.setState({ visionUsed: res.vision });
+    } catch (e) {}
+    this.setState({ recog: null });
+  }
+  sceneContext() {
+    const s = this.state, m = s.sceneMap, marks = this.curMarks(), cur = s.items.find(x => x.type === 'wall' && this.srcOf(x) === s.wall);
+    const out = ['SCENE CONTEXT', 'Canvas: ' + (s.tall ? 'vertical 9:16 (720x1280)' : 'wide 16:9 (1280x720)') + ', loop ' + s.loop + 's. Coordinates are fractions: x 0 left to 1 right, y 0 top to 1 bottom.',
+      'Wallpaper: ' + ((cur && cur.prompt) || (s.wall.indexOf('assets/') === 0 ? 'stock fantasy wallpaper' : 'uploaded image')),
+      'Built-in effects already on (do not duplicate): ' + (FX.filter(([k]) => s.fx[k]).map(([, l]) => l).join(', ') || 'none') + '.'];
+    if (m) { out.push('Bright spots found in the image: ' + (m.spots.map(p => p.id + ' x=' + p.x + ' y=' + p.y + ' r=' + p.r + ' ' + p.tone + ' ' + p.color).join('; ') || 'none') + '.');
+      out.push('Colour bands top to bottom: ' + m.bands.map(b => b.from + '-' + b.to + '% ' + b.color + ' brightness ' + b.lum).join('; ') + '. Strongest horizontal edge (likely horizon) at y=' + m.horizon + '.');
+      if (m.regions) { const lab = this.elemLabels(); out.push('Elements (image regions; anchor E1.. keeps particles inside that shape): ' + m.regions.map(r => r.id + ' "' + (lab[r.id] || 'unnamed') + '" covers ' + r.cover + '%, box x ' + r.left + '-' + r.right + ' y ' + r.top + '-' + r.bottom + ', colour ' + r.color).join('; ') + '.'); } }
+    else out.push('Pixel analysis is not available for this image.');
+    if (marks.length) out.push('Creator marks: ' + marks.map(k => k.type === 'path' ? k.id + ' LINE "' + (k.label || 'unnamed') + '"' + (k.kind ? ' [' + k.kind + ']' : '') + ' ' + k.pts.length + ' points from (' + k.pts[0].map(v => v.toFixed(2)).join(',') + ') to (' + k.pts[k.pts.length - 1].map(v => v.toFixed(2)).join(',') + ') spread=' + k.r.toFixed(2) : k.id + (k.group ? ' (similar copy of ' + k.group + ')' : '') + ' "' + (k.label || 'unnamed') + '"' + (k.kind ? ' [' + k.kind + ']' : '') + (k.element ? ' on ' + k.element : '') + ' x=' + k.x.toFixed(2) + ' y=' + k.y.toFixed(2) + ' r=' + k.r.toFixed(2)).join('; ') + '. To animate a mark together with all its copies use anchor "Mx*".');
+    return out.join('\n');
+  }
+  saveRecipe(r) { this.setState({ ai: r }); clearTimeout(this.rt); const id = this.state.aiId; if (id) this.rt = setTimeout(() => this.patchItem(id, { recipe: r, name: r.name }), 500); }
+  async adjust() {
+    const s = this.state; if (!s.ai || !s.adjustPrompt.trim() || s.adjustBusy) return;
+    this.setState({ adjustBusy: true });
+    try {
+      const text = await window.claude.complete({ system: MOTION_SYS + ' You are editing an existing recipe: change only what the request asks and return the full updated JSON.', max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nCurrent recipe: ' + JSON.stringify(s.ai) + '\nChange: ' + s.adjustPrompt }] });
+      this.saveRecipe(clampRecipe(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)))); this.setState({ adjustBusy: false, adjustPrompt: '' });
+    } catch (e) { this.setState({ adjustBusy: false }); this.flash('Could not adjust: ' + (e.message || e)); }
+  }
+  drawAI(g, W, H, p) {
+    const r = this.state.ai; if (!r) return; const TAU = Math.PI * 2, k = this.state.intensity, sc = W / 1280;
+    r.layers.forEach((l, li) => {
+      const R = rng(97 + li * 131), As = this.anchorsOf(l.anchor), T = this.xf || { z: 1, dx: 0, dy: 0 }; g.save();
+      const P = (a) => [W / 2 + (a.x - 0.5) * W * T.z + T.dx * W, H / 2 + (a.y - 0.5) * H * T.z + T.dy * H, a.r * T.z];
+      let AX = 0, AY = 0, AR = 0;
+      if (l.type === 'fog') {
+        const y0 = Math.min(l.height[0], l.height[1]) * H, h = Math.max(40, Math.abs(l.height[1] - l.height[0]) * H);
+        g.globalAlpha = Math.min(1, l.opacity * k);
+        for (let i = 0; i < 4; i++) { const span = W * 1.5, x = ((R() * span + l.speed * span * p) % span) - W * 0.25, y = y0 + R() * h, rw = W * (0.35 + R() * 0.35);
+          const gr = g.createRadialGradient(x, y, 0, x, y, rw); gr.addColorStop(0, l.color); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.setTransform(1, 0, 0, 0.35, 0, y * 0.65); g.fillRect(x - rw, y - rw, rw * 2, rw * 2); g.setTransform(1, 0, 0, 1, 0, 0); }
+      } else if (l.type === 'light') {
+        g.globalCompositeOperation = 'lighter'; g.globalAlpha = Math.max(0, l.amount * k * (l.pulse ? 0.5 + 0.5 * Math.sin(TAU * p * l.pulse) : 1));
+        (As.length ? this.expand(As, W, H) : [null]).forEach(a => { const q = a ? P(a) : null, x = q ? q[0] : l.x * W, y = q ? q[1] : l.y * H, rad = q ? Math.max(l.radius * Math.max(W, H) / (As.length > 1 ? 3 : 1), q[2] * W * 2.2) : l.radius * Math.max(W, H);
+          if (!rad) { g.fillStyle = l.color; g.fillRect(0, 0, W, H); }
+          else { const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, l.color); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); } });
+      } else {
+        g.globalCompositeOperation = l.blend === 'add' ? 'lighter' : 'source-over'; g.fillStyle = l.color; g.strokeStyle = l.color;
+        const th = l.direction * Math.PI / 180, ux = Math.cos(th), uy = Math.sin(th), n = Math.min(300, Math.round(l.count * k)), m = 40 * sc;
+        const top = Math.min(l.area[0], l.area[1]) * H, span = Math.max(1, Math.abs(l.area[1] - l.area[0]) * H), xl = Math.min(l.xRange[0], l.xRange[1]) * W, xw = Math.max(1, Math.abs(l.xRange[1] - l.xRange[0]) * W);
+        const fullY = span > H * 0.95, fullX = xw > W * 0.95;
+        for (let i = 0; i < n; i++) {
+          const sz = (l.size[0] + R() * Math.max(0, l.size[1] - l.size[0])) * sc, ph = R(), laps = l.speed ? l.speed + Math.floor(R() * 2) : 0, rx = R(), ry = R();
+          let x, y, fade = 1;
+          const Ai = As.length ? As[i % As.length] : null;
+          if (Ai && Ai.type === 'region') {
+            const sg = this.seg; if (!sg) continue; let fx, fy;
+            if (!laps) { const cs = sg.cells[Ai.ri]; if (!cs || !cs.length) continue; const ci = cs[Math.floor(rx * cs.length) % cs.length]; fx = ((ci % sg.gw) + ry) / sg.gw; fy = (Math.floor(ci / sg.gw) + ph) / sg.gh; }
+            else { const bw = Math.max(0.01, Ai.right - Ai.left), bh = Math.max(0.01, Ai.bottom - Ai.top); fx = Ai.left + rx * bw + ux * laps * bw * p; fy = Ai.top + ry * bh + uy * laps * bh * p; fx = Ai.left + ((fx - Ai.left) % bw + bw) % bw; fy = Ai.top + ((fy - Ai.top) % bh + bh) % bh;
+              if (sg.assign[Math.min(sg.gh - 1, Math.floor(fy * sg.gh)) * sg.gw + Math.min(sg.gw - 1, Math.floor(fx * sg.gw))] !== Ai.ri) continue; }
+            const pp = P({ x: fx, y: fy, r: 0 }); x = pp[0]; y = pp[1];
+          } else if (Ai && Ai.type === 'path') {
+            const q = laps ? (p * laps + ph) % 1 : rx, pt = this.pathPoint(Ai, q, W, H), pp = P({ x: pt[0], y: pt[1], r: Ai.r }), off = (ry - 0.5) * 2 * Math.max(pp[2], 0.004) * W * l.spread;
+            x = pp[0] + pt[2] * off; y = pp[1] + pt[3] * off; fade = laps ? Math.min(1, Math.sin(Math.PI * q) * 3) : 1;
+          } else if (Ai) { [AX, AY, AR] = P(Ai);
+            const ar = Math.max(AR, 0.02) * W * l.spread, ox = (rx - 0.5) * 2 * ar, oy = (ry - 0.5) * 2 * ar * 0.6;
+            if (laps) { const q = (p * laps + ph) % 1, tr = l.travel * H; x = AX + ox + ux * q * tr; y = AY + oy + uy * q * tr; fade = Math.sin(Math.PI * q); } else { x = AX + ox; y = AY + oy; }
+          } else {
+            x = xl + rx * xw; y = top + ry * span;
+            if (laps) { x += ux * laps * (fullX ? W + 2 * m : xw) * p; y += uy * laps * (fullY ? H + 2 * m : span) * p; }
+            if (Math.abs(ux) > 0.01 && laps) x = fullX ? ((x + m) % (W + 2 * m) + W + 2 * m) % (W + 2 * m) - m : xl + ((x - xl) % xw + xw) % xw;
+            if (Math.abs(uy) > 0.01 && laps) y = fullY ? ((y + m) % (H + 2 * m) + H + 2 * m) % (H + 2 * m) - m : top + ((y - top) % span + span) % span;
+          }
+          if (l.sway) { const sw = Math.sin(TAU * (p * Math.max(1, l.spin || 2) + ph)) * l.sway * sc; x += -uy * sw; y += ux * sw; }
+          let a = l.opacity * fade; if (l.twinkle) a *= 1 - l.twinkle + l.twinkle * (0.5 + 0.5 * Math.sin(TAU * (p * (2 + Math.floor(ph * 4)) + ph * 7)));
+          g.globalAlpha = Math.max(0, Math.min(1, a));
+          if (l.shape === 'streak') { g.lineWidth = Math.max(1, sz * 0.4); g.beginPath(); g.moveTo(x, y); g.lineTo(x - ux * sz * 6, y - uy * sz * 6); g.stroke(); }
+          else if (l.shape === 'petal') { g.save(); g.translate(x, y); g.rotate(TAU * (p * (l.spin || 1) + ph)); g.beginPath(); g.ellipse(0, 0, sz, sz * 0.5, 0, 0, TAU); g.fill(); g.restore(); }
+          else if (l.shape === 'glow') { const gr = g.createRadialGradient(x, y, 0, x, y, sz * 3); gr.addColorStop(0, l.color); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x - sz * 3, y - sz * 3, sz * 6, sz * 6); g.fillStyle = l.color; }
+          else if (l.shape === 'star') { g.fillRect(x - sz / 2, y - sz / 2, sz, sz); g.globalAlpha *= 0.5; g.fillRect(x - sz * 1.5, y - 0.5, sz * 3, 1); g.fillRect(x - 0.5, y - sz * 1.5, 1, sz * 3); }
+          else { g.beginPath(); g.arc(x, y, sz, 0, TAU); g.fill(); }
+        }
+      }
+      g.restore();
+    });
+  }
+  loadWall(src, isVideo) {
+    if (isVideo) { const v = document.createElement('video'); v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.crossOrigin = 'anonymous'; v.play().catch(() => {}); v.addEventListener('loadeddata', () => this.analyze(v), { once: true }); this.media = v; return; }
+    const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => { this.media = im; this.analyze(im); }; im.onerror = () => this.setState({ sceneMap: null }); im.src = src;
+  }
+  loopT() { const L = this.state.loop; return (((performance.now() - this.t0) / 1000) % L + L) % L; }
+  draw() {
+    const c = this.canvas; if (!c) return;
+    const g = c.getContext('2d'), W = c.width, H = c.height, s = this.state, k = s.intensity, L = s.loop, t = this.loopT(), p = t / L, TAU = Math.PI * 2;
+    g.fillStyle = '#05060a'; g.fillRect(0, 0, W, H);
+    const m = this.media;
+    if (m && (m.naturalWidth || m.videoWidth)) {
+      const mw = m.naturalWidth || m.videoWidth, mh = m.naturalHeight || m.videoHeight;
+      const cam = s.ai ? s.ai.camera : null;
+      const z = 1.08 + (s.fx.zoom ? 0.04 * k * (0.5 - 0.5 * Math.cos(TAU * p)) : 0) + (cam ? cam.zoom * (0.5 - 0.5 * Math.cos(TAU * p)) : 0);
+      const sc = Math.max(W / mw, H / mh) * z;
+      const dx = (s.fx.drift ? Math.sin(TAU * p) * W * 0.02 * k : 0) + (cam ? Math.sin(TAU * p) * W * cam.driftX : 0), dy = (s.fx.drift ? Math.sin(TAU * p * 2) * H * 0.01 * k : 0) + (cam ? Math.sin(TAU * p * 2) * H * cam.driftY : 0);
+      g.drawImage(m, (W - mw * sc) / 2 + dx, (H - mh * sc) / 2 + dy, mw * sc, mh * sc);
+      this.xf = { z, dx: dx / W, dy: dy / H };
+    }
+    if (s.fx.flicker) { const a = 0.06 * k * (0.5 + 0.5 * Math.sin(TAU * p * 12) * Math.sin(TAU * p * 7)); g.fillStyle = `rgba(255,190,120,${Math.max(0, a)})`; g.fillRect(0, 0, W, H); }
+    const R = rng(11);
+    if (s.fx.rain) { g.strokeStyle = 'rgba(200,220,255,0.35)'; g.lineWidth = 1.2; const n = Math.round(180 * k); for (let i = 0; i < n; i++) { const x0 = R() * W, y0 = R() * H, laps = 6 + Math.floor(R() * 6), y = (y0 + laps * (H + 40) * p) % (H + 40) - 20, x = x0 - (y / H) * 30; g.beginPath(); g.moveTo(x, y); g.lineTo(x - 4, y + 18); g.stroke(); } }
+    if (s.fx.snow) { g.fillStyle = 'rgba(255,255,255,0.8)'; const n = Math.round(120 * k); for (let i = 0; i < n; i++) { const x0 = R() * W, y0 = R() * H, r = 1 + R() * 2.5, laps = 1 + Math.floor(R() * 2), y = (y0 + laps * (H + 20) * p) % (H + 20) - 10, x = x0 + Math.sin(TAU * (p * 3 + R())) * 12; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); } }
+    if (s.fx.fireflies) { const n = Math.round(40 * k); for (let i = 0; i < n; i++) { const cx = R() * W, cy = H * (0.35 + R() * 0.6), ax = 20 + R() * 60, ay = 10 + R() * 40, f1 = 1 + Math.floor(R() * 3), ph = R(); const x = cx + Math.sin(TAU * (p * f1 + ph)) * ax, y = cy + Math.cos(TAU * (p * f1 * 2 + ph)) * ay, a = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(TAU * (p * 4 * f1 + ph))); const gr = g.createRadialGradient(x, y, 0, x, y, 10); gr.addColorStop(0, `rgba(255,236,160,${a})`); gr.addColorStop(1, 'rgba(255,236,160,0)'); g.fillStyle = gr; g.fillRect(x - 10, y - 10, 20, 20); } }
+    this.drawAI(g, W, H, p);
+    if (s.fx.vignette) { const gr = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, `rgba(0,0,0,${0.55 * Math.min(1.2, k)})`); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+  }
+
+  ensureAudio() {
+    if (this.ctx) return;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain(); master.gain.value = this.state.volume;
+    const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
+    const dest = ctx.createMediaStreamDestination(); comp.connect(dest);
+    const conv = ctx.createConvolver(), len = ctx.sampleRate * 3.5, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    conv.buffer = ir; const wet = ctx.createGain(); wet.gain.value = 0.45; conv.connect(wet); wet.connect(master);
+    Object.assign(this, { ctx, master, dest, conv });
+  }
+  voice(freq, start, dur, type, gain, cutoff, attack, release) {
+    const ctx = this.ctx, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), v = ctx.createGain();
+    o.type = type; o.frequency.value = freq; f.type = 'lowpass'; f.frequency.value = cutoff;
+    v.gain.setValueAtTime(0, start); v.gain.linearRampToValueAtTime(gain, start + attack); v.gain.setValueAtTime(gain, Math.max(start + attack, start + dur - release)); v.gain.linearRampToValueAtTime(0, start + dur);
+    o.connect(f); f.connect(v); v.connect(this.master); v.connect(this.conv); o.start(start); o.stop(start + dur + 0.05);
+  }
+  startGen() {
+    const s = this.state, M = MOODS[s.mood], L = s.loop, ctx = this.ctx;
+    const cycles = Math.max(1, Math.round(L / 16)), chordDur = L / (cycles * M.prog.length), step = chordDur / 8;
+    this.audioT0 = ctx.currentTime + 0.1; let next = 0;
+    const deg = (d, o) => { const sc = M.scale, n = sc.length; return M.root + sc[((d % n) + n) % n] + 12 * (Math.floor(d / n) + (o || 0)); };
+    const schedule = () => {
+      const horizon = ctx.currentTime + 0.6;
+      while (this.audioT0 + next * step < horizon) {
+        const at = this.audioT0 + next * step, inLoop = next % Math.round(L / step), chordI = Math.floor(inLoop / 8) % M.prog.length, d = M.prog[chordI], beat = inLoop % 8;
+        if (beat === 0) {
+          [0, 2, 4].forEach(o => this.voice(hz(deg(d + o)), at, chordDur + 0.3, M.wave, 0.045, M.cutoff, 1.2, 1.4));
+          this.voice(hz(deg(d, -1)), at, chordDur, 'sine', 0.09, 400, 0.4, 0.8);
+        }
+        const r = rng(s.seed * 1000 + (inLoop % (8 * M.prog.length)))();
+        if (r < 0.42 && beat % 2 === 0) { const pick = [0, 2, 4, 7][Math.floor(r * 9.5) % 4]; this.voice(hz(deg(d + pick, 1)), at, step * 1.8, 'sine', 0.05, 3000, 0.01, step * 1.4); }
+        next++;
+      }
+    };
+    schedule(); this.sched = setInterval(schedule, 150);
+    if (M.rain > 0) {
+      const b = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource(); src.buffer = b; src.loop = true; const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2500; bp.Q.value = 0.6; const gn = ctx.createGain(); gn.gain.value = M.rain;
+      src.connect(bp); bp.connect(gn); gn.connect(this.master); src.start(); this.rainSrc = src;
+    }
+  }
+  startAudio() {
+    this.ensureAudio(); this.ctx.resume();
+    this.t0 = performance.now();
+    if (this.state.musicMode === 'gen') this.startGen();
+    else if (this.audioEl) { if (!this.elSrc) { this.elSrc = this.ctx.createMediaElementSource(this.audioEl); this.elSrc.connect(this.master); } this.audioEl.currentTime = 0; this.audioEl.play().catch(() => {}); }
+  }
+  stopAudio() {
+    clearInterval(this.sched); this.sched = null;
+    try { this.rainSrc && this.rainSrc.stop(); } catch (e) {} this.rainSrc = null;
+    if (this.audioEl) this.audioEl.pause();
+    if (this.master && this.ctx) { const g = this.master.gain, now = this.ctx.currentTime; g.cancelScheduledValues(now); g.setValueAtTime(g.value, now); g.linearRampToValueAtTime(0, now + 0.3); setTimeout(() => { if (this.master) this.master.gain.value = this.state.volume; }, 400); }
+  }
+  restart() { if (this.state.playing) { this.stopAudio(); setTimeout(() => this.startAudio(), 450); } }
+  toggle() { if (this.state.playing) { this.stopAudio(); this.setState({ playing: false }); } else { this.startAudio(); this.setState({ playing: true }); } }
+
+  record() {
+    const s = this.state;
+    if (s.rec) { this.recorder && this.recorder.stop(); return; }
+    if (s.musicMode === 'upload' && !this.audioEl) { this.flash('Upload a music file first, or switch to Generate.'); return; }
+    let stream;
+    try { stream = this.canvas.captureStream(30); } catch (e) { this.flash('This wallpaper can\u2019t be recorded (the image host blocks it). Pick a stock or uploaded one.'); return; }
+    this.stopAudio(); this.ensureAudio(); this.ctx.resume();
+    setTimeout(() => {
+      this.startAudio(); this.setState({ playing: true });
+      const tracks = [...stream.getVideoTracks(), ...this.dest.stream.getAudioTracks()];
+      const type = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(x => window.MediaRecorder && MediaRecorder.isTypeSupported(x));
+      const rec = new MediaRecorder(new MediaStream(tracks), { mimeType: type, videoBitsPerSecond: 8000000 }), chunks = [];
+      rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+      rec.onstop = () => { clearInterval(this.recT); const blob = new Blob(chunks, { type: 'video/webm' }); const name = 'loop-' + s.mood + '-' + s.loop + 's-' + (s.tall ? '9x16' : '16x9') + '.webm'; if (this.state.fileUrl) URL.revokeObjectURL(this.state.fileUrl); this.setState({ rec: null, fileUrl: URL.createObjectURL(blob), fileName: name }); };
+      this.recorder = rec; rec.start(1000);
+      const startAt = Date.now(); this.setState({ rec: { left: s.loop } });
+      this.recT = setInterval(() => { const left = Math.max(0, s.loop - Math.floor((Date.now() - startAt) / 1000)); this.setState({ rec: { left } }); if (left <= 0) rec.stop(); }, 250);
+    }, 450);
+  }
+  async genWall() {
+    const s = this.state, base = s.wallPrompt.trim(); if (!base || s.genBusy) return;
+    const prompt = base + (STYLES[s.style] && base.length < 200 ? ', ' + STYLES[s.style][1] : '') + ', no text, no watermark';
+    if (s.engine === 'app') { navigator.clipboard.writeText(prompt + '. Make it a ' + (s.tall ? 'vertical 9:16' : 'wide 16:9') + ' image.'); window.open('https://gemini.google.com/app', '_blank'); this.flash('Prompt copied. Paste it in Gemini, download the image, then press + Upload here.'); return; }
+    this.setState({ genBusy: true });
+    try {
+      if (s.engine === 'gemini') {
+        if (!s.geminiKey) throw new Error('Paste your Gemini API key first.');
+        const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': s.geminiKey }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { aspectRatio: s.tall ? '9:16' : '16:9' } } }) });
+        const j = await r.json(); if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status));
+        const part = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).find(x => x.inlineData || x.inline_data);
+        if (!part) throw new Error('Gemini returned no image. Try again.');
+        const d = part.inlineData || part.inline_data, bin = atob(d.data), arr = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        const it = await this.addItem({ type: 'wall', kind: 'gen', blob: new Blob([arr], { type: d.mimeType || d.mime_type || 'image/png' }), prompt: base, engine: 'gemini' });
+        const src = this.srcOf(it); this.loadWall(src); this.setState({ wall: src, genBusy: false });
+      } else {
+        const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=' + (s.tall ? 1080 : 1920) + '&height=' + (s.tall ? 1920 : 1080) + '&seed=' + Math.floor(Math.random() * 1e6) + '&model=flux&nologo=true&enhance=true';
+        await new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => { this.media = im; this.analyze(im); res(); }; im.onerror = () => rej(new Error('Free image service is busy. Wait 15 seconds and try again.')); im.src = url; });
+        await this.addItem({ type: 'wall', kind: 'gen', url, prompt: base, engine: 'pollinations' });
+        this.setState({ wall: url, genBusy: false });
+      }
+    } catch (e) { this.setState({ genBusy: false }); this.flash(String(e.message || e)); }
+  }
+  async writeMeta() {
+    if (this.state.metaBusy) return; const s = this.state;
+    this.setState({ metaBusy: true });
+    try {
+      const fx = FX.filter(([k]) => s.fx[k]).map(([, l]) => l).join(', ');
+      const out = await window.claude.complete({ system: 'You write YouTube metadata for a US ambient music channel. Plain text: TITLE (max 70 chars, no clickbait), then DESCRIPTION (3 short lines plus a line saying the music and art are AI-generated or original), then TAGS (10, comma-separated). No emoji.', max_tokens: 500, messages: [{ role: 'user', content: 'Mood: ' + MOODS[s.mood].label + '. Motion: ' + fx + '. Wallpaper: ' + (s.wallPrompt || 'fantasy landscape') + '. Planned length: 1 hour. Format: ' + (s.tall ? 'Shorts teaser' : 'long video') + '.' }] });
+      this.setState({ meta: out, metaBusy: false });
+    } catch (e) { this.setState({ meta: 'Could not write metadata: ' + (e.message || e), metaBusy: false }); }
+  }
+
+  renderVals() {
+    const s = this.state, sel = (on) => ({ bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC' });
+    const name = s.fileName || 'loop.webm', audioPart = s.musicMode === 'upload' ? ' -i "' + (s.musicName || 'music.mp3') + '" -map 0:v -map 1:a -shortest' : '';
+    const THEMES = { Aurora: 'assets/wall_aurora.jpg', Starfall: 'assets/wall_starfall.jpg', Citadel: 'assets/wall_citadel.jpg', Megacity: 'assets/wall_megacity.jpg' };
+    const acc = /^#[0-9a-f]{6}$/i.test(this.props.accent || '') ? this.props.accent : '#8DEBFF';
+    const rgb = [1, 3, 5].map(i => parseInt(acc.slice(i, i + 2), 16)).join(','), glass = this.props.glass !== false;
+    const theme = { themeBg: "url('" + (THEMES[this.props.theme] || THEMES.Aurora) + "')", themeOpacity: glass ? 0.28 : 0.12, accent: acc, accentSoft: 'rgba(' + rgb + ',0.16)', accentLine: 'rgba(' + rgb + ',0.3)', accentGlow: 'rgba(' + rgb + ',0.22)', panelBg: glass ? 'rgba(22,26,36,0.72)' : '#161A23', panelBlur: glass ? 'blur(14px)' : 'none' };
+    return {
+      ...theme,
+      ...(() => { const m = s.sceneMap, marks = this.curMarks(), show = s.showMap || s.markMode, gold = 'oklch(0.83 0.14 80)';
+        const spots = m ? m.spots : [];
+        return {
+          markers: show ? [...spots.map(p => ({ left: (50 + (p.x - 0.5) * 108) + '%', top: (50 + (p.y - 0.5) * 108) + '%', size: Math.max(3, p.r * 216) + '%', dash: 'dashed', color: acc, label: p.id, pe: 'none', cursor: 'default', fill: 'transparent', onDown: null })), ...((s.match && s.match.list) || []).map(q => ({ left: (50 + (q.x - 0.5) * 108) + '%', top: (50 + (q.y - 0.5) * 108) + '%', size: Math.max(0.8, q.r * 216) + '%', dash: 'dotted', color: gold, label: '≈ ' + Math.round(q.score * 100) + '%', pe: 'none', cursor: 'default', fill: 'transparent', onDown: null })), ...marks.map(q => { const isPath = q.type === 'path', x0 = isPath ? q.pts[0][0] : q.x, y0 = isPath ? q.pts[0][1] : q.y, edit = !s.drawMode && !s.markMode;
+            return { pe: edit ? 'auto' : 'none', cursor: 'move', fill: isPath ? gold : 'rgba(255,200,107,0.08)', onDown: (e) => { if (!edit) return; e.stopPropagation(); e.preventDefault(); try { this.stageEl.setPointerCapture(e.pointerId); } catch (er) {} this.drag = { start: this.toImg(e), orig: q }; },
+              left: (50 + (x0 - 0.5) * 108) + '%', top: (50 + (y0 - 0.5) * 108) + '%', size: isPath ? '1.4%' : Math.max(0.8, q.r * 216) + '%', dash: 'solid', color: gold, label: q.id + (s.recog === q.id ? ' · recognizing…' : (q.label ? ' · ' + q.label : '') + (q.kind ? ' · ' + q.kind : '')) + (isPath ? ' (line)' : '') }; })] : [],
+          markMode: s.markMode, stageCursor: s.markMode ? 'crosshair' : 'default',
+          onStageClick: (e) => { if (!this.state.markMode) return; const list = this.curMarks(), n = list.reduce((a, q) => Math.max(a, +q.id.slice(1)), 0) + 1, pt = this.toImg(e); const nm = { id: 'M' + n, label: '', x: pt[0], y: pt[1], r: 0.025 }; this.setMarks([...list, nm]); this.setState({ markMode: false, showMap: true }); this.recognize(nm); },
+          stageRef: (el) => { this.stageEl = el; },
+          onStageDown: (e) => { if (!this.state.drawMode) return; e.preventDefault(); try { this.stageEl.setPointerCapture(e.pointerId); } catch (er) {} this.drawing = [this.toImg(e)]; this.setState({ draftPts: this.drawing.slice() }); },
+          onStageMove: (e) => {
+            if (this.drawing) { const pt = this.toImg(e), last = this.drawing[this.drawing.length - 1]; if (Math.hypot(pt[0] - last[0], pt[1] - last[1]) > 0.008) { this.drawing.push(pt); this.setState({ draftPts: this.drawing.slice() }); } return; }
+            if (this.drag) { const pt = this.toImg(e), dx = pt[0] - this.drag.start[0], dy = pt[1] - this.drag.start[1], o = this.drag.orig; this.drag.moved = true;
+              this.setMarks(this.curMarks().map(z => z.id !== o.id ? z : (o.type === 'path' ? { ...z, pts: o.pts.map(([px, py]) => [+(px + dx).toFixed(3), +(py + dy).toFixed(3)]) } : { ...z, x: Math.min(1, Math.max(0, o.x + dx)), y: Math.min(1, Math.max(0, o.y + dy)) }))); }
+          },
+          onStageUp: () => {
+            if (this.drawing) { const pts = this.drawing; this.drawing = null;
+              if (pts.length >= 3) { const list = this.curMarks(), n = list.reduce((a, q) => Math.max(a, +q.id.slice(1)), 0) + 1, step = Math.max(1, Math.ceil(pts.length / 60));
+                const nm = { id: 'M' + n, type: 'path', label: '', pts: pts.filter((q, i) => i % step === 0 || i === pts.length - 1).map(([a, b]) => [+a.toFixed(3), +b.toFixed(3)]), r: 0.02 }; this.setMarks([...list, nm]); this.recognize(nm);
+                this.flash('Line M' + n + ' added. Motion flows from where you started drawing.'); }
+              this.setState({ drawMode: false, draftPts: null, showMap: true }); }
+            if (this.drag) this.drag = null;
+          },
+          toggleDraw: () => this.setState({ drawMode: !s.drawMode, markMode: false }), drawLabel: s.drawMode ? 'Cancel' : '✎ Draw a line', drawBg: s.drawMode ? gold : 'rgba(244,247,252,0.08)', drawFg: s.drawMode ? '#0A0C12' : '#F4F7FC',
+          stageHint: s.drawMode ? 'Drag on the image to draw a line' : s.markMode ? 'Click the spot you want to animate' : '',
+          pathOverlay: React.createElement('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none' } },
+            ...(show ? marks.filter(q => q.type === 'path') : []).flatMap(q => { const pts = q.pts.map(([a, b]) => (50 + (a - 0.5) * 108) + ',' + (50 + (b - 0.5) * 108)).join(' ');
+              const down = (e) => { if (s.drawMode || s.markMode) return; e.stopPropagation(); e.preventDefault(); try { this.stageEl.setPointerCapture(e.pointerId); } catch (er) {} this.drag = { start: this.toImg(e), orig: q }; };
+              return [React.createElement('polyline', { key: q.id + 'h', points: pts, onPointerDown: down, style: { fill: 'none', stroke: 'rgba(255,200,107,0.22)', strokeWidth: 14, vectorEffect: 'non-scaling-stroke', strokeLinecap: 'round', strokeLinejoin: 'round', pointerEvents: 'stroke', cursor: 'move' } }),
+                React.createElement('polyline', { key: q.id, points: pts, style: { fill: 'none', stroke: gold, strokeWidth: 2.5, vectorEffect: 'non-scaling-stroke', strokeLinecap: 'round', strokeLinejoin: 'round', pointerEvents: 'none' } })]; }),
+            ...(s.draftPts && s.draftPts.length > 1 ? [React.createElement('polyline', { key: 'draft', points: s.draftPts.map(([a, b]) => (50 + (a - 0.5) * 108) + ',' + (50 + (b - 0.5) * 108)).join(' '), style: { fill: 'none', stroke: acc, strokeWidth: 2.5, strokeDasharray: '6 4', vectorEffect: 'non-scaling-stroke', strokeLinecap: 'round' } })] : [])),
+          toggleMap: () => this.setState({ showMap: !s.showMap }), mapLabel: s.showMap ? 'Hide map' : 'Show map', mapBg: s.showMap ? acc : 'rgba(244,247,252,0.08)', mapFg: s.showMap ? '#0A0C12' : '#F4F7FC',
+          toggleMark: () => this.setState({ markMode: !s.markMode }), markLabel: s.markMode ? 'Cancel' : '＋ Mark a spot', markBg: s.markMode ? gold : 'rgba(244,247,252,0.08)', markFg: s.markMode ? '#0A0C12' : '#F4F7FC',
+          mapSummary: m ? spots.length + ' bright spot' + (spots.length === 1 ? '' : 's') + ' found · horizon ≈ ' + Math.round(m.horizon * 100) + '%' : 'No map for this image (its host blocks pixel reading). Marks still work.',
+          markList: marks.map(q => ({ id: (q.ai ? '✦' : '') + (q.group ? q.id + '≈' + q.group : q.id), label: q.label, r: q.r, ph: s.recog === q.id ? 'AI is recognizing…' : q.type === 'path' ? 'what is this line? e.g. river' : 'what is here? e.g. lantern', noFind: q.type === 'path', find: () => q.type !== 'path' && this.findSimilar(q.id, 0.78), onLabel: (e) => this.setMarks(this.curMarks().map(z => z.id === q.id ? { ...z, label: e.target.value } : z)), onR: (e) => this.setMarks(this.curMarks().map(z => z.id === q.id ? { ...z, r: +e.target.value } : z)), del: () => this.setMarks(this.curMarks().filter(z => z.id !== q.id)) })),
+          hasAI: !!s.ai,
+          ...(() => { const regs = (m && m.regions) || [], lab = this.elemLabels();
+            return { showElems: s.showElems && !!regs.length, elemBg: s.elemUrl ? 'url("' + s.elemUrl + '")' : 'none', elemBtnBg: s.showElems ? acc : 'rgba(244,247,252,0.08)', elemBtnFg: s.showElems ? '#0A0C12' : '#F4F7FC',
+              toggleElems: () => { if (!regs.length) { this.flash('No element map for this image (its host blocks pixel reading). Download it and use + Upload.'); return; } const on = !s.showElems; this.setState({ showElems: on }); if (on && !Object.keys(lab).length) this.nameElements(); },
+              elemTags: (() => { const placed = []; return regs.map(r => { const L = 50 + ((r.tx != null ? r.tx : r.x) - 0.5) * 108; let T = 50 + ((r.ty != null ? r.ty : r.y) - 0.5) * 108;
+                for (let g2 = 0; g2 < 10 && placed.some(q2 => Math.abs(q2[0] - L) < 18 && Math.abs(q2[1] - T) < 5.5); g2++) T += 6; placed.push([L, T]);
+                return { left: Math.min(92, Math.max(8, L)) + '%', top: Math.min(95, Math.max(4, T)) + '%', pal: r.pal, text: r.id + (lab[r.id] ? ' · ' + lab[r.id] : '') }; }); })(),
+              elemList: regs.map(r => ({ id: r.id, pal: r.pal, label: lab[r.id] || '', cover: r.cover + '%', onLabel: (e) => this.setElemLabels({ ...this.elemLabels(), [r.id]: e.target.value }) })),
+              nameElems: () => this.nameElements(), nameLabel: s.naming ? 'Naming…' : Object.keys(lab).length ? '✦ Rename with AI' : '✦ Name with AI',
+              elemNote: s.visionUsed === true ? 'Named by AI looking at the picture. Fix any name; motion uses these names.' : s.visionUsed === false ? 'Named by AI from colour, position and the wallpaper description (it could not view the image), so check the names.' : 'Regions are found from colour, height and texture. Use E1, E2… in motion, e.g. "rain only over the sky".' }; })(),
+          anchorElems: 0,
+          hasMatch: !!s.match, matchThr: s.match ? s.match.thr : 0.78, matchThrShow: s.match ? Math.round(s.match.thr * 100) + '%' : '',
+          matchText: s.match ? (() => { const src = marks.find(q => q.id === s.match.from); return 'Found ' + s.match.list.length + ' spot' + (s.match.list.length === 1 ? '' : 's') + ' like ' + s.match.from + (src && src.label ? ' "' + src.label + '"' : '') + ' (dotted circles). Adjust and add them.'; })() : '',
+          onMatchThr: (e) => this.findSimilar(s.match.from, +e.target.value), cancelMatch: () => this.setState({ match: null }),
+          acceptLabel: s.match ? 'Add ' + s.match.list.length + ' as marks' : '',
+          acceptMatch: () => { const src = marks.find(q => q.id === s.match.from), n0 = marks.reduce((a, q) => Math.max(a, +q.id.slice(1)), 0); if (!s.match.list.length) return; this.setMarks([...marks, ...s.match.list.map((q, i) => ({ id: 'M' + (n0 + i + 1), label: src ? src.label : '', kind: src ? src.kind : '', x: q.x, y: q.y, r: q.r, group: s.match.from }))]); this.setState({ match: null }); this.flash('Added. In motion, use "all ' + ((src && src.label) || 'of them') + '" or pick ' + s.match.from + '* to animate them together.'); },
+          anchorOpts: [{ id: '', label: 'Anywhere (area)' }, ...(((m && m.regions) || []).map(r => ({ id: r.id, label: r.id + ' · element ' + (this.elemLabels()[r.id] || '') }))), ...spots.map(p => ({ id: p.id, label: p.id + ' · ' + p.tone + ' bright spot (' + Math.round(p.x * 100) + '%, ' + Math.round(p.y * 100) + '%)' })), ...marks.flatMap(q => { const copies = marks.filter(z => z.group === q.id).length; return [{ id: q.id, label: q.id + ' · ' + (q.label || 'your mark') }, ...(copies ? [{ id: q.id + '*', label: q.id + ' + ' + copies + ' similar · all ' + (q.label || 'copies') }] : [])]; })],
+          layers: s.ai ? s.ai.layers.map((l, i) => { const set = (patch) => this.saveRecipe({ ...s.ai, layers: s.ai.layers.map((x, j) => j === i ? { ...x, ...patch } : x) });
+            const sl = (label, key, min, max, step, fm) => ({ label, min, max, step, value: l[key], show: fm ? fm(l[key]) : String(l[key]), onChange: (e) => set({ [key]: +e.target.value }) });
+            const pct = (v) => Math.round(v * 100) + '%';
+            const ctl = l.type === 'particles' ? [sl('Amount', 'count', 1, 300, 1), sl('Speed', 'speed', 0, 12, 1), { label: 'Size', min: 0.5, max: 40, step: 0.5, value: l.size[1], show: String(l.size[1]), onChange: (e) => { const v = +e.target.value; set({ size: [Math.min(l.size[0], v), v] }); } }, sl('Opacity', 'opacity', 0.05, 1, 0.05, pct), sl('Direction', 'direction', 0, 360, 5, (v) => Math.round(v) + '°'), ...(l.anchor ? [sl('Spread', 'spread', 0.5, 4, 0.1), sl('Travel', 'travel', 0.05, 1, 0.05, pct)] : [])]
+              : l.type === 'light' ? [sl('Strength', 'amount', 0, 0.3, 0.01, pct), sl('Pulses', 'pulse', 0, 12, 1), sl('Radius', 'radius', 0, 1, 0.02, pct)] : [sl('Opacity', 'opacity', 0.02, 0.5, 0.01, pct), sl('Speed', 'speed', 0, 3, 1)];
+            return { title: 'Layer ' + (i + 1) + ' · ' + (l.type === 'particles' ? l.shape : l.type), hex: hexOf(l.color), onColor: (e) => set({ color: e.target.value }), anchor: l.anchor || '', onAnchor: (e) => set({ anchor: e.target.value }), del: () => this.saveRecipe({ ...s.ai, layers: s.ai.layers.filter((x, j) => j !== i) }), ctl }; }) : [],
+          adjustPrompt: s.adjustPrompt, onAdjustPrompt: (e) => this.setState({ adjustPrompt: e.target.value }), onAdjustKey: (e) => { if (e.key === 'Enter') this.adjust(); }, adjust: () => this.adjust(), adjustLabel: s.adjustBusy ? 'Adjusting…' : '✦ Adjust'
+        }; })(),
+      formats: [[false, 'Long 16:9'], [true, 'Shorts 9:16']].map(([v, label]) => ({ label, ...sel(s.tall === v), onClick: () => this.setState({ tall: v, fileUrl: '' }) })),
+      togglePlay: () => this.toggle(), playLabel: s.playing ? '■ Stop' : '▶ Play',
+      canvasRef: this.canvasRef, cw: s.tall ? 720 : 1280, ch: s.tall ? 1280 : 720, ar: s.tall ? '9/16' : '16/9', viewW: s.tall ? 'auto' : '100%', viewH: s.tall ? '66vh' : 'auto', pad: s.tall ? '16px' : '0', radius: s.tall ? '10px' : '22px',
+      dot: s.rec ? 'oklch(0.7 0.19 25)' : s.playing ? 'oklch(0.78 0.15 150)' : 'rgba(244,247,252,0.35)', status: s.rec ? 'Recording · ' + s.rec.left + 's left' : s.playing ? 'Playing' : 'Stopped · press Play to hear it', loopSec: s.loop,
+      walls: [...WALLS.map(src => ({ src, stock: true })), ...s.items.filter(it => it.type === 'wall' && !it.deletedAt).map(it => ({ src: this.srcOf(it), video: it.kind === 'video', it }))].map(w => ({ bg: 'url("' + (w.video ? 'assets/wall_starfall.jpg' : w.src) + '")', ring: s.wall === w.src ? '0 0 0 3px #0A0C12, 0 0 0 5px #F4F7FC' : 'none', isVideo: !!w.video, canDelete: !w.stock, del: () => w.it && this.trashItem(w.it), onClick: () => { this.setState({ wall: w.src, realm: null }); this.loadWall(w.src, w.video); } })),
+      trashCount: s.items.filter(x => x.deletedAt).length, openTrash: () => this.setState({ showTrash: true }), closeTrash: () => this.setState({ showTrash: false }), stopProp: (e) => e.stopPropagation(), showTrash: s.showTrash,
+      trashItems: s.items.filter(x => x.deletedAt).map(it => { const left = Math.max(0, Math.ceil(TRASH_DAYS - (Date.now() - it.deletedAt) / 864e5)); return { bg: it.type === 'wall' && it.kind !== 'video' ? 'url("' + this.srcOf(it) + '")' : 'rgba(141,235,255,0.1)', badge: it.type === 'motion' ? 'MOTION' : it.kind === 'video' ? 'VIDEO' : '', name: it.type === 'motion' ? it.name + ' · ' + (it.prompt || '') : (it.prompt || 'Uploaded ' + (it.kind || 'image')), when: 'Deleted ' + new Date(it.deletedAt).toLocaleDateString() + ' · gone in ' + left + ' day' + (left === 1 ? '' : 's'), restore: () => this.patchItem(it.id, { deletedAt: null }), purge: () => this.purge(it.id) }; }),
+      trashEmpty: !s.items.some(x => x.deletedAt), trashHas: s.items.some(x => x.deletedAt), emptyTrash: async () => { for (const it of s.items.filter(x => x.deletedAt)) await this.purge(it.id); },
+      styles: Object.entries(STYLES).map(([id, [label]]) => ({ label, ...sel(s.style === id), onClick: () => this.setState({ style: id }) })),
+      improve: () => this.improvePrompt(), improveLabel: s.improving ? 'Improving…' : '✦ Improve prompt',
+      engines: [['pollinations', 'Free'], ['app', 'Gemini app · free'], ['gemini', 'Gemini API']].map(([id, label]) => ({ label, bg: s.engine === id ? '#F4F7FC' : 'transparent', fg: s.engine === id ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
+      needsKey: s.engine === 'gemini', geminiKey: s.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
+      engineNote: s.engine === 'app' ? 'Uses your free Gemini app (gemini.google.com). Generate copies the prompt and opens Gemini: paste, download the image, then press + Upload. Same quality as Gemini, no API key.' : s.engine === 'gemini' ? 'Gemini Nano Banana with your own key from aistudio.google.com. Best quality; free quota depends on your Google account. The key stays in this browser.' : 'Free (Flux via Pollinations): press ✦ Improve prompt first, because Flux needs detailed prompts. About one image every 15 seconds. For Gemini-level quality, switch to Gemini.',
+      motionPrompt: s.motionPrompt, onMotionPrompt: (e) => this.setState({ motionPrompt: e.target.value }), onMotionKey: (e) => { if (e.key === 'Enter') this.createMotion(); },
+      createMotion: () => this.createMotion(), motionLabel: s.motionBusy ? 'Creating…' : '✦ Create',
+      presets: s.items.filter(x => x.type === 'motion' && !x.deletedAt).map(it => { const on = s.aiId === it.id; return { name: it.name, bg: on ? acc : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC', onClick: () => this.setState(on ? { ai: null, aiId: null } : { ai: clampRecipe(it.recipe), aiId: it.id }), del: () => this.trashItem(it) }; }),
+      hasVideoPrompt: !!(s.ai && s.ai.videoPrompt), copyVideoPrompt: () => { navigator.clipboard.writeText(s.ai.videoPrompt + ' Start from the attached wallpaper image.'); this.flash('Animate prompt copied · use it in Veo or Kling with your wallpaper, then upload the clip as a video wallpaper'); },
+      onUpload: async (e) => { const fl = e.target.files && e.target.files[0]; if (!fl) return; const video = fl.type.indexOf('video') === 0; const it = await this.addItem({ type: 'wall', kind: video ? 'video' : 'image', blob: fl, prompt: fl.name }); const url = this.srcOf(it); this.loadWall(url, video); this.setState({ wall: url }); if (video) this.flash('Video wallpaper saved. It loops seamlessly only if the clip itself loops.'); },
+      wallPrompt: s.wallPrompt, onWallPrompt: (e) => this.setState({ wallPrompt: e.target.value }), genWall: () => this.genWall(), genWallLabel: s.engine === 'app' ? 'Copy prompt & open Gemini' : s.genBusy ? 'Generating…' : '✦ Generate',
+      fx: FX.map(([k, label]) => ({ label, ...sel(!!s.fx[k]), onClick: () => this.setState(st => ({ fx: { ...st.fx, [k]: !st.fx[k] } })) })),
+      intensity: s.intensity, onIntensity: (e) => this.setState({ intensity: +e.target.value }),
+      musicModes: [['gen', 'Generate'], ['upload', 'Upload']].map(([id, label]) => ({ label, ...sel(s.musicMode === id), onClick: () => { this.setState({ musicMode: id }, () => this.restart()); } })),
+      isGen: s.musicMode === 'gen', isUpload: s.musicMode === 'upload',
+      moods: Object.entries(MOODS).map(([id, m]) => ({ label: m.label, ...sel(s.mood === id), onClick: () => this.setState({ mood: id }, () => this.restart()) })),
+      newSeed: () => this.setState({ seed: Math.floor(Math.random() * 9999) }, () => this.restart()), seed: s.seed,
+      uploadLabel: s.musicName ? '♪ ' + s.musicName : '+ Upload music (MP3 / WAV)',
+      onMusic: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; this.stopAudio(); if (this.elSrc) { try { this.elSrc.disconnect(); } catch (er) {} this.elSrc = null; } this.audioEl = new Audio(URL.createObjectURL(f)); this.audioEl.loop = true; this.setState({ musicName: f.name, playing: false }); },
+      volume: s.volume, onVolume: (e) => { const v = +e.target.value; this.setState({ volume: v }); if (this.master) this.master.gain.value = v; },
+      loops: [30, 60, 120].map(n => ({ label: n + 's', ...sel(s.loop === n), onClick: () => this.setState({ loop: n }, () => this.restart()) })),
+      record: () => this.record(), recLabel: s.rec ? '■ Stop recording (' + s.rec.left + 's)' : '● Record ' + s.loop + 's loop', recBg: s.rec ? 'oklch(0.7 0.19 25)' : '#F4F7FC',
+      hasFile: !!s.fileUrl, fileUrl: s.fileUrl, fileName: name,
+      ffmpeg: 'ffmpeg -stream_loop -1 -i ' + name + audioPart + ' -t 3600 -c:v libx264 -pix_fmt yuv420p -crf 20 -c:a aac -b:a 192k ' + name.replace('.webm', '-1h.mp4'),
+      copyFfmpeg: () => { navigator.clipboard.writeText('ffmpeg -stream_loop -1 -i ' + name + audioPart + ' -t 3600 -c:v libx264 -pix_fmt yuv420p -crf 20 -c:a aac -b:a 192k ' + name.replace('.webm', '-1h.mp4')); this.flash('Command copied'); },
+      realms: AEGIS.map(r => ({ name: r.id + ' · ' + r.name, bg: 'url("' + r.jpg + '")', ring: s.realm === r.id ? '0 0 0 3px #0A0C12, 0 0 0 5px #F4F7FC' : 'none', onClick: () => { const src = s.realmLive ? r.mp4 : r.jpg; this.setState({ realm: r.id, wall: src, wallPrompt: s.wallPrompt || r.name + ' fantasy realm', ...(s.realmLive && s.loop === 30 ? { loop: 60 } : {}) }); this.loadWall(src, s.realmLive); } })),
+      realmModes: [[true, 'Live (Aegis motion)'], [false, 'Still + Dreamscript motion']].map(([v, label]) => ({ label, bg: s.realmLive === v ? '#F4F7FC' : 'transparent', fg: s.realmLive === v ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { this.setState({ realmLive: v }); const r = AEGIS.find(x => x.id === s.realm); if (r) { const src = v ? r.mp4 : r.jpg; this.setState({ wall: src, ...(v && s.loop === 30 ? { loop: 60 } : {}) }); this.loadWall(src, v); } } })),
+      realmNote: s.realmLive ? 'Pre-rendered 12s seamless loops from the Aegis deterministic engine. Use a 60s or 120s loop so it stays seamless.' : 'The 4K still, animated by the motion tools below.',
+      writeMeta: () => this.writeMeta(), metaLabel: s.metaBusy ? 'Writing…' : '✦ Write title, description and tags', meta: s.meta, note: s.note
+    };
+  }
+}
+</script>
+</body>
+</html>

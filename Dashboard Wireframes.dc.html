@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#f0eee9;font-family:'Kalam',system-ui,sans-serif;color:#222}a{color:#c2410c}a:hover{color:#7c2d12}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Dashboard directions · Home, Run / Generate, Connect (MCP server)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Pipeline rail: sidebar app, the 7-agent pipeline is the hero</div>
+<div class="dv-card" style="width:560px;padding:18px;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">HOME</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;display:grid;grid-template-columns:110px 1fr;min-height:380px">
+      <div style="border-right:2px solid #222;padding:12px 10px;display:flex;flex-direction:column;gap:10px;font-size:14px">
+        <div style="font-weight:700;font-size:15px">My Channel</div>
+        <div style="background:#222;color:#fff;padding:2px 6px;border-radius:4px">Home</div><div>Runs</div><div>Queue</div><div>Analytics</div><div>Settings</div><div>Connect</div>
+        <div style="margin-top:auto;font-size:12px;color:#c2410c">● 4/5 checks ok</div>
+      </div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:18px;font-weight:700">Today</div><div style="border:2px solid #c2410c;color:#c2410c;padding:2px 10px;border-radius:6px 3px 7px 3px">+ Generate</div></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px"><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">✓ Script</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">✓ Images</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">✓ Voice</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">✓ FFmpeg</span><span style="border:1.5px dashed #c2410c;color:#c2410c;padding:0 6px;border-radius:10px">✗ YouTube upload</span></div>
+        <div style="border:2px solid #222;border-radius:6px 3px 7px 4px;padding:10px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:13px">Current run · "Why cats knead" · 3 of 7</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:11px;text-align:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;background:#222"></div>Strategy</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;background:#222"></div>Script</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;border:3px solid #c2410c;box-sizing:border-box"></div>Thumb</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;border:2px solid #222;box-sizing:border-box"></div>SEO</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;border:2px solid #222;box-sizing:border-box"></div>Produce</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;border:2px solid #222;box-sizing:border-box"></div>Publish</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:26px;height:26px;border-radius:50%;border:2px solid #222;box-sizing:border-box"></div>Analytics</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:8px;display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">Up next</div><div style="font-size:12px">Tue 2 PM · video A</div><div style="font-size:12px">Wed 2 PM · video B</div><div style="font-size:12px;color:#888">06:00 generate · 09:00 stats</div></div>
+          <div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:8px;display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">Last 7 days</div><div style="height:46px;border-bottom:2px solid #222;background:repeating-linear-gradient(90deg,transparent 0 10px,#ddd 10px 22px)"></div><div style="font-size:12px;color:#888">views · avg score</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#c2410c">↑ capability check from startup becomes a chip row; red chip links to the fix</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">GENERATE (modal over Home)</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:16px;background:repeating-linear-gradient(45deg,#fafafa 0 8px,#f1f1f1 8px 16px);display:flex;justify-content:center">
+      <div style="background:#fff;border:2px solid #222;border-radius:8px 4px 9px 4px;padding:14px;width:320px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:17px;font-weight:700">New video</div>
+        <div style="font-size:13px">Topic <span style="color:#888">(empty = let Strategy pick)</span></div><div style="border:2px solid #222;height:30px;border-radius:4px"></div>
+        <div style="font-size:13px">Style</div><div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px"><span style="background:#222;color:#fff;padding:0 6px;border-radius:10px">story</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">list</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">tutorial</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">explainer</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">review</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">+5</span></div>
+        <div style="font-size:13px">Length</div><div style="display:grid;grid-template-columns:repeat(3,1fr);border:2px solid #222;border-radius:4px;font-size:12px;text-align:center"><div>short</div><div style="background:#222;color:#fff">medium</div><div>long</div></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;font-size:14px"><div style="padding:2px 10px">Cancel</div><div style="background:#c2410c;color:#fff;padding:2px 12px;border-radius:5px 3px 6px 3px">Start run →</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">CONNECT · MCP SERVER</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:14px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:17px;font-weight:700">Use this agent from other apps</div><div style="display:flex;align-items:center;gap:6px;font-size:13px">On <div style="width:34px;height:18px;border-radius:10px;background:#222;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff"></div></div></div></div>
+      <div style="border:2px dashed #222;padding:6px 8px;font-family:ui-monospace,Menlo,monospace;font-size:12px;border-radius:4px">http://localhost:3456/mcp   [copy]</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:5px;font-size:13px"><div>Tools exposed</div><div>☑ generate_content</div><div>☑ get_schedule</div><div>☑ get_analytics</div><div>☐ publish_content</div><div>☑ get_health</div></div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-size:13px"><div>Add to a client</div><div style="display:flex;gap:4px;font-size:12px"><span style="background:#222;color:#fff;padding:0 6px;border-radius:10px">Claude</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">Cursor</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">JSON</span></div><div style="border:2px solid #222;height:64px;border-radius:4px;background:repeating-linear-gradient(0deg,#fff 0 10px,#eee 10px 12px)"></div></div>
+      </div>
+      <div style="font-size:13px;color:#c2410c">publish_content off by default: it uploads to YouTube. Requires API_KEY</div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Composer + run feed: one column, generate is always at the top</div>
+<div class="dv-card" style="width:560px;padding:18px;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">HOME</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;min-height:380px;display:flex;flex-direction:column">
+      <div style="border-bottom:2px solid #222;padding:8px 12px;display:flex;justify-content:space-between;font-size:14px"><div style="font-weight:700">My Channel <span style="color:#c2410c">●</span></div><div style="display:flex;gap:12px"><span>Schedule</span><span>Analytics</span><span>Settings</span></div></div>
+      <div style="display:grid;grid-template-columns:1fr 150px;flex:1">
+        <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+          <div style="border:2px solid #222;border-radius:8px 4px 9px 4px;padding:10px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:16px;color:#888">What should the next video be about?</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px;align-items:center"><span style="background:#222;color:#fff;padding:0 6px;border-radius:10px">story</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">list</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">tutorial</span><span style="color:#888">· medium ▾</span><span style="margin-left:auto;background:#c2410c;color:#fff;padding:1px 10px;border-radius:5px 3px 6px 3px;font-size:13px">Generate</span></div>
+          </div>
+          <div style="font-size:13px;color:#888">Runs</div>
+          <div style="border:2px solid #c2410c;border-radius:6px 3px 7px 4px;padding:8px;display:flex;flex-direction:column;gap:5px;font-size:12px">
+            <div style="font-size:14px">"Why cats knead" · running</div>
+            <div>✓ Strategy · ✓ Script · ◐ Thumbnail …</div>
+            <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#666">› generating image 2 of 3</div>
+          </div>
+          <div style="border:2px solid #222;border-radius:6px 3px 7px 4px;padding:8px;font-size:12px;display:flex;justify-content:space-between"><span>"5 tiny habits" · queued Tue 2 PM</span><span>▸</span></div>
+          <div style="border:2px dashed #222;border-radius:6px 3px 7px 4px;padding:8px;font-size:12px;display:flex;justify-content:space-between"><span>"Ocean myths" · simulated, won't upload</span><span>▸</span></div>
+        </div>
+        <div style="border-left:2px solid #222;padding:10px;display:flex;flex-direction:column;gap:8px;font-size:12px">
+          <div style="font-size:13px">Health</div><div>✓ Script</div><div>✓ Images</div><div>✓ Voice</div><div>✓ FFmpeg</div><div style="color:#c2410c">✗ Upload · fix</div>
+          <div style="font-size:13px;margin-top:6px">Today</div><div>06:00 generate</div><div>09:00 analytics</div><div>14:00 publish</div><div>22:00 optimize</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#c2410c">↑ "simulated" runs get a dashed outline so a placeholder run can't pass for a real one</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">RUN DETAIL (expanded in feed)</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:12px;display:grid;grid-template-columns:130px 1fr;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px"><div>✓ Strategy</div><div>✓ Script</div><div style="font-weight:700">◐ Thumbnail</div><div style="color:#999">○ SEO</div><div style="color:#999">○ Production</div><div style="color:#999">○ Publishing</div><div style="color:#999">○ Analytics</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div style="aspect-ratio:16/9;border:2px solid #222;background:repeating-linear-gradient(45deg,#fff 0 6px,#eee 6px 12px)"></div><div style="aspect-ratio:16/9;border:2px solid #c2410c;background:repeating-linear-gradient(45deg,#fff 0 6px,#eee 6px 12px)"></div><div style="aspect-ratio:16/9;border:2px dashed #222"></div></div>
+        <div style="font-size:12px;color:#888">A/B variants · pick one or let it test</div>
+        <div style="border:2px solid #222;border-radius:4px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:11px;display:flex;flex-direction:column;gap:3px"><div>06:00:02 strategy  topic chosen</div><div>06:00:41 script    1,240 words</div><div>06:01:10 thumbnail prompt sent</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">SETTINGS (single page, MCP section)</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:14px;display:flex;flex-direction:column;gap:10px;font-size:13px">
+      <div style="display:flex;gap:14px;color:#888"><span>Providers</span><span>Channel</span><span>API key</span><span style="color:#222;border-bottom:2px solid #222">MCP server</span></div>
+      <div style="display:flex;justify-content:space-between"><div style="font-size:16px;font-weight:700">MCP server</div><div>☑ enabled</div></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:6px 10px;align-items:center"><div>Transport</div><div style="display:flex;gap:4px;font-size:12px"><span style="background:#222;color:#fff;padding:0 6px;border-radius:10px">HTTP</span><span style="border:1.5px solid #222;padding:0 6px;border-radius:10px">stdio</span></div><div>Endpoint</div><div style="border:2px dashed #222;padding:2px 6px;font-family:ui-monospace,Menlo,monospace;font-size:11px">localhost:3456/mcp</div><div>Auth</div><div>x-api-key = API_KEY ••••••</div></div>
+      <div style="border:2px solid #222;border-radius:4px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fafafa">{ "mcpServers": { "youtube-agent": { "url": "…/mcp" } } }</div>
+      <div style="color:#c2410c">copy-paste config is the whole setup for a solo user</div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Board + calendar: videos as cards moving through stages</div>
+<div class="dv-card" style="width:560px;padding:18px;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">BOARD</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;min-height:380px;display:flex;flex-direction:column">
+      <div style="border-bottom:2px solid #222;padding:8px 12px;display:flex;gap:14px;font-size:14px;align-items:center"><span style="font-weight:700">My Channel</span><span style="border-bottom:2px solid #222">Board</span><span>Calendar</span><span>Analytics</span><span>Connect</span><span style="margin-left:auto;color:#c2410c">✗ 1 check</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;flex:1">
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">In pipeline</div><div style="border:2px solid #c2410c;border-radius:5px 3px 6px 3px;padding:6px;font-size:11px;display:flex;flex-direction:column;gap:4px"><div style="aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#fff 0 5px,#eee 5px 10px);border:1.5px solid #222"></div>Why cats knead<div style="height:5px;border:1.5px solid #222"><div style="width:43%;height:100%;background:#c2410c"></div></div></div><div style="border:2px dashed #222;border-radius:5px;padding:6px;font-size:12px;text-align:center">+ new</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">Ready</div><div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:6px;font-size:11px;display:flex;flex-direction:column;gap:4px"><div style="aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#fff 0 5px,#eee 5px 10px);border:1.5px solid #222"></div>Ocean myths<span style="color:#c2410c">simulated</span></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">Scheduled</div><div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:6px;font-size:11px;display:flex;flex-direction:column;gap:4px"><div style="aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#fff 0 5px,#eee 5px 10px);border:1.5px solid #222"></div>5 tiny habits<span>Tue 2 PM</span></div><div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:6px;font-size:11px;display:flex;flex-direction:column;gap:4px"><div style="aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#fff 0 5px,#eee 5px 10px);border:1.5px solid #222"></div>Moon facts<span>Wed 2 PM</span></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px">Published</div><div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:6px;font-size:11px;display:flex;flex-direction:column;gap:4px"><div style="aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#fff 0 5px,#eee 5px 10px);border:1.5px solid #222"></div>Sleep science<span>1.2k views · 78</span></div></div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#c2410c">↑ drag Ready → Scheduled = /publish; card opens a side drawer with script, SEO, thumbs</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">CALENDAR · generate into a slot</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:10px;display:flex;flex-direction:column;gap:6px;position:relative">
+      <div style="display:grid;grid-template-columns:40px repeat(5,1fr);gap:4px;font-size:12px;text-align:center"><div></div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div></div>
+      <div style="display:grid;grid-template-columns:40px repeat(5,1fr);gap:4px;font-size:11px"><div>06:00</div><div style="border:1.5px dashed #222;padding:2px">gen</div><div style="border:1.5px dashed #222;padding:2px">gen</div><div style="border:1.5px dashed #222;padding:2px">gen</div><div style="border:1.5px dashed #222;padding:2px">gen</div><div style="border:1.5px dashed #222;padding:2px">gen</div></div>
+      <div style="display:grid;grid-template-columns:40px repeat(5,1fr);gap:4px;font-size:11px"><div>14:00</div><div style="border:2px solid #222;padding:2px">Sleep sci.</div><div style="border:2px solid #222;padding:2px">5 habits</div><div style="border:2px solid #222;padding:2px">Moon</div><div style="border:2px solid #c2410c;padding:2px;color:#c2410c">+ empty</div><div style="border:1.5px dashed #ccc;padding:2px"></div></div>
+      <div style="align-self:flex-end;margin-right:10px;background:#fff;border:2px solid #222;border-radius:7px 3px 8px 4px;padding:10px;width:230px;display:flex;flex-direction:column;gap:6px;font-size:12px">
+        <div style="font-size:14px;font-weight:700">Fill Thu 2 PM</div><div style="border:2px solid #222;height:24px;border-radius:4px;color:#999;padding:0 6px">topic (optional)</div><div>style: story ▾ · length: medium ▾</div><div style="align-self:flex-end;background:#c2410c;color:#fff;padding:1px 10px;border-radius:5px 3px 6px 3px">Generate</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;color:#888">CONNECT · MCP SERVER + call log</div>
+    <div style="border:2px solid #222;border-radius:9px 4px 10px 5px;padding:14px;display:flex;flex-direction:column;gap:10px;font-size:13px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:700">MCP server · running</div><div style="border:2px solid #222;padding:0 8px;border-radius:5px">Copy config</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:8px;display:flex;flex-direction:column;gap:4px;font-size:12px"><div style="font-size:13px">Connected clients</div><div>● Claude Desktop · 2m ago</div><div style="color:#999">○ Cursor · yesterday</div></div>
+        <div style="border:2px solid #222;border-radius:5px 3px 6px 3px;padding:8px;display:flex;flex-direction:column;gap:4px;font-size:12px"><div style="font-size:13px">Tools</div><div>generate_content · get_schedule · get_analytics · publish_content · analyze_trends · predict_performance</div></div>
+      </div>
+      <div style="border:2px solid #222;border-radius:4px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:11px;display:flex;flex-direction:column;gap:3px"><div>19:02 Claude → get_schedule()          ok</div><div>19:03 Claude → generate_content("moon") run #42</div><div style="color:#c2410c">19:03 Claude → publish_content(41)    needs approval</div></div>
+      <div style="color:#c2410c">call log shows what outside apps did; uploads wait for your OK</div>
+    </div>
+  </div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "take <a class="dv-oid" href="#1a">1a</a> to hi-fi" · "<a class="dv-oid" href="#1b">1b</a> layout with the MCP call log from <a class="dv-oid" href="#1c">1c</a>" · "more analytics ideas"</p>
+</section>
+</x-dc>
+</body>
+</html>

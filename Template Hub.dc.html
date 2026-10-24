@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}body{margin:0;background:#10131B;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}textarea,input,button{font-family:inherit}</style></helmet>
+<div data-screen-label="Template Hub" style="position:relative;min-height:100vh;overflow:hidden;background:#10131B">
+  {{ bgEl }}
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,#10131B 22%,rgba(16,19,27,0.82) 55%,rgba(16,19,27,0.35)),linear-gradient(0deg,#10131B 4%,rgba(16,19,27,0) 45%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:14px;padding:28px 56px 0;flex-wrap:wrap">
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <div style="display:flex;gap:4px;background:rgba(16,19,27,0.6);border:1px solid rgba(200,212,228,0.12);border-radius:12px;padding:4px;backdrop-filter:blur(10px)">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4"><button onClick="{{ tb.onClick }}" style="height:34px;padding:0 16px;border:none;border-radius:9px;font-size:13px;font-weight:800;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }}">{{ tb.label }}</button></sc-for>
+    </div>
+    <span style="margin-left:auto;font:500 12px 'JetBrains Mono',monospace;color:rgba(200,212,228,0.6)">en-US · US market · YouTube first</span>
+  </div>
+
+  <sc-if value="{{ is.pick }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Pick template" style="position:relative;padding:48px 56px 56px;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:720px"><span style="font-size:14px;font-weight:700;color:#8DEBFF">Step 1 of 1</span><h1 style="margin:0;font-size:52px;line-height:1.04;font-weight:300;letter-spacing:-0.03em">Pick the one channel template to start with</h1><p style="margin:0;font-size:17px;line-height:1.55;color:rgba(200,212,228,0.85)">Each template bundles the concept, hook patterns, structure, subject lock, voice, SFX, music, thumbnail rules and benchmarks. You can switch later.</p></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;max-width:1200px">
+        <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+          <div onClick="{{ c.onClick }}" onMouseEnter="{{ c.onHover }}" style="position:relative;min-height:200px;border-radius:20px;overflow:hidden;cursor:pointer;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;border:{{ c.border }};transition:transform 0.2s" style-hover="transform:translateY(-4px)">
+            <div style="position:absolute;inset:0;background-image:{{ c.bgUrl }};background-size:cover;background-position:center"></div>
+            <div style="position:absolute;inset:0;background:{{ c.shade }}"></div>
+            <span style="position:relative;font-size:22px;font-weight:800">{{ c.label }}</span>
+            <span style="position:relative;font-size:13px;line-height:1.45;color:rgba(244,247,252,0.85)">{{ c.concept }}</span>
+            <sc-if value="{{ c.chosen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:14px;right:14px;background:#8DEBFF;color:#10131B;font-size:11px;font-weight:800;padding:4px 10px;border-radius:12px">ACTIVE</span></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.tpl }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Template detail" style="position:relative;padding:44px 56px 56px;display:flex;flex-direction:column;gap:24px;max-width:1240px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:8px;max-width:720px"><span style="font-size:14px;font-weight:700;color:#8DEBFF">Active template</span><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">{{ t.label }}</h1><p style="margin:0;font-size:17px;line-height:1.55;color:rgba(200,212,228,0.88)">{{ t.concept }}</p></div>
+        <div style="display:flex;gap:10px"><button onClick="{{ copyTpl }}" style="height:46px;padding:0 20px;border:1px solid rgba(200,212,228,0.25);border-radius:23px;background:rgba(16,19,27,0.5);color:#fff;font-size:14px;font-weight:700;cursor:pointer">{{ copyLabel }}</button><a href="Storyboard Studio.dc.html" style="height:46px;padding:0 24px;border-radius:23px;background:#F4F7FC;color:#10131B;font-size:14px;font-weight:800;display:flex;align-items:center">New video from this</a></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px">
+        <sc-for list="{{ facets }}" as="f" hint-placeholder-count="12">
+          <div style="background:rgba(16,19,27,0.62);border:1px solid rgba(200,212,228,0.1);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(12px)">
+            <span style="font:600 11px 'JetBrains Mono',monospace;color:#8DEBFF;letter-spacing:0.08em">{{ f.k }}</span>
+            <sc-for list="{{ f.lines }}" as="ln" hint-placeholder-count="2"><span style="font-size:13.5px;line-height:1.45;color:rgba(244,247,252,0.9)">{{ ln }}</span></sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.factory }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Template factory" style="position:relative;padding:44px 56px 56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;max-width:1300px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:14px;font-weight:700;color:#8DEBFF">Template factory</span>
+        <h1 style="margin:0;font-size:44px;font-weight:300;letter-spacing:-0.03em">Learn the structure of a video you like</h1>
+        <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(200,212,228,0.85)">Paste what you can see on YouTube: title, length, views, the chapter list or transcript, and what happens on screen. The agent extracts the pattern (pacing, hook type, beat lengths) and writes a new template in your style. It keeps none of their words, characters, footage or music.</p>
+        <input value="{{ fUrl }}" onChange="{{ onFUrl }}" placeholder="Video URL (for your notes)" style="height:42px;background:rgba(16,19,27,0.6);border:1px solid rgba(200,212,228,0.18);border-radius:10px;color:#fff;font-size:14px;padding:0 12px">
+        <textarea value="{{ fText }}" onChange="{{ onFText }}" rows="10" placeholder="Title · length · views&#10;0:00 Hook — ...&#10;0:12 ...&#10;Transcript or shot notes..." style="resize:vertical;background:rgba(16,19,27,0.6);border:1px solid rgba(200,212,228,0.18);border-radius:10px;color:#fff;font-size:13.5px;line-height:1.5;padding:12px"></textarea>
+        <button onClick="{{ runFactory }}" style="align-self:flex-start;height:46px;padding:0 24px;border:none;border-radius:23px;background:#F4F7FC;color:#10131B;font-size:14px;font-weight:800;cursor:pointer">{{ fBtn }}</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;background:rgba(16,19,27,0.7);border:1px solid rgba(200,212,228,0.1);border-radius:18px;padding:18px;min-height:300px;backdrop-filter:blur(12px)">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:800">New template (niches.json schema)</span><sc-if value="{{ fOut }}" hint-placeholder-val="{{ false }}"><button onClick="{{ copyF }}" style="height:30px;padding:0 12px;border:none;border-radius:15px;background:rgba(244,247,252,0.12);color:#fff;font-size:12px;font-weight:700;cursor:pointer">Copy</button></sc-if></div>
+        <pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:400 12px/1.55 'JetBrains Mono',monospace;color:rgba(244,247,252,0.85)">{{ fShow }}</pre>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.inspect }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Competitor inspector" style="position:relative;padding:44px 56px 56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;max-width:1300px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:14px;font-weight:700;color:#8DEBFF">Competitor inspector · {{ t.label }}</span>
+        <h1 style="margin:0;font-size:44px;font-weight:300;letter-spacing:-0.03em">Benchmark a channel's best videos</h1>
+        <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(200,212,228,0.85)">Open the channel's Videos tab, sort by Popular, and paste 10–30 rows (title, views, length, age). The agent finds what the winners share and turns it into targets for your template. It only uses the numbers you paste.</p>
+        <input value="{{ cName }}" onChange="{{ onCName }}" placeholder="Channel name or URL" style="height:42px;background:rgba(16,19,27,0.6);border:1px solid rgba(200,212,228,0.18);border-radius:10px;color:#fff;font-size:14px;padding:0 12px">
+        <textarea value="{{ cText }}" onChange="{{ onCText }}" rows="10" placeholder="I Tested 10 Myths… | 2.1M views | 11:04 | 3 months ago&#10;…" style="resize:vertical;background:rgba(16,19,27,0.6);border:1px solid rgba(200,212,228,0.18);border-radius:10px;color:#fff;font-size:13.5px;line-height:1.5;padding:12px"></textarea>
+        <button onClick="{{ runInspect }}" style="align-self:flex-start;height:46px;padding:0 24px;border:none;border-radius:23px;background:#F4F7FC;color:#10131B;font-size:14px;font-weight:800;cursor:pointer">{{ cBtn }}</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;background:rgba(16,19,27,0.7);border:1px solid rgba(200,212,228,0.1);border-radius:18px;padding:18px;min-height:300px;backdrop-filter:blur(12px)">
+        <span style="font-size:13px;font-weight:800">Benchmark report</span>
+        <div style="font-size:14px;line-height:1.6;color:rgba(244,247,252,0.88);white-space:pre-wrap">{{ cShow }}</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const KEY = 'rhm_template';
+class Component extends DCLogic {
+  state = { data: null, tab: 'pick', active: null, hover: null, fUrl: '', fText: '', fOut: '', fBusy: false, cName: '', cText: '', cOut: '', cBusy: false, copied: false };
+  async componentDidMount() {
+    const data = await (await fetch('templates/niches.json')).json();
+    let active = null; try { active = localStorage.getItem(KEY); } catch (e) {}
+    const q = new URLSearchParams(location.search).get('tab');
+    this.setState({ data, active, tab: ['pick', 'tpl', 'factory', 'inspect'].includes(q) && (q !== 'tpl' || active) ? q : (active ? 'tpl' : 'pick') });
+    this.onKey = (e) => { if (e.key === 'Escape' && !/INPUT|TEXTAREA/.test(e.target.tagName)) location.href = 'Home.dc.html'; };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+  tpl(id) { const d = this.state.data; return d ? (d.templates.find(t => t.id === id) || d.templates[0]) : null; }
+  choose(id) { try { localStorage.setItem(KEY, id); } catch (e) {} this.setState({ active: id, tab: 'tpl' }); }
+  async ask(system, content, key) {
+    this.setState({ [key + 'Busy']: true, [key + 'Out']: '' });
+    try { const out = await window.claude.complete({ system, max_tokens: 3000, messages: [{ role: 'user', content }] }); this.setState({ [key + 'Out']: out }); }
+    catch (e) { this.setState({ [key + 'Out']: 'Agent error: ' + (e.message || e) }); }
+    this.setState({ [key + 'Busy']: false });
+  }
+  renderVals() {
+    const s = this.state, d = s.data;
+    const t = this.tpl(s.active) || { label: '…', concept: '' };
+    const shown = this.tpl(s.hover || s.active) || t;
+    const sel = (on) => ({ bg: on ? '#F4F7FC' : 'transparent', fg: on ? '#10131B' : 'rgba(244,247,252,0.8)' });
+    const j = (v) => Array.isArray(v) ? v.join(' · ') : (typeof v === 'object' && v ? Object.entries(v).map(([k, x]) => k + ': ' + (Array.isArray(x) ? x.join(' → ') : x)).join('\n') : String(v));
+    const facets = d && s.active ? [['AUDIENCE', t.audience], ['HOOK · max ' + t.hook.maxSec + 's', t.hook.patterns.join('\n')], ['LONG STRUCTURE', t.structure.long.join(' → ')], ['SHORT STRUCTURE', t.structure.short.join(' → ')], ['SUBJECT LOCK', j(t.subject)], ['VISUAL', j(t.visual)], ['MOTION', t.motion.join('\n')], ['VOICE', j(t.voice)], ['SFX', t.sfx.join(' · ')], ['MUSIC', j(t.music)], ['THUMBNAIL', j(t.thumbnail)], ['TITLES', t.title.join('\n')], ['BENCHMARK', t.benchmark.join('\n')], ['COMPLIANCE', t.compliance.join('\n')], ['FREE GENERATORS', d.generators.video.map(g => g.name + ': ' + g.free).join('\n')]].map(([k, v]) => ({ k, lines: String(v).split('\n') })) : [];
+    const rules = 'Locale en-US, US market, YouTube. Never copy the source video\u2019s words, characters, footage, music, thumbnails or channel name. Only extract structure, pacing and patterns. Never invent numbers you were not given.';
+    return {
+      bgEl: React.createElement('div', { style: { position: 'absolute', inset: 0, backgroundImage: `url('${shown ? shown.bg : 'assets/wall_starfall.jpg'}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.55 } }),
+      tabs: [['pick', 'Templates'], ['tpl', 'Active'], ['factory', 'Template factory'], ['inspect', 'Competitor inspector']].map(([id, label]) => ({ label, ...sel(s.tab === id), onClick: () => this.setState({ tab: id }) })),
+      is: { pick: s.tab === 'pick', tpl: s.tab === 'tpl' && !!s.active, factory: s.tab === 'factory', inspect: s.tab === 'inspect' },
+      cards: d ? d.templates.map(x => ({ label: x.label, concept: x.concept, bgUrl: `url('${x.bg}')`, chosen: x.id === s.active, border: x.id === s.active ? '2px solid #8DEBFF' : '1px solid rgba(200,212,228,0.14)', shade: `linear-gradient(0deg, oklch(0.18 0.04 ${x.hue} / 0.95) 25%, oklch(0.3 0.08 ${x.hue} / 0.35))`, onClick: () => this.choose(x.id), onHover: () => this.setState({ hover: x.id }) })) : [],
+      t, facets,
+      copyTpl: () => navigator.clipboard.writeText(JSON.stringify(t, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }),
+      copyLabel: s.copied ? 'Copied' : 'Copy template JSON',
+      fUrl: s.fUrl, onFUrl: (e) => this.setState({ fUrl: e.target.value }), fText: s.fText, onFText: (e) => this.setState({ fText: e.target.value }),
+      fBtn: s.fBusy ? 'Analyzing…' : 'Make a template',
+      runFactory: () => s.fText.trim() && this.ask(rules + ' Output only JSON matching this example template schema, with a new id and label, an original concept and original hook patterns:\n' + JSON.stringify(this.tpl(s.active || 'roblox-horror')), 'Source video notes (' + s.fUrl + '):\n' + s.fText, 'f'),
+      fOut: s.fOut, fShow: s.fOut || 'The new template appears here. Save it into templates/niches.json to make it selectable.',
+      copyF: () => navigator.clipboard.writeText(s.fOut),
+      cName: s.cName, onCName: (e) => this.setState({ cName: e.target.value }), cText: s.cText, onCText: (e) => this.setState({ cText: e.target.value }),
+      cBtn: s.cBusy ? 'Inspecting…' : 'Benchmark',
+      runInspect: () => s.cText.trim() && this.ask(rules + ' You benchmark a competitor channel for the "' + t.label + '" template. Report in plain text with short headings: 1) top performers and what they share (title pattern, length, topic), 2) median views of the pasted rows and the outlier threshold (2x median), 3) length sweet spot, 4) five original video ideas for us that follow the winning pattern without copying, 5) targets to add to our benchmark list.', 'Channel: ' + s.cName + '\nRows:\n' + s.cText, 'c'),
+      cShow: s.cOut || 'Paste rows and press Benchmark.'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}body{margin:0;background:#0b0d12;color:#f3f4f6;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#f5c27a}a:hover{color:#fff}input{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
+<div data-screen-label="Console home" style="position:relative;min-height:100vh;overflow:hidden;background:#0b0d12;display:flex;flex-direction:column">
+  <div style="position:absolute;inset:0;background:{{ ambient }};transition:background 0.6s ease"></div>
+  <div style="position:absolute;top:0;right:0;width:58%;height:72%;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.035) 0 14px,rgba(255,255,255,0.015) 14px 28px);-webkit-mask-image:linear-gradient(to left,#000 30%,transparent),linear-gradient(to top,transparent,#000 40%);mask-image:linear-gradient(to left,#000 30%,transparent);display:flex;align-items:flex-start;justify-content:flex-end;padding:96px 64px 0 0"><span style="font:500 11px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.35);letter-spacing:0.08em">KEY ART · FOCUSED ITEM</span></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,#0b0d12 8%,rgba(11,13,18,0.6) 45%,rgba(11,13,18,0.1) 75%),linear-gradient(to right,rgba(11,13,18,0.85),rgba(11,13,18,0) 60%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:36px 64px 0;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:32px;font-size:18px;font-weight:600">
+      <span style="color:#fff">Channel</span><span style="color:rgba(255,255,255,0.45)">Library</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:28px;font-size:15px;color:rgba(255,255,255,0.8)">
+      <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:oklch(0.75 0.14 25)"></span>4/5 ready</span>
+      <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:oklch(0.75 0.14 150)"></span>MCP</span>
+      <span style="font-variant-numeric:tabular-nums">7:03 PM</span>
+      <span style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">ED</span>
+    </div>
+  </div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:16px;padding:56px 64px 0;min-height:248px;overflow-x:auto;scrollbar-width:none">
+    <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="7">
+      <div onClick="{{ t.onClick }}" style="{{ t.style }}">
+        <span style="font-size:{{ t.glyphSize }};line-height:1;color:#fff;font-weight:500">{{ t.glyph }}</span>
+        <span style="position:absolute;left:14px;bottom:12px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.85)">{{ t.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position:relative;padding:40px 64px 0;display:flex;flex-direction:column;gap:14px;max-width:820px">
+    <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.02em">{{ cur.meta }}</div>
+    <h1 style="margin:0;font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-0.02em;text-wrap:balance">{{ cur.title }}</h1>
+    <p style="margin:0;font-size:19px;line-height:1.5;color:rgba(255,255,255,0.78);text-wrap:pretty">{{ cur.desc }}</p>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:10px">
+      <button onClick="{{ openCur }}" style="height:52px;padding:0 34px;border-radius:26px;border:none;background:#fff;color:#0b0d12;font:700 17px 'Manrope',sans-serif;cursor:pointer;transition:transform 0.15s" style-hover="transform:scale(1.04)">{{ cur.primary }}</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,0.14);color:#fff;font:700 18px 'Manrope',sans-serif;cursor:pointer" style-hover="background:rgba(255,255,255,0.24)">···</button>
+    </div>
+  </div>
+
+  <div style="position:relative;padding:44px 64px 64px">
+    <sc-if value="{{ is.generate }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Suggested by the Strategy agent</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;max-width:1100px">
+          <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+            <div onClick="{{ s.onClick }}" style="background:rgba(255,255,255,0.07);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:background 0.15s" style-hover="background:rgba(255,255,255,0.14)">
+              <span style="font-size:18px;font-weight:600">{{ s.topic }}</span><span style="font-size:14px;color:rgba(255,255,255,0.55)">{{ s.style }} · {{ s.why }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.run }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;max-width:1100px">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="7">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="height:4px;border-radius:2px;background:{{ st.bar }}"></div>
+            <span style="font-size:14px;font-weight:600;color:{{ st.color }}">{{ st.name }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.queue }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;max-width:1100px">
+        <sc-for list="{{ queue }}" as="q" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:10px;opacity:{{ q.opacity }}">
+            <div style="aspect-ratio:16/9;border-radius:12px;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.08) 0 10px,rgba(255,255,255,0.04) 10px 20px);display:flex;align-items:flex-end;padding:10px;font:500 10px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.4)">THUMBNAIL</div>
+            <span style="font-size:16px;font-weight:600">{{ q.title }}</span><span style="font-size:13px;color:{{ q.metaColor }}">{{ q.when }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.analytics }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:56px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:44px;font-weight:700;font-variant-numeric:tabular-nums">4,812</span><span style="font-size:14px;color:rgba(255,255,255,0.55)">Views</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:44px;font-weight:700;font-variant-numeric:tabular-nums">6</span><span style="font-size:14px;color:rgba(255,255,255,0.55)">Videos published</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:44px;font-weight:700;font-variant-numeric:tabular-nums">72</span><span style="font-size:14px;color:rgba(255,255,255,0.55)">Avg performance score</span></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.health }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:2px;max-width:760px">
+        <sc-for list="{{ checks }}" as="c" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+            <span style="font-size:16px;font-weight:700;color:{{ c.color }}">{{ c.mark }}</span>
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ c.name }}</span><span style="font-size:14px;color:rgba(255,255,255,0.55)">{{ c.note }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.connect }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;font:500 15px 'JetBrains Mono',monospace">http://localhost:3456/mcp</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;max-width:1000px">
+          <sc-for list="{{ enabledTools }}" as="tl" hint-placeholder-count="5">
+            <span style="background:rgba(255,255,255,0.08);border-radius:18px;padding:7px 14px;font:500 13px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.85)">{{ tl.name }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.settings }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;max-width:1100px">
+        <div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:rgba(255,255,255,0.55)">AI provider</span><span style="font-size:17px;font-weight:600">Gemini · 3.1 Pro</span></div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:rgba(255,255,255,0.55)">Voice</span><span style="font-size:17px;font-weight:600">Gemini TTS</span></div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:rgba(255,255,255,0.55)">Default privacy</span><span style="font-size:17px;font-weight:600">Private</span></div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:rgba(255,255,255,0.55)">API key</span><span style="font-size:17px;font-weight:600">Set · ••••3f9a</span></div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:relative;margin-top:auto;padding:0 64px 28px;display:flex;gap:28px;font-size:13px;color:rgba(255,255,255,0.45)">
+    <span>← → Move</span><span>Enter Open</span><span>Esc Back</span>
+  </div>
+
+  <sc-if value="{{ screens.generate }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Generate" style="position:absolute;inset:0;background:rgba(8,10,14,0.92);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:40px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;flex-direction:column;gap:36px;max-width:880px">
+        <h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">New video</h1>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Topic</span>
+          <input value="{{ topic }}" onChange="{{ onTopic }}" placeholder="Leave empty and the Strategy agent picks one" maxLength="200" style="height:64px;border-radius:14px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;padding:0 22px;outline:none" style-focus="border-color:#fff">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Style</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ styles }}" as="sy" hint-placeholder-count="10">
+              <button onClick="{{ sy.onClick }}" style="height:44px;padding:0 20px;border-radius:22px;border:none;font:600 15px 'Manrope',sans-serif;cursor:pointer;background:{{ sy.bg }};color:{{ sy.fg }}">{{ sy.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Length</span>
+          <div style="display:flex;gap:10px">
+            <sc-for list="{{ lengths }}" as="ln" hint-placeholder-count="3">
+              <button onClick="{{ ln.onClick }}" style="height:56px;min-width:140px;padding:0 22px;border-radius:14px;border:none;font:600 16px 'Manrope',sans-serif;cursor:pointer;background:{{ ln.bg }};color:{{ ln.fg }}">{{ ln.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center">
+          <button onClick="{{ startRun }}" style="height:56px;padding:0 40px;border-radius:28px;border:none;background:#fff;color:#0b0d12;font:700 18px 'Manrope',sans-serif;cursor:pointer">Start run</button>
+          <span style="font-size:14px;color:rgba(255,255,255,0.5)">Runs all 7 agents. Uploads stay private until you change it.</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ screens.run }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Live run" style="position:absolute;inset:0;background:rgba(8,10,14,0.94);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:40px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">{{ runMeta }}</span>
+        <h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">{{ runTitle }}</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;max-width:1300px">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="7">
+          <div style="border-radius:16px;padding:18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;background:{{ st.cardBg }};outline:{{ st.outline }};outline-offset:3px;transition:all 0.3s">
+            <span style="font:500 12px 'JetBrains Mono',monospace;color:{{ st.color }}">{{ st.num }}</span>
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:17px;font-weight:700;color:{{ st.color }}">{{ st.name }}</span><span style="font-size:13px;color:rgba(255,255,255,0.55)">{{ st.state }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;max-width:900px;font:400 14px/1.6 'JetBrains Mono',monospace;color:rgba(255,255,255,0.7)">
+        <sc-for list="{{ logs }}" as="lg" hint-placeholder-count="3"><div>{{ lg }}</div></sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ screens.connect }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Connect MCP" style="position:absolute;inset:0;background:rgba(8,10,14,0.94);backdrop-filter:blur(24px);display:flex;flex-direction:column;padding:48px 64px;gap:36px;overflow:auto">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:none;color:rgba(255,255,255,0.7);font:600 15px 'Manrope',sans-serif;cursor:pointer;padding:0">← Back</button>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;max-width:1200px">
+        <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Let other apps run this agent</span><h1 style="margin:0;font-size:48px;font-weight:700;letter-spacing:-0.02em">MCP server</h1></div>
+        <button onClick="{{ toggleServer }}" style="display:flex;align-items:center;gap:12px;height:48px;padding:0 10px 0 20px;border-radius:24px;border:none;background:rgba(255,255,255,0.1);color:#fff;font:600 15px 'Manrope',sans-serif;cursor:pointer">{{ serverLabel }}<span style="width:48px;height:28px;border-radius:14px;background:{{ toggleBg }};position:relative;transition:background 0.2s"><span style="position:absolute;top:3px;left:{{ knobLeft }};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s"></span></span></button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:24px;max-width:1200px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Tools</span>
+          <div style="display:flex;flex-direction:column;background:rgba(255,255,255,0.05);border-radius:16px;padding:6px 18px">
+            <sc-for list="{{ tools }}" as="tl" hint-placeholder-count="8">
+              <div onClick="{{ tl.onClick }}" style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.07);cursor:pointer">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font:500 14px 'JetBrains Mono',monospace">{{ tl.name }}</span><span style="font-size:13px;color:rgba(255,255,255,0.5)">{{ tl.desc }}</span></div>
+                <span style="width:40px;height:24px;border-radius:12px;background:{{ tl.bg }};position:relative"><span style="position:absolute;top:3px;left:{{ tl.knob }};width:18px;height:18px;border-radius:50%;background:#fff"></span></span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6)">Add to a client</span>
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ clients }}" as="cl" hint-placeholder-count="3">
+              <button onClick="{{ cl.onClick }}" style="height:40px;padding:0 18px;border-radius:20px;border:none;font:600 14px 'Manrope',sans-serif;cursor:pointer;background:{{ cl.bg }};color:{{ cl.fg }}">{{ cl.name }}</button>
+            </sc-for>
+          </div>
+          <pre style="margin:0;background:rgba(255,255,255,0.05);border-radius:16px;padding:20px;font:400 13px/1.6 'JetBrains Mono',monospace;color:rgba(255,255,255,0.85);white-space:pre-wrap;word-break:break-all">{{ snippet }}</pre>
+          <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.6);margin-top:10px">Recent calls</span>
+          <div style="display:flex;flex-direction:column;gap:8px;font:400 13px/1.5 'JetBrains Mono',monospace">
+            <div style="display:grid;grid-template-columns:56px 1fr auto;gap:12px;color:rgba(255,255,255,0.75)"><span>19:02</span><span>Claude → get_schedule()</span><span style="color:oklch(0.75 0.14 150)">ok</span></div>
+            <div style="display:grid;grid-template-columns:56px 1fr auto;gap:12px;color:rgba(255,255,255,0.75)"><span>19:03</span><span>Claude → generate_content("moon facts")</span><span style="color:oklch(0.78 0.14 70)">run #42</span></div>
+            <div style="display:grid;grid-template-columns:56px 1fr auto;gap:12px;color:rgba(255,255,255,0.75)"><span>19:03</span><span>Claude → publish_content(41)</span><span style="color:oklch(0.75 0.14 25)">401 · needs x-api-key</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const TILES = [
+  { id: 'generate', glyph: '+', label: 'New video', hue: 70, meta: 'Strategy → Script → Thumbnail → SEO → Production → Publishing', title: 'Make a new video', desc: 'Pick a topic, or leave it empty and the Strategy agent chooses one from current trends.', primary: 'Start', screen: 'generate' },
+  { id: 'run', glyph: '▶', label: 'Live run', hue: 40, meta: 'Running · started 06:00 by the daily schedule', title: 'Why cats knead', desc: 'Thumbnail Designer is generating variants. Production starts when SEO finishes.', primary: 'Watch run', screen: 'run' },
+  { id: 'queue', glyph: '≡', label: 'Up next', hue: 250, meta: '3 videos · next upload Tue 2:00 PM · private', title: 'Publish queue', desc: 'Videos upload at their scheduled time. Simulated runs are held back and never upload.', primary: 'Open queue' },
+  { id: 'analytics', glyph: '↗', label: 'Analytics', hue: 200, meta: 'Last 7 days · collected daily at 09:00', title: 'Channel performance', desc: 'Insights feed back into the Strategy agent for the next topic pick.', primary: 'Open analytics' },
+  { id: 'health', glyph: '✓', label: 'Health', hue: 25, meta: '4 of 5 stages ready', title: 'Pipeline health', desc: 'YouTube upload is not connected. Videos render, but nothing will publish.', primary: 'Fix upload' },
+  { id: 'connect', glyph: '⇄', label: 'Connect', hue: 150, meta: 'Running · 1 client connected', title: 'MCP server', desc: 'Let Claude, Cursor or any MCP client generate videos, read the schedule and pull analytics.', primary: 'Manage', screen: 'connect' },
+  { id: 'settings', glyph: '⚙', label: 'Settings', hue: 280, meta: 'Providers · Channel · API key', title: 'Settings', desc: 'Ethereal Dreamscript · posting daily at 2:00 PM.', primary: 'Open settings' }
+];
+const STEPS = ['Strategy', 'Script', 'Thumbnail', 'SEO', 'Production', 'Publishing', 'Analytics'];
+const STYLES = ['story', 'explainer', 'tutorial', 'list', 'review', 'educational', 'informative', 'engaging', 'professional', 'ethereal'];
+const LOGS = ['strategy    topic chosen', 'script      1,240 words · hook + 4 beats + CTA', 'thumbnail   3 variants generated', 'seo         title, 14 tags, description', 'production  narration 2:48 · 9 slides · mp4 rendered', 'publishing  queued for Tue 2:00 PM · private', 'analytics   tracking starts after upload'];
+const TOOLS = [
+  ['generate_content', 'Run the full pipeline for a topic, style and length'],
+  ['get_schedule', 'Upcoming publishes and cron jobs'],
+  ['get_analytics', 'Recent performance data'],
+  ['get_health', 'Capability check and agent status'],
+  ['publish_content', 'Upload a queued video to YouTube'],
+  ['analyze_trends', 'Trending topics for a region and category'],
+  ['predict_performance', 'Score a topic and publish time'],
+  ['get_content_calendar', 'Planned topics for the next N days']
+];
+const CLIENTS = ['Claude', 'Cursor', 'JSON'];
+
+class Component extends DCLogic {
+  state = { focus: 0, screen: 'home', topic: '', style: 'story', length: 'medium', runStep: 2, runTitle: 'Why cats knead', server: true, toolsOff: { publish_content: true }, client: 'Claude' };
+
+  componentDidMount() {
+    this.onKey = (e) => {
+      if (e.target && e.target.tagName === 'INPUT') { if (e.key === 'Escape') this.setState({ screen: 'home' }); return; }
+      if (this.state.screen !== 'home') { if (e.key === 'Escape' || e.key === 'Backspace') this.setState({ screen: 'home' }); return; }
+      if (e.key === 'ArrowRight') this.setState(s => ({ focus: Math.min(TILES.length - 1, s.focus + 1) }));
+      if (e.key === 'ArrowLeft') this.setState(s => ({ focus: Math.max(0, s.focus - 1) }));
+      if (e.key === 'Enter') this.open(this.state.focus);
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.timer = setInterval(() => {
+      if (this.state.running && this.state.runStep < STEPS.length) this.setState(s => ({ runStep: s.runStep + 1 }));
+    }, 2200);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); clearInterval(this.timer); }
+
+  open(i) { const t = TILES[i]; if (t.screen) this.setState({ screen: t.screen }); }
+
+  renderVals() {
+    const s = this.state;
+    const cur = TILES[s.focus];
+    const live = s.runStep < STEPS.length;
+    const tiles = TILES.map((t, i) => {
+      const f = i === s.focus;
+      const size = f ? 184 : 136;
+      return {
+        glyph: t.glyph, label: t.label, glyphSize: f ? '56px' : '40px',
+        onClick: () => (f ? this.open(i) : this.setState({ focus: i })),
+        style: { position: 'relative', flex: 'none', width: size + 'px', height: size + 'px', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.25s cubic-bezier(.2,.8,.2,1)', background: f ? `oklch(0.42 0.08 ${t.hue})` : 'rgba(255,255,255,0.09)', boxShadow: f ? '0 0 0 3px #0b0d12, 0 0 0 6px #fff, 0 24px 60px rgba(0,0,0,0.5)' : 'none' }
+      };
+    });
+    const steps = STEPS.map((name, i) => {
+      const done = i < s.runStep, active = i === s.runStep;
+      return {
+        name, num: String(i + 1).padStart(2, '0'),
+        state: done ? 'Done' : active ? 'Working…' : 'Waiting',
+        color: done || active ? '#fff' : 'rgba(255,255,255,0.4)',
+        bar: done ? '#fff' : active ? 'oklch(0.78 0.14 70)' : 'rgba(255,255,255,0.15)',
+        cardBg: active ? 'oklch(0.36 0.07 70)' : done ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
+        outline: active ? '2px solid oklch(0.78 0.14 70)' : '2px solid transparent'
+      };
+    });
+    const sel = (on) => ({ bg: on ? '#fff' : 'rgba(255,255,255,0.1)', fg: on ? '#0b0d12' : '#fff' });
+    const enabled = TOOLS.filter(([n]) => !s.toolsOff[n]);
+    const isOn = (n) => !s.toolsOff[n];
+    const toolNames = enabled.map(([n]) => n);
+    const snippet = s.client === 'JSON'
+      ? JSON.stringify({ url: 'http://localhost:3456/mcp', headers: { 'x-api-key': '${API_KEY}' }, tools: toolNames }, null, 2)
+      : JSON.stringify({ mcpServers: { 'youtube-agent': { url: 'http://localhost:3456/mcp', headers: { 'x-api-key': '${API_KEY}' } } } }, null, 2);
+    return {
+      ambient: `radial-gradient(ellipse 70% 60% at 80% 10%, oklch(0.34 0.07 ${cur.hue} / 0.9), transparent 70%), #0b0d12`,
+      tiles,
+      cur: { ...cur, meta: cur.id === 'run' ? (live ? `Running · step ${s.runStep + 1} of 7 · ${STEPS[s.runStep]}` : 'Finished · queued for Tue 2:00 PM') : cur.meta, title: cur.id === 'run' ? s.runTitle : cur.title, desc: cur.id === 'run' ? (live ? `${STEPS[s.runStep]} agent is working. ${s.runStep < 6 ? STEPS[s.runStep + 1] + ' starts when it finishes.' : 'Last step.'}` : 'All 7 agents finished. The video is in the publish queue.') : cur.desc },
+      openCur: () => this.open(s.focus),
+      is: Object.fromEntries(TILES.map((t, i) => [t.id, i === s.focus])),
+      screens: { generate: s.screen === 'generate', run: s.screen === 'run', connect: s.screen === 'connect' },
+      goHome: () => this.setState({ screen: 'home' }),
+      suggestions: [
+        { topic: 'The science of déjà vu', style: 'explainer', why: 'rising in US searches' },
+        { topic: '5 myths about sleep', style: 'list', why: 'evergreen' },
+        { topic: 'How lighthouses work', style: 'story', why: 'fits Animated Storytelling' }
+      ].map(x => ({ ...x, onClick: () => this.setState({ topic: x.topic, style: x.style, screen: 'generate' }) })),
+      steps,
+      runMeta: live ? `Step ${s.runStep + 1} of 7 · ${s.style} · ${s.length}` : `Finished · ${s.style} · ${s.length}`,
+      runTitle: s.runTitle,
+      logs: LOGS.slice(0, Math.min(s.runStep + (live ? 1 : 0), LOGS.length)).map((l, i) => `06:0${i}:${String(12 + i * 7).padStart(2, '0')}  ${l}${i === s.runStep ? ' …' : ''}`),
+      queue: [
+        { title: 'Why cats knead', when: 'Tue 2:00 PM · private' },
+        { title: '5 tiny habits', when: 'Wed 2:00 PM · private' },
+        { title: 'Moon facts', when: 'Thu 2:00 PM · private' },
+        { title: 'Ocean myths', when: 'Simulated · held back', sim: true }
+      ].map(q => ({ ...q, opacity: q.sim ? 0.5 : 1, metaColor: q.sim ? 'oklch(0.75 0.14 25)' : 'rgba(255,255,255,0.55)' })),
+      checks: [
+        ['Script & strategy generation', 'Gemini 3.1 Pro', true],
+        ['Image generation', 'Gemini 3.1 Flash Image', true],
+        ['Voice narration (TTS)', 'Gemini TTS', true],
+        ['Video assembly (FFmpeg)', 'Bundled ffmpeg-static', true],
+        ['YouTube upload', 'Not connected · run npm run credentials:setup', false]
+      ].map(([name, note, ok]) => ({ name, note, mark: ok ? '✓' : '✗', color: ok ? 'oklch(0.75 0.14 150)' : 'oklch(0.75 0.14 25)' })),
+      enabledTools: enabled.map(([name]) => ({ name })),
+      topic: s.topic,
+      onTopic: (e) => this.setState({ topic: e.target.value }),
+      styles: STYLES.map(n => ({ name: n, ...sel(n === s.style), onClick: () => this.setState({ style: n }) })),
+      lengths: ['short', 'medium', 'long'].map(n => ({ name: n[0].toUpperCase() + n.slice(1), ...sel(n === s.length), onClick: () => this.setState({ length: n }) })),
+      startRun: () => this.setState({ screen: 'run', runStep: 0, running: true, runTitle: s.topic.trim() || 'Topic picked by Strategy', focus: 1 }),
+      serverLabel: s.server ? 'Running' : 'Stopped',
+      toggleBg: s.server ? 'oklch(0.6 0.14 150)' : 'rgba(255,255,255,0.2)',
+      knobLeft: s.server ? '23px' : '3px',
+      toggleServer: () => this.setState({ server: !s.server }),
+      tools: TOOLS.map(([name, desc]) => ({ name, desc, bg: isOn(name) ? 'oklch(0.6 0.14 150)' : 'rgba(255,255,255,0.2)', knob: isOn(name) ? '19px' : '3px', onClick: () => this.setState(p => ({ toolsOff: { ...p.toolsOff, [name]: !p.toolsOff[name] } })) })),
+      clients: CLIENTS.map(n => ({ name: n, ...sel(n === s.client), onClick: () => this.setState({ client: n }) })),
+      snippet
+    };
+  }
+}
+</script>
+</body>
+</html>

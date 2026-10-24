@@ -1,0 +1,658 @@
+{
+  "version": 1,
+  "locale": {
+    "language": "en-US",
+    "market": "US",
+    "platform": "youtube"
+  },
+  "schema": [
+    "concept",
+    "audience",
+    "hook",
+    "structure",
+    "subject",
+    "visual",
+    "motion",
+    "voice",
+    "sfx",
+    "music",
+    "thumbnail",
+    "title",
+    "benchmark",
+    "compliance"
+  ],
+  "generators": {
+    "note": "Free first. Credits change often; check each site before planning volume.",
+    "video": [
+      {
+        "name": "Google Flow (Veo 3.1 Fast / Lite)",
+        "free": "about 50 credits per day; non-subscribers may be blocked at peak hours",
+        "use": "hero shots with ingredients (up to 3 reference images), first/last frame, scene extension"
+      },
+      {
+        "name": "Seedance 2.0",
+        "free": "daily credits on several hosts; watermark and resolution vary by host",
+        "use": "character-driven clips, high daily volume"
+      },
+      {
+        "name": "Kling 3.0",
+        "free": "daily credits, watermark on free",
+        "use": "motion-heavy action"
+      }
+    ],
+    "image": [
+      {
+        "name": "Gemini image (Nano Banana) in Gemini / Flow",
+        "use": "ingredient images: character sheet, location plate, style frame"
+      }
+    ],
+    "voice": [
+      {
+        "name": "edge-tts (local, free)",
+        "use": "narration; already used by media-fabric"
+      }
+    ],
+    "music": [
+      {
+        "name": "YouTube Audio Library",
+        "use": "free, cleared for YouTube monetization"
+      },
+      {
+        "name": "media-fabric procedural BGM",
+        "use": "warm_pad; no license risk"
+      }
+    ]
+  },
+  "templates": [
+    {
+      "id": "roblox-horror",
+      "label": "Roblox Horror",
+      "bg": "assets/wall_megacity.jpg",
+      "hue": 250,
+      "concept": "Faceless investigator tests one horror-game claim per segment and shows the evidence.",
+      "audience": "US gamers 10–17 and their older siblings; watches Roblox horror playthroughs.",
+      "hook": {
+        "maxSec": 3,
+        "patterns": [
+          "Everyone says {claim}. We tested it.",
+          "This hiding spot looks safe. Is it?",
+          "Don't do this in {game}."
+        ]
+      },
+      "structure": {
+        "long": [
+          "cold open 0–8s",
+          "promise 8–17s",
+          "rules 17–45s",
+          "test blocks 40s each",
+          "midpoint board",
+          "results",
+          "limits",
+          "CTA"
+        ],
+        "short": [
+          "hook 0–3",
+          "setup 3–8",
+          "attempt 8–20",
+          "replay 20–27",
+          "verdict 27–33"
+        ]
+      },
+      "subject": {
+        "type": "avatar",
+        "id": "RHM_INVESTIGATOR_01",
+        "lock": "character-bible.md hard continuity rules"
+      },
+      "visual": {
+        "source": "gameplay for evidence; generated only for setup, boards, CTA",
+        "palette": [
+          "#10131B",
+          "#252C39",
+          "#1677FF",
+          "#8DEBFF",
+          "#C8D4E4"
+        ],
+        "captions": "≤6 words, uppercase"
+      },
+      "motion": [
+        "handheld-feel gameplay",
+        "slow push-in on reveals",
+        "freeze-frame replays"
+      ],
+      "voice": {
+        "id": "en-US-AndrewNeural",
+        "style": "calm, low, curious; no greeting",
+        "rate": "-5%"
+      },
+      "sfx": [
+        "sub_drop",
+        "whoosh_cinematic",
+        "hit",
+        "pop"
+      ],
+      "music": {
+        "mood": "low drone, ducked under game audio",
+        "default": "sfx/bgm_warm_pad.wav"
+      },
+      "thumbnail": {
+        "rules": "avatar large, one threat, 2–4 words, blue vs red",
+        "variants": [
+          "10 HORROR MYTHS",
+          "REAL OR FAKE?",
+          "SECRET FOUND? (only if proven)"
+        ]
+      },
+      "title": [
+        "I Tested {n} Roblox Horror Myths",
+        "Is {claim} Actually True in {game}?"
+      ],
+      "benchmark": [
+        "CTR first 24h",
+        "viewed vs swiped (Shorts)",
+        "30s retention",
+        "average % viewed",
+        "returning viewers"
+      ],
+      "compliance": [
+        "No fake results or secrets",
+        "Label AI illustrations",
+        "Name the experience and version"
+      ]
+    },
+    {
+      "id": "kids-story",
+      "label": "Kids Story",
+      "bg": "assets/wall_aurora.jpg",
+      "hue": 150,
+      "concept": "Short animated bedtime or lesson story with one friendly recurring character.",
+      "audience": "US kids 3–7 watched with a parent. Must be set as Made for Kids in YouTube Studio (COPPA).",
+      "hook": {
+        "maxSec": 3,
+        "patterns": [
+          "Can {character} find {thing} before bedtime?",
+          "What happens when {character} {does}?"
+        ]
+      },
+      "structure": {
+        "long": [
+          "hello beat",
+          "problem",
+          "try 1",
+          "try 2",
+          "solution",
+          "lesson",
+          "goodnight"
+        ],
+        "short": [
+          "question 0–3",
+          "try 3–15",
+          "solution 15–25",
+          "lesson 25–30"
+        ]
+      },
+      "subject": {
+        "type": "character",
+        "lock": "one mascot sheet; same colors, eyes and outfit every scene"
+      },
+      "visual": {
+        "source": "generated",
+        "palette": [
+          "warm pastels"
+        ],
+        "captions": "large rounded type, few words"
+      },
+      "motion": [
+        "gentle pans",
+        "bouncy but slow",
+        "no fast cuts or flashing"
+      ],
+      "voice": {
+        "id": "en-US-AnaNeural",
+        "style": "warm, slow, clear",
+        "rate": "-12%"
+      },
+      "sfx": [
+        "pop",
+        "blip",
+        "coin",
+        "powerup"
+      ],
+      "music": {
+        "mood": "soft music box or ukulele, low volume",
+        "default": "YouTube Audio Library"
+      },
+      "thumbnail": {
+        "rules": "character face close, bright single background, one object",
+        "variants": [
+          "character + object",
+          "character + emotion"
+        ]
+      },
+      "title": [
+        "{Character} and the {Thing} | Bedtime Story for Kids"
+      ],
+      "benchmark": [
+        "average view duration",
+        "repeat views",
+        "playlist starts"
+      ],
+      "compliance": [
+        "Made for Kids flag",
+        "No scary content, no ads to kids in video",
+        "No collecting comments"
+      ]
+    },
+    {
+      "id": "manhwa-recap",
+      "label": "Manhwa Recap",
+      "bg": "assets/wall_starfall.jpg",
+      "hue": 300,
+      "concept": "Original fantasy webtoon-style story told as a recap with narrated panels.",
+      "audience": "US 16–30, reads webtoons, watches recap channels.",
+      "hook": {
+        "maxSec": 5,
+        "patterns": [
+          "He was the weakest hunter. Then the system chose him.",
+          "She was betrayed on her wedding day. She woke up ten years earlier."
+        ]
+      },
+      "structure": {
+        "long": [
+          "cold open at the twist",
+          "origin",
+          "rise",
+          "betrayal",
+          "power-up",
+          "cliffhanger"
+        ],
+        "short": [
+          "twist 0–3",
+          "setup 3–12",
+          "turn 12–25",
+          "cliffhanger 25–33"
+        ]
+      },
+      "subject": {
+        "type": "human",
+        "lock": "face, hair, outfit, weapon per character sheet"
+      },
+      "visual": {
+        "source": "generated panels in an original manhwa style",
+        "palette": [
+          "deep navy",
+          "neon violet",
+          "gold"
+        ],
+        "captions": "panel text inside bubbles only"
+      },
+      "motion": [
+        "parallax on panels",
+        "zoom punches on reveals",
+        "speed lines on action"
+      ],
+      "voice": {
+        "id": "en-US-ChristopherNeural",
+        "style": "dramatic narrator, steady pace",
+        "rate": "+0%"
+      },
+      "sfx": [
+        "whoosh_fast",
+        "hit",
+        "laser",
+        "explosion",
+        "sub_drop"
+      ],
+      "music": {
+        "mood": "epic orchestral or trap-orchestral",
+        "default": "YouTube Audio Library"
+      },
+      "thumbnail": {
+        "rules": "one face with strong emotion, glowing eyes or aura, 2–3 words",
+        "variants": [
+          "SYSTEM AWAKENED",
+          "SHE CAME BACK"
+        ]
+      },
+      "title": [
+        "Weakest Hunter Gets a Secret System | Manhwa Recap"
+      ],
+      "benchmark": [
+        "average % viewed",
+        "series binge (next video)",
+        "comments per 1k views"
+      ],
+      "compliance": [
+        "Original stories only, no copyrighted manhwa art or plots",
+        "Label AI-generated art"
+      ]
+    },
+    {
+      "id": "jdm-cars",
+      "label": "JDM Cars",
+      "bg": "assets/wall_megacity.jpg",
+      "hue": 25,
+      "concept": "Night-city JDM culture: builds, history and meets, told with cinematic car shots.",
+      "audience": "US 18–34 car enthusiasts.",
+      "hook": {
+        "maxSec": 3,
+        "patterns": [
+          "This engine changed tuning forever.",
+          "Why does everyone want this 90s car now?"
+        ]
+      },
+      "structure": {
+        "long": [
+          "hero shot",
+          "history",
+          "what makes it special",
+          "the build",
+          "on the road",
+          "verdict"
+        ],
+        "short": [
+          "hero 0–3",
+          "fact 3–12",
+          "sound 12–22",
+          "verdict 22–30"
+        ]
+      },
+      "subject": {
+        "type": "vehicle",
+        "lock": "body shape, color, wheels, livery; no real badges if generated"
+      },
+      "visual": {
+        "source": "own footage or generated cars without brand logos",
+        "palette": [
+          "neon magenta",
+          "cyan",
+          "wet asphalt"
+        ],
+        "captions": "≤5 words, condensed type"
+      },
+      "motion": [
+        "rolling shots parallel to the car",
+        "low angle push",
+        "wheels turn with travel"
+      ],
+      "voice": {
+        "id": "en-US-GuyNeural",
+        "style": "confident, fast",
+        "rate": "+5%"
+      },
+      "sfx": [
+        "whoosh_fast",
+        "sub_drop",
+        "hit"
+      ],
+      "music": {
+        "mood": "phonk or synthwave, royalty-free only",
+        "default": "YouTube Audio Library"
+      },
+      "thumbnail": {
+        "rules": "car 3/4 front, night neon, one number or word",
+        "variants": [
+          "800 HP",
+          "BANNED?"
+        ]
+      },
+      "title": [
+        "The 90s JDM Car Everyone Wants Now"
+      ],
+      "benchmark": [
+        "CTR",
+        "30s retention",
+        "likes per view"
+      ],
+      "compliance": [
+        "No real trademarks on generated cars",
+        "No street-racing encouragement",
+        "Music must be licensed; phonk tracks are often Content ID'd"
+      ]
+    },
+    {
+      "id": "fleet-formation",
+      "label": "Fleet Formation",
+      "bg": "assets/wall_citadel.jpg",
+      "hue": 210,
+      "concept": "Cinematic ships or aircraft moving in formation, with short explainers of each formation.",
+      "audience": "US 18–45 military-history and naval-game fans.",
+      "hook": {
+        "maxSec": 3,
+        "patterns": [
+          "This formation protected a whole fleet.",
+          "Why ships never sail in a straight line."
+        ]
+      },
+      "structure": {
+        "long": [
+          "wide reveal",
+          "formation explained",
+          "why it works",
+          "weakness",
+          "modern version"
+        ],
+        "short": [
+          "reveal 0–3",
+          "shape 3–12",
+          "why 12–24",
+          "twist 24–30"
+        ]
+      },
+      "subject": {
+        "type": "vehicle",
+        "lock": "ship/aircraft class, livery, count and spacing"
+      },
+      "visual": {
+        "source": "generated or simulation footage",
+        "palette": [
+          "steel blue",
+          "fog grey",
+          "sunset amber"
+        ],
+        "captions": "diagram labels only"
+      },
+      "motion": [
+        "aerial drone orbit",
+        "slow lateral track",
+        "formation keeps spacing across cuts"
+      ],
+      "voice": {
+        "id": "en-US-EricNeural",
+        "style": "documentary, measured",
+        "rate": "-3%"
+      },
+      "sfx": [
+        "whoosh_cinematic",
+        "sub_drop",
+        "explosion"
+      ],
+      "music": {
+        "mood": "cinematic percussion",
+        "default": "YouTube Audio Library"
+      },
+      "thumbnail": {
+        "rules": "top-down formation shape, one label",
+        "variants": [
+          "THE WALL",
+          "WHY V-SHAPE?"
+        ]
+      },
+      "title": [
+        "Why Fleets Sail in This Exact Shape"
+      ],
+      "benchmark": [
+        "average % viewed",
+        "subs per 1k views"
+      ],
+      "compliance": [
+        "Mark simulations as simulations",
+        "No real combat footage presented as AI"
+      ]
+    },
+    {
+      "id": "news-brief",
+      "label": "News Brief",
+      "bg": "assets/wall_aurora.jpg",
+      "hue": 70,
+      "concept": "60-second explainer of one verified US story, sourced on screen.",
+      "audience": "US adults 18–45 who want the gist fast.",
+      "hook": {
+        "maxSec": 2,
+        "patterns": [
+          "Here's what actually changed today.",
+          "{Thing} just happened. Three facts."
+        ]
+      },
+      "structure": {
+        "long": [
+          "headline",
+          "what happened",
+          "why it matters",
+          "what's next",
+          "sources"
+        ],
+        "short": [
+          "headline 0–2",
+          "fact 1",
+          "fact 2",
+          "fact 3",
+          "source card"
+        ]
+      },
+      "subject": {
+        "type": "none",
+        "lock": "brand frame and lower-third only"
+      },
+      "visual": {
+        "source": "licensed stock, official images, charts; no AI images of real people or events",
+        "palette": [
+          "white",
+          "ink",
+          "one accent"
+        ],
+        "captions": "source and date always visible"
+      },
+      "motion": [
+        "clean slides",
+        "chart builds",
+        "no dramatic zooms on people"
+      ],
+      "voice": {
+        "id": "en-US-JennyNeural",
+        "style": "neutral, clear",
+        "rate": "+0%"
+      },
+      "sfx": [
+        "blip",
+        "mouse_click"
+      ],
+      "music": {
+        "mood": "light news bed",
+        "default": "YouTube Audio Library"
+      },
+      "thumbnail": {
+        "rules": "one fact, one image, source logo-free",
+        "variants": [
+          "WHAT CHANGED",
+          "3 FACTS"
+        ]
+      },
+      "title": [
+        "{Topic}: What Actually Changed Today"
+      ],
+      "benchmark": [
+        "CTR",
+        "returning viewers",
+        "shares"
+      ],
+      "compliance": [
+        "Every claim has a source and date on screen",
+        "No AI depictions of real people or events",
+        "Correct and pin errors"
+      ]
+    },
+    {
+      "id": "music-wallpaper",
+      "label": "Music & Live Wallpaper",
+      "bg": "assets/wall_aurora.jpg",
+      "hue": 180,
+      "concept": "Long ambient instrumental mixes over a slowly moving fantasy wallpaper, for studying, sleeping, gaming and reading.",
+      "audience": "US 16–35, students and gamers who play background music for focus or sleep; long sessions on desktop and TV.",
+      "hook": {
+        "maxSec": 10,
+        "patterns": [
+          "A quiet {place} at night. Stay as long as you need.",
+          "1 hour of {mood} music to focus."
+        ]
+      },
+      "structure": {
+        "long": [
+          "seamless visual loop 30–120s",
+          "music 1–3 h (original tracks or one generated bed)",
+          "chapters every track",
+          "soft fade at end"
+        ],
+        "short": [
+          "strongest 20–30s of the mix",
+          "one motion moment",
+          "title card with the full-length link"
+        ]
+      },
+      "subject": {
+        "type": "landscape",
+        "lock": "same wallpaper composition, horizon and palette for the whole video; motion only from light, weather and slow camera"
+      },
+      "visual": {
+        "source": "stock, uploaded or AI wallpaper + live motion (zoom, drift, rain, snow, fireflies, flicker)",
+        "palette": [
+          "night blue",
+          "aurora teal",
+          "warm window light"
+        ],
+        "captions": "none; small track title in a corner optional"
+      },
+      "motion": [
+        "slow zoom ≤ 6% per loop",
+        "particles loop seamlessly",
+        "no cuts, no flashing"
+      ],
+      "voice": {
+        "id": "en-US-AvaNeural",
+        "style": "none in the mix; optional 5-second soft intro line",
+        "rate": "-10%"
+      },
+      "sfx": [
+        "rain bed",
+        "soft wind",
+        "fireplace"
+      ],
+      "music": {
+        "mood": "original instrumental: lofi, ambient, fantasy, game-inspired (never real game soundtracks)",
+        "default": "Loop Studio generator or your own uploads"
+      },
+      "thumbnail": {
+        "rules": "the wallpaper itself, one glowing focal point, 2–4 words like \"Rainy Night Study\"",
+        "variants": [
+          "RAINY NIGHT STUDY",
+          "DEEP FOCUS 1 HOUR"
+        ]
+      },
+      "title": [
+        "{Mood} Music for {Activity} · 1 Hour {Place} Ambience",
+        "{Place} at Night · Relaxing Fantasy Music"
+      ],
+      "benchmark": [
+        "average view duration (minutes)",
+        "returning viewers",
+        "session length",
+        "playlist adds"
+      ],
+      "compliance": [
+        "Never upload real game OSTs or copyrighted tracks",
+        "Only use AI music whose license allows commercial use",
+        "Vary art, music and length per upload to stay clear of YouTube’s inauthentic (mass-produced, repetitive) content rule",
+        "Label AI-generated visuals and music"
+      ]
+    }
+  ]
+}

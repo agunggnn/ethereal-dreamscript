@@ -1,0 +1,25 @@
+{
+  "engine": "edge-tts",
+  "install": "pip install edge-tts",
+  "note": "Free Microsoft neural voices, no API key. Same engine media-fabric/engine/voice_synthesizer.py uses. Paid engines the repo also supports: ElevenLabs, OpenAI TTS, Gemini TTS (need keys).",
+  "rates": ["-10%", "-5%", "+0%", "+5%", "+10%"],
+  "voices": [
+    { "id": "en-US-AndrewNeural", "name": "Andrew", "gender": "male", "age": "adult", "tone": "Warm, confident, honest", "bestFor": ["roblox-horror", "manhwa-recap"] },
+    { "id": "en-US-AndrewMultilingualNeural", "name": "Andrew ML", "gender": "male", "age": "adult", "tone": "Warm, confident, more expressive", "bestFor": ["roblox-horror"] },
+    { "id": "en-US-BrianNeural", "name": "Brian", "gender": "male", "age": "adult", "tone": "Approachable, casual, sincere", "bestFor": ["jdm-cars", "roblox-horror"] },
+    { "id": "en-US-BrianMultilingualNeural", "name": "Brian ML", "gender": "male", "age": "adult", "tone": "Casual, conversational", "bestFor": ["jdm-cars"] },
+    { "id": "en-US-ChristopherNeural", "name": "Christopher", "gender": "male", "age": "adult", "tone": "Reliable, authoritative", "bestFor": ["manhwa-recap", "fleet-formation"] },
+    { "id": "en-US-EricNeural", "name": "Eric", "gender": "male", "age": "adult", "tone": "Rational, measured", "bestFor": ["fleet-formation", "news-brief"] },
+    { "id": "en-US-GuyNeural", "name": "Guy", "gender": "male", "age": "adult", "tone": "Passionate, energetic", "bestFor": ["jdm-cars"], "sample": "voices/samples/en-US-GuyNeural.mp3" },
+    { "id": "en-US-RogerNeural", "name": "Roger", "gender": "male", "age": "adult", "tone": "Lively, upbeat", "bestFor": ["jdm-cars"] },
+    { "id": "en-US-SteffanNeural", "name": "Steffan", "gender": "male", "age": "adult", "tone": "Rational, calm", "bestFor": ["fleet-formation", "news-brief"] },
+    { "id": "en-US-AvaNeural", "name": "Ava", "gender": "female", "age": "adult", "tone": "Expressive, caring, friendly", "bestFor": ["kids-story", "manhwa-recap"] },
+    { "id": "en-US-AvaMultilingualNeural", "name": "Ava ML", "gender": "female", "age": "adult", "tone": "Expressive, pleasant", "bestFor": ["kids-story"] },
+    { "id": "en-US-EmmaNeural", "name": "Emma", "gender": "female", "age": "adult", "tone": "Cheerful, clear, conversational", "bestFor": ["news-brief", "kids-story"] },
+    { "id": "en-US-EmmaMultilingualNeural", "name": "Emma ML", "gender": "female", "age": "adult", "tone": "Cheerful, clear", "bestFor": ["news-brief"] },
+    { "id": "en-US-JennyNeural", "name": "Jenny", "gender": "female", "age": "adult", "tone": "Friendly, considerate", "bestFor": ["news-brief"] },
+    { "id": "en-US-AriaNeural", "name": "Aria", "gender": "female", "age": "adult", "tone": "Positive, confident", "bestFor": ["news-brief", "manhwa-recap"] },
+    { "id": "en-US-MichelleNeural", "name": "Michelle", "gender": "female", "age": "adult", "tone": "Friendly, pleasant", "bestFor": ["kids-story"] },
+    { "id": "en-US-AnaNeural", "name": "Ana", "gender": "female", "age": "child", "tone": "Child voice, cute", "bestFor": ["kids-story"] }
+  ]
+}

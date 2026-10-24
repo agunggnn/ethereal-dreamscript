@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}textarea,input,select,button{font-family:inherit}::-webkit-scrollbar{height:6px;width:6px}::-webkit-scrollbar-thumb{background:rgba(244,247,252,0.14);border-radius:3px}</style></helmet>
+<div data-screen-label="Storyboard Studio" style="position:relative;min-height:100vh;display:flex;flex-direction:column;background:#0A0C12;overflow:hidden">
+  <img src="assets/wall_megacity.jpg" alt="" style="position:absolute;inset:-60px;width:calc(100% + 120px);height:calc(100% + 120px);object-fit:cover;opacity:0.28;filter:blur(40px)">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.5),rgba(10,12,18,0.9) 60%)"></div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:16px;padding:20px 32px;flex-wrap:wrap">
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <div style="display:flex;flex-direction:column;gap:3px;flex:1 1 280px;min-width:220px">
+      <span style="font-size:13px;font-weight:600;color:#8DEBFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ kicker }}</span>
+      <span style="font-size:22px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ title }}</span>
+    </div>
+    <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:14px;padding:4px">
+      <sc-for list="{{ templates }}" as="tp" hint-placeholder-count="2"><button onClick="{{ tp.onClick }}" style="height:36px;padding:0 16px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:{{ tp.bg }};color:{{ tp.fg }}">{{ tp.label }}</button></sc-for>
+    </div>
+    <button onClick="{{ toggleBgm }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ bgmBg }};color:{{ bgmFg }}">♪ Music</button>
+    <button onClick="{{ toggleSubs }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ subsBg }};color:{{ subsFg }}">CC</button>
+    <button onClick="{{ playAll }}" style="height:44px;padding:0 22px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:#F4F7FC;color:#0A0C12">{{ playAllLabel }}</button>
+    <button onClick="{{ live.onClick }}" title="{{ live.title }}" style="height:44px;padding:0 14px;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;background:{{ live.bg }};color:{{ live.fg }}"><span style="width:9px;height:9px;border-radius:50%;background:{{ live.dot }};box-shadow:{{ live.glow }}"></span>{{ live.label }}</button>
+    <span style="font-size:18px;font-variant-numeric:tabular-nums;padding-left:4px">{{ clock }}</span>
+  </div>
+  <div style="position:relative;display:flex;align-items:center;gap:6px;padding:0 32px 18px;flex-wrap:wrap">
+    <sc-for list="{{ steps }}" as="sp" hint-placeholder-count="5">
+      <button onClick="{{ sp.onClick }}" style="display:flex;align-items:center;gap:10px;height:46px;padding:0 18px 0 8px;border:none;border-radius:23px;cursor:pointer;background:{{ sp.bg }};color:{{ sp.fg }};font-size:15px;font-weight:{{ sp.weight }}"><span style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:{{ sp.dotBg }};color:{{ sp.dotFg }}">{{ sp.mark }}</span>{{ sp.label }}</button>
+      <sc-if value="{{ sp.notLast }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:2px;border-radius:1px;background:rgba(244,247,252,0.18)"></span></sc-if>
+    </sc-for>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prevStep }}" style="height:46px;padding:0 18px;border:none;border-radius:23px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:15px;font-weight:700;cursor:pointer">‹ Back</button></sc-if>
+      <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nextStep }}" style="height:46px;padding:0 24px;border:none;border-radius:23px;background:#F4F7FC;color:#0A0C12;font-size:15px;font-weight:800;cursor:pointer">{{ nextLabel }}</button></sc-if>
+    </div>
+  </div>
+
+  <div style="position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,410px);gap:24px;padding:0 32px 24px;flex:1;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <sc-if value="{{ isIdea }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Idea" style="display:flex;flex-direction:column;gap:22px;max-width:860px;padding:6px 0 24px">
+          <h1 style="margin:0;font-size:50px;font-weight:300;letter-spacing:-0.03em;line-height:1.05">What is this video about?</h1>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.8);max-width:680px">Write the idea in one sentence. AI turns it into a complete storyboard: every scene with what we see, what the narrator says and the caption. You read the whole board before anything is recorded or generated.</p>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">CHANNEL TEMPLATE</span><div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ idea.templates }}" as="it" hint-placeholder-count="6"><button onClick="{{ it.onClick }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button></sc-for></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">THE IDEA</span><textarea value="{{ idea.text }}" onChange="{{ idea.onText }}" rows="3" placeholder="{{ idea.placeholder }}" style="resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:18px;line-height:1.5;padding:14px 16px" style-focus="border-color:#8DEBFF;outline:none"></textarea></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">GAME OR SUBJECT · OPTIONAL</span><input value="{{ idea.game }}" onChange="{{ idea.onGame }}" placeholder="e.g. the exact Roblox experience name" style="height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:15px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none"></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">FORMAT</span><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button onClick="{{ idea.generate }}" style="height:56px;padding:0 30px;border:none;border-radius:14px;background:#F4F7FC;color:#0A0C12;font-size:17px;font-weight:800;cursor:pointer">{{ idea.genLabel }}</button>
+            <button onClick="{{ idea.useExisting }}" style="height:56px;padding:0 22px;border:none;border-radius:14px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:15px;font-weight:700;cursor:pointer">Use the existing storyboard</button>
+          </div>
+          <sc-if value="{{ idea.err }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:oklch(0.83 0.14 80)">{{ idea.err }}</span></sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Storyboard board" style="display:flex;flex-direction:column;gap:18px;padding-bottom:24px">
+          <div style="background:rgba(22,26,36,0.75);border:1px solid rgba(244,247,252,0.08);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
+            <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">CONCEPT · {{ board.cutLabel }}</span>
+            <span style="font-size:28px;font-weight:600;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">{{ board.logline }}</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+              <sc-for list="{{ board.facts }}" as="fa" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:700;color:#8DEBFF">{{ fa.k }}</span><span style="font-size:14px;line-height:1.45;color:rgba(232,237,245,0.88)">{{ fa.v }}</span></div></sc-for>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ board.checks }}" as="ck" hint-placeholder-count="5"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ ck.color }}"></span>{{ ck.text }}</span></sc-for>
+            </div>
+            <sc-if value="{{ board.review }}" hint-placeholder-val="{{ false }}"><div style="font-size:14px;line-height:1.6;color:rgba(232,237,245,0.88);white-space:pre-wrap;background:rgba(141,235,255,0.08);border-radius:14px;padding:14px">{{ board.review }}</div></sc-if>
+          </div>
+          <div style="background:rgba(22,26,36,0.75);border:1px solid rgba(141,235,255,0.2);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#8DEBFF">AI IMAGES</span>
+              <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:12px;padding:3px"><sc-for list="{{ board.engines }}" as="en" hint-placeholder-count="2"><button onClick="{{ en.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
+              <sc-if value="{{ board.needsKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ board.key }}" onChange="{{ board.onKey }}" placeholder="Gemini API key · stays in this browser" style="height:40px;min-width:240px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 12px"></sc-if>
+              <button onClick="{{ board.genAll }}" style="height:40px;padding:0 18px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ board.genAllLabel }}</button>
+              <span style="font-size:13px;font-weight:600;color:rgba(232,237,245,0.75)">{{ board.imgStatus }}</span>
+            </div>
+            <span style="font-size:12.5px;line-height:1.5;color:rgba(232,237,245,0.55)">{{ board.engineNote }}</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+              <sc-for list="{{ board.specials }}" as="sx" hint-placeholder-count="0">
+                <div style="display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:rgba(10,12,18,0.5);border:1px solid {{ sx.border }}">
+                  <div style="position:relative;aspect-ratio:16/9;background:{{ sx.bg }};background-size:cover;background-position:center">
+                    <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:#F4F7FC;color:#0A0C12">{{ sx.title }}</span>
+                    <sc-if value="{{ sx.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate</button></sc-if>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;padding:10px 12px">
+                    <span style="font-size:12.5px;font-weight:600;flex:1;color:{{ sx.stColor }}">{{ sx.stText }}</span>
+                    <sc-if value="{{ sx.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ sx.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax({{ board.minCard }},1fr));gap:14px">
+            <sc-for list="{{ board.cards }}" as="bc" hint-placeholder-count="0">
+              <div style="display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(22,26,36,0.8);border:1px solid {{ bc.border }}">
+                <div style="position:relative;aspect-ratio:{{ bc.ar }};background:{{ bc.bg }};background-size:cover;background-position:center">
+                  <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:{{ bc.srcBg }};color:#0A0C12">{{ bc.src }}</span>
+                  <span style="position:absolute;right:10px;top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#F4F7FC;text-shadow:0 1px 4px rgba(0,0,0,0.9)">{{ bc.n }} · {{ bc.time }}</span>
+                  <sc-if value="{{ bc.onScreen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;bottom:10px;background:#F4F7FC;color:#0A0C12;font-size:12px;font-weight:800;padding:4px 8px;border-radius:6px;text-transform:uppercase">{{ bc.onScreen }}</span></sc-if>
+                  <sc-if value="{{ bc.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate image</button></sc-if>
+                  <sc-if value="{{ bc.loading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;background:rgba(10,12,18,0.75);padding:8px 12px;border-radius:10px">Generating…</span></sc-if>
+                </div>
+                <div style="display:flex;gap:6px;padding:10px 12px 0;align-items:center">
+                  <span style="flex:1;font-size:12.5px;font-weight:600;color:{{ bc.stColor }}">{{ bc.stText }}</span>
+                  <sc-if value="{{ bc.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ bc.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;padding:12px 12px 14px">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700">{{ bc.beat }}</span><sc-if value="{{ bc.isDir }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px;font-weight:800;color:#10131B;background:oklch(0.83 0.14 80);padding:2px 7px;border-radius:8px">NEEDS LINE</span></sc-if></div>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">WE SEE</span>
+                  <textarea value="{{ bc.visual }}" onChange="{{ bc.onVisual }}" rows="2" style="resize:vertical;background:rgba(244,247,252,0.05);border:1px solid rgba(244,247,252,0.08);border-radius:10px;color:rgba(244,247,252,0.85);font-size:13px;line-height:1.45;padding:8px 10px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">NARRATOR</span>
+                  <textarea value="{{ bc.narration }}" onChange="{{ bc.onNarr }}" rows="3" style="resize:vertical;background:rgba(244,247,252,0.05);border:1px solid rgba(244,247,252,0.08);border-radius:10px;color:#F4F7FC;font-size:14px;line-height:1.45;padding:8px 10px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <button onClick="{{ bc.hear }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer">▶ Hear</button>
+                    <button onClick="{{ bc.rewrite }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(141,235,255,0.16);color:#8DEBFF;font-size:12px;font-weight:700;cursor:pointer">✦ Rewrite</button>
+                    <button onClick="{{ bc.note }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer">✎ Note</button>
+                    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(232,237,245,0.5)">{{ bc.sfx }}</span>
+                  </div>
+                  <sc-for list="{{ bc.notes }}" as="bn" hint-placeholder-count="0"><div style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;background:rgba(244,247,252,0.04);border-radius:10px;padding:8px 10px"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ bn.color }}"></span><div style="display:flex;flex-direction:column;gap:3px"><span>{{ bn.text }}</span><sc-if value="{{ bn.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#8DEBFF">↳ {{ bn.reply }}</span></sc-if></div></div></sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isPlayer }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div style="display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,0.6);border-radius:22px;padding:{{ frame.pad }};min-height:320px;box-shadow:0 30px 80px rgba(0,0,0,0.5)">
+        <div style="position:relative;overflow:hidden;background:#000;border-radius:{{ frame.radius }};width:{{ frame.w }};height:{{ frame.h }};aspect-ratio:{{ frame.ar }};max-height:{{ frame.maxH }};max-width:100%">
+          <sc-if value="{{ cur.hasFrame }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:{{ cur.frameBg }};background-size:cover;background-position:center;transform:scale({{ zoom }});transition:transform {{ zoomDur }} linear"></div></sc-if>
+          <div style="position:absolute;left:0;right:0;top:{{ frame.vTop }};aspect-ratio:16/9">
+            <sc-if value="{{ cur.hasVideo }}" hint-placeholder-val="{{ false }}">
+              <video ref="{{ videoRef }}" src="{{ cur.videoSrc }}" muted="{{ muted }}" playsInline="{{ true }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+            </sc-if>
+            <sc-if value="{{ cur.noVideo }}" hint-placeholder-val="{{ true }}">
+              <div style="position:relative;width:100%;height:100%;background:{{ cur.slotBg }};display:flex;flex-direction:column;align-items:{{ cur.slotAlign }};justify-content:{{ cur.slotJustify }};gap:12px;text-align:center;padding:16px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(232,237,245,0.75)">{{ cur.slotLabel }}</span>
+                <label style="height:40px;padding:0 18px;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;display:flex;align-items:center;cursor:pointer">Load clip<input type="file" accept="video/*" onChange="{{ onClip }}" style="display:none"></label>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ frame.isShorts }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:5.9%;right:13.9%;top:8.9%;height:{{ frame.bandH }};display:flex;align-items:flex-end;padding-bottom:4%">
+              <span style="font-weight:800;font-size:{{ frame.capSize }};line-height:1.05;color:#fff;text-transform:uppercase;text-wrap:balance">{{ cur.onScreen }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ frame.isLong }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ cur.onScreen }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;left:3%;top:5%;background:#F4F7FC;color:#10131B;font-weight:800;font-size:{{ frame.capSize }};padding:0.4em 0.7em;border-radius:6px;text-transform:uppercase">{{ cur.onScreen }}</span>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ cur.verdictChip }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;right:3%;top:5%;background:{{ cur.verdictBg }};color:#10131B;font-size:11px;font-weight:800;padding:5px 9px;border-radius:12px">{{ cur.verdictChip }}</span>
+          </sc-if>
+          <sc-if value="{{ showSub }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;left:8%;right:8%;bottom:{{ frame.subBottom }};text-align:center;font-weight:700;font-size:{{ frame.subSize }};color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.9);text-wrap:balance">{{ cur.narration }}</span>
+          </sc-if>
+          <div style="position:absolute;left:0;bottom:0;height:3px;width:{{ progress }};background:#8DEBFF"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <button onClick="{{ playCur }}" title="Play scene (Space)" style="width:52px;height:52px;border-radius:50%;border:none;background:#F4F7FC;color:#0A0C12;font-size:17px;cursor:pointer;flex:none">{{ playIcon }}</button>
+        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:17px;font-weight:600">{{ cur.beat }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(232,237,245,0.55)">{{ cur.time }} · {{ cur.id }}</span></div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ lengthColor }}"></span>{{ lengthText }}</span>
+          <sc-for list="{{ pills }}" as="p" hint-placeholder-count="3"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ p.color }}"></span>{{ p.label }}</span></sc-for>
+        </div>
+      </div>
+      <span style="font-size:12.5px;color:rgba(232,237,245,0.45)">{{ rulesText }}</span>
+
+      <div style="display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:6px 6px 10px;margin:0 -6px">
+        <sc-for list="{{ strip }}" as="c" hint-placeholder-count="19">
+          <div onClick="{{ c.onClick }}" style="flex:none;width:150px;display:flex;flex-direction:column;gap:8px;cursor:pointer">
+            <div style="position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,rgba(244,247,252,0.06) 0 8px,rgba(244,247,252,0.02) 8px 16px);box-shadow:{{ c.ring }};transition:box-shadow 0.2s">
+              <sc-if value="{{ c.hasFrame }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:{{ c.frameBg }};background-size:cover;background-position:center"></div></sc-if>
+              <sc-if value="{{ c.hasVideo }}" hint-placeholder-val="{{ false }}"><video src="{{ c.videoSrc }}" muted="{{ true }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video></sc-if>
+              <span style="position:absolute;left:8px;top:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;color:rgba(244,247,252,0.8)">{{ c.src }}</span>
+              <div style="position:absolute;left:8px;bottom:7px;display:flex;gap:4px"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotF }}"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotL }}"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotV }}"></span></div>
+            </div>
+            <span style="font-size:13px;font-weight:{{ c.weight }};line-height:1.25;height:32px;overflow:hidden;color:{{ c.color }}">{{ c.beat }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:rgba(232,237,245,0.6)">
+        <span>{{ draftText }}</span>
+        <button onClick="{{ copyJson }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ copyLabel }}</button>
+        <sc-if value="{{ hasDraft }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetDraft }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:none;color:rgba(232,237,245,0.7);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline">Reset to file</button></sc-if>
+        <span style="margin-left:auto">← → Scene · Space Play · Esc Home</span>
+      </div>
+      </div></sc-if>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;min-height:0;max-height:calc(100vh - 172px);overflow:auto;padding-right:2px">
+      <div style="background:linear-gradient(160deg,rgba(22,119,255,0.3),rgba(22,26,36,0.82) 70%);border:1px solid rgba(141,235,255,0.28);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <span style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:#8DEBFF">STEP {{ guide.n }} OF 5</span>
+        <span style="font-size:26px;font-weight:600;letter-spacing:-0.01em;line-height:1.15">{{ guide.title }}</span>
+        <span style="font-size:14.5px;line-height:1.55;color:rgba(232,237,245,0.88)">{{ guide.text }}</span>
+        <sc-if value="{{ guide.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:700">{{ guide.statusLabel }}</span><div style="height:6px;border-radius:3px;background:rgba(244,247,252,0.15)"><div style="height:100%;border-radius:3px;width:{{ guide.statusPct }};background:{{ guide.statusColor }}"></div></div></div></sc-if>
+        <sc-if value="{{ guide.hasChoices }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></sc-if>
+        <sc-if value="{{ guide.hasChecks }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ guide.checks }}" as="ck" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ ck.color }}"></span>{{ ck.text }}</div></sc-for></div></sc-if>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ guide.actions }}" as="ac" hint-placeholder-count="2"><button onClick="{{ ac.onClick }}" style="height:42px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:{{ ac.bg }};color:{{ ac.fg }}">{{ ac.label }}</button></sc-for></div>
+        <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:600;color:#8DEBFF">{{ note }}</span></sc-if>
+      </div>
+      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c0 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <span style="font-size:24px;font-weight:600;letter-spacing:-0.01em">{{ cur.beat }}</span>
+        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VISUAL DIRECTION</span>
+        <textarea value="{{ cur.visual }}" onChange="{{ onField.visual }}" rows="3" style="display:{{ show.blk3 }};resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;line-height:1.5;padding:10px 12px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+      </div>
+
+      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c1 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <div style="display:{{ show.flex2 }};align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VOICE LINE</span><sc-if value="{{ cur.isDirection }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:800;color:#10131B;background:oklch(0.83 0.14 80);padding:3px 9px;border-radius:10px">DIRECTION, NOT A LINE YET</span></sc-if></div>
+        <textarea value="{{ cur.narration }}" onChange="{{ onField.narration }}" rows="3" style="display:{{ show.blk2 }};resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:15px;line-height:1.5;padding:10px 12px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">NARRATOR VOICE · WHOLE VIDEO</span>
+        <div style="display:{{ show.flex4 }};gap:8px;align-items:center">
+          <select value="{{ voiceId }}" onChange="{{ onVoice }}" style="flex:1;min-width:0;height:42px;background:#161A24;border:1px solid rgba(244,247,252,0.12);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 10px">
+            <sc-for list="{{ voiceOpts }}" as="o" hint-placeholder-count="17"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+          </select>
+          <button onClick="{{ speakCur }}" style="height:42px;padding:0 16px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer;flex:none">▶ Hear</button>
+        </div>
+        <div style="display:{{ show.flex4 }};gap:4px;align-items:center;flex-wrap:wrap">
+          <sc-for list="{{ rateOpts }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.onClick }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</button></sc-for>
+          <a href="Audio Lab.dc.html" style="margin-left:auto;font-size:13px;font-weight:600">All voices ›</a>
+        </div>
+      </div>
+
+      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c2 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <div style="display:{{ show.flex2 }};justify-content:space-between"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">ON-SCREEN CAPTION</span><span style="font-size:12px;font-weight:600;color:{{ cur.wordColor }}">{{ cur.words }}/6 words</span></div>
+        <input value="{{ cur.onScreen }}" onChange="{{ onField.onScreen }}" style="display:{{ show.blk2 }};height:44px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:15px;font-weight:700;padding:0 12px;text-transform:uppercase" style-focus="border-color:#8DEBFF;outline:none">
+        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">SOUND EFFECT · THIS SCENE</span>
+        <div style="display:{{ show.flex4 }};gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ sfxChips }}" as="o" hint-placeholder-count="8"><button onClick="{{ o.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;background:{{ o.bg }};color:{{ o.fg }}">{{ o.name }}</button></sc-for>
+        </div>
+        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">EDIT NOTE</span>
+        <input value="{{ cur.edit }}" onChange="{{ onField.edit }}" style="display:{{ show.blk3 }};height:42px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 12px" style-focus="border-color:#8DEBFF;outline:none">
+      </div>
+
+      <sc-if value="{{ cur.isMyth }}" hint-placeholder-val="{{ false }}">
+        <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c3 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+          <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">EVIDENCE REQUIRED</span>
+          <span style="font-size:14px;line-height:1.5">{{ cur.evidence }}</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ verdicts }}" as="v" hint-placeholder-count="4"><button onClick="{{ v.onClick }}" disabled="{{ v.disabled }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:{{ v.cursor }};opacity:{{ v.opacity }};background:{{ v.bg }};color:{{ v.fg }}">{{ v.label }}</button></sc-for>
+          </div>
+          <span style="font-size:12.5px;color:rgba(232,237,245,0.55)">{{ verdictNote }}</span>
+        </div>
+      </sc-if>
+
+      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c4 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VISUAL SOURCE</span>
+        <sc-if value="{{ isGameplay }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;line-height:1.5;color:rgba(232,237,245,0.8)">{{ genNote }}</span></sc-if>
+        <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ subjects }}" as="sj" hint-placeholder-count="6"><button onClick="{{ sj.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:{{ sj.bg }};color:{{ sj.fg }}">{{ sj.label }}</button></sc-for></div>
+            <div style="display:flex;flex-direction:column;gap:4px;font-family:'JetBrains Mono',monospace;font-size:12px"><sc-for list="{{ ingr }}" as="ig" hint-placeholder-count="3"><div style="display:flex;gap:8px"><span style="color:{{ ig.color }}">●</span><span>{{ ig.name }}</span><span style="color:rgba(232,237,245,0.45)">{{ ig.file }} · {{ ig.status }}</span></div></sc-for></div>
+            <div style="display:flex;gap:8px;align-items:center"><button onClick="{{ toggleChain }}" style="height:32px;padding:0 12px;border:1px solid rgba(244,247,252,0.18);border-radius:10px;background:none;color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ chainLabel }}</button><span style="font-size:12px;color:rgba(232,237,245,0.45)">{{ genRef }}</span></div>
+            <pre style="margin:0;white-space:pre-wrap;background:rgba(244,247,252,0.05);border-radius:12px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.55;color:rgba(232,237,245,0.85)">{{ genPrompt }}</pre>
+            <button onClick="{{ copyPrompt }}" style="align-self:flex-start;height:40px;padding:0 16px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Copy prompt for Flow / Veo</button>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(141,235,255,0.18);border-radius:20px;padding:18px;display:{{ show.agent }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:#8DEBFF">AGENT</span><span style="margin-left:auto;font-size:12px;font-weight:700;color:{{ notes.countColor }}">{{ notes.count }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:rgba(244,247,252,0.04);border-radius:14px;padding:12px">
+          <span style="font-size:13px;font-weight:700">Review note on “{{ cur.beat }}”</span>
+          <div style="display:flex;gap:6px"><input ref="{{ notes.ref }}" value="{{ notes.draft }}" onChange="{{ notes.onDraft }}" onKeyDown="{{ notes.onKey }}" placeholder="e.g. scarier, shorter line, darker image" style="flex:1;min-width:0;height:40px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 10px" style-focus="border-color:#8DEBFF;outline:none"><button onClick="{{ notes.add }}" style="height:40px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Add</button></div>
+          <sc-for list="{{ notes.items }}" as="nt" hint-placeholder-count="0"><div onClick="{{ nt.onClick }}" style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ nt.color }}"></span><div style="display:flex;flex-direction:column;gap:2px"><span><b>{{ nt.where }}</b> · {{ nt.text }}</span><sc-if value="{{ nt.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#8DEBFF">↳ {{ nt.reply }}</span></sc-if></div></div></sc-for>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><button onClick="{{ notes.fix }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:#8DEBFF;color:#0A0C12;font-size:12.5px;font-weight:800;cursor:pointer">{{ notes.fixLabel }}</button><button onClick="{{ notes.copy }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Copy prompt for my agent</button></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.onClick }}" style="height:32px;padding:0 12px;border:1px solid rgba(244,247,252,0.14);border-radius:10px;background:none;color:rgba(244,247,252,0.9);font-size:12.5px;font-weight:600;cursor:pointer" style-hover="background:rgba(244,247,252,0.08)">{{ q.label }}</button></sc-for>
+        </div>
+        <div style="display:flex;gap:8px">
+          <input value="{{ ask }}" onChange="{{ onAsk }}" onKeyDown="{{ onAskKey }}" placeholder="e.g. make every myth line end on a question" style="flex:1;min-width:0;height:44px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 12px" style-focus="border-color:#8DEBFF;outline:none">
+          <button onClick="{{ sendAsk }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;background:#8DEBFF;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ askLabel }}</button>
+        </div>
+        <sc-if value="{{ agentReply }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;line-height:1.5;color:rgba(232,237,245,0.85)">{{ agentReply }}</span></sc-if>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.5;color:rgba(232,237,245,0.6)">
+          <sc-for list="{{ log }}" as="l" hint-placeholder-count="0"><div><span style="color:{{ l.color }}">{{ l.by }}</span> {{ l.call }}</div></sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SFX = ['none', 'sub_drop', 'whoosh_cinematic', 'whoosh_fast', 'pop', 'hit', 'blip', 'mouse_click'];
+const RATES = ['-10%', '-5%', '+0%', '+5%', '+10%'];
+const VCOL = { confirmed: 'oklch(0.78 0.15 150)', busted: 'oklch(0.7 0.19 25)', inconclusive: 'oklch(0.83 0.14 80)', pending: 'rgba(244,247,252,0.2)' };
+const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)';
+const DRAFT = 'ds_ep01_draft';
+const GEMINI_MODEL = 'gemini-2.5-flash-image';
+const dataToObj = (u) => { try { const m = /^data:([^;]+);base64,(.*)$/.exec(u); const bin = atob(m[2]), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([a], { type: m[1] })); } catch (e) { return ''; } };
+const POLL = (prompt, w, h, seed) => 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=' + w + '&height=' + h + '&seed=' + seed + '&model=flux&nologo=true';
+const CHAR_DESC = 'an original Roblox-style blocky avatar: messy black swept fringe with three tufts, small silver-blue floating three-prong crown, cool-blue face accents, black techwear hoodie with white zipper and electric-blue piping, asymmetrical utility straps, compact black backpack with a cyan-lit core, charcoal cargo pants, black-and-white high-top sneakers, holding a cyan lantern';
+const STRIPES = 'repeating-linear-gradient(135deg,rgba(244,247,252,0.06) 0 10px,rgba(244,247,252,0.02) 10px 20px)';
+const idb = { db: null,
+  open() { return this.db || (this.db = new Promise((res, rej) => { const r = indexedDB.open('ds_frames', 1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); })); },
+  async put(k, v) { const d = await this.open(); return new Promise((res) => { const t = d.transaction('f', 'readwrite'); t.objectStore('f').put(v, k); t.oncomplete = res; t.onerror = res; }); },
+  async get(k) { const d = await this.open(); return new Promise((res) => { const q = d.transaction('f').objectStore('f').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } };
+const wordsOf = (s) => (s || '').trim().split(/\s+/).filter(Boolean).filter(w => w !== '·').length;
+const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); return m ? (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]) : 8; };
+const shortName = (id) => ((id || '').split('-')[2] || '').replace(/Multilingual|Neural/g, '');
+
+class Component extends DCLogic {
+  state = { frameObj: {}, bridge: false, live: false, follow: true, flashIds: {}, activity: [], noteDraft: '', lastAgentAt: 0, engine: 'pollinations', geminiKey: '', frameData: {}, queue: null, step: 1, note: '', idea: '', game: '', tplId: 'roblox-horror', niches: null, genBusy: false, genErr: '', review: '', ep: null, sel: 0, subs: false, bgm: false, playing: false, all: false, t0: 0, now: 0, clips: {}, found: {}, log: [], ask: '', busy: false, reply: '', copied: false, voices: [], hasDraft: false, clock: new Date() };
+  video = null;
+  videoRef = (el) => { this.video = el; };
+
+  async componentDidMount() {
+    const sp = +new URLSearchParams(location.search).get('step'); if (sp >= 1 && sp <= 5) this.setState({ step: sp });
+    await this.load();
+    this.bgmAudio = new Audio('sfx/bgm_warm_pad.wav'); this.bgmAudio.loop = true; this.bgmAudio.volume = 0.12;
+    this.tick = setInterval(() => { if (this.state.playing) { this.setState({ now: performance.now() }); this.checkDone(); } }, 120);
+    this.pollT = setInterval(() => this.poll(), 2000);
+    this.clockT = setInterval(() => this.setState({ clock: new Date() }), 20000);
+    this.onKey = (e) => {
+      const typing = /INPUT|TEXTAREA|SELECT/.test((e.target && e.target.tagName) || '');
+      if (e.key === 'Escape') { if (typing) e.target.blur(); else location.href = 'Home.dc.html'; return; }
+      if (typing || !this.state.ep) return;
+      const n = this.list().length;
+      if (e.key === 'ArrowRight') { e.preventDefault(); this.stop(); this.setState(s => ({ sel: Math.min(n - 1, s.sel + 1) })); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.stop(); this.setState(s => ({ sel: Math.max(0, s.sel - 1) })); }
+      if (e.key === ' ') { e.preventDefault(); this.state.playing ? this.stop() : this.play(this.state.sel, false); }
+    };
+    window.addEventListener('keydown', this.onKey);
+    try { speechSynthesis.onvoiceschanged = () => this.forceUpdate(); } catch (e) {}
+  }
+  componentWillUnmount() { clearInterval(this.pollT); clearInterval(this.tick); clearInterval(this.clockT); window.removeEventListener('keydown', this.onKey); this.stop(); this.bgmAudio && this.bgmAudio.pause(); }
+
+  async load(ignoreDraft) {
+    try {
+      const [file, vj] = await Promise.all([fetch('production/ep01/episode.json').then(r => r.json()), fetch('templates/voices.json').then(r => r.json()).catch(() => ({ voices: [] }))]);
+      let bridge = false; try { bridge = (await fetch('api/ping', { cache: 'no-store' })).ok; } catch (e) {}
+      this.setState({ bridge, live: bridge }); this.lastText = JSON.stringify(file, null, 2) + '\n';
+      let draft = null, over = null;
+      try { if (!ignoreDraft && !bridge) draft = JSON.parse(localStorage.getItem(DRAFT) || 'null'); over = JSON.parse(localStorage.getItem('ds_ep01_voice') || 'null'); } catch (e) {}
+      const ep = draft || file;
+      if (over && over.id) ep.voice = { ...ep.voice, ...over };
+      if (/[?&]t=shorts/.test(location.search)) ep.template = 'shorts';
+      let tplId = 'roblox-horror'; try { tplId = localStorage.getItem('rhm_template') || tplId; } catch (e) {}
+      const niches = await fetch('templates/niches.json').then(r => r.json()).catch(() => null);
+      let engine = 'pollinations', geminiKey = ''; try { engine = localStorage.getItem('ds_img_engine') || engine; geminiKey = localStorage.getItem('ds_gemini_key') || ''; } catch (e) {}
+      const clean = (fr) => fr && fr.status === 'loading' ? undefined : fr;
+      ep.scenes = ep.scenes.map(s => ({ ...s, frame: clean(s.frame) })); ep.shorts.scenes = ep.shorts.scenes.map(s => ({ ...s, frame: clean(s.frame) }));
+      this.setState({ ep, voices: vj.voices || [], hasDraft: !!draft, sel: 0, niches, tplId, engine, geminiKey });
+      const keys = [...ep.scenes, ...ep.shorts.scenes].filter(s => s.frame && s.frame.idb).map(s => s.id).concat(Object.entries(ep.frames || {}).filter(([k, v]) => v && v.idb).map(([k]) => k));
+      if (keys.length) { const fd = {}, fo = {}; for (const k of keys) { try { fd[k] = await idb.get(k); if (fd[k]) fo[k] = dataToObj(fd[k]); } catch (e) {} } this.setState({ frameData: fd, frameObj: fo }); }
+      const found = {};
+      await Promise.all([...ep.scenes, ...ep.shorts.scenes].map(async s => { try { const r = await fetch(s.footage, { method: 'HEAD' }); found[s.id] = r.ok; } catch (e) { found[s.id] = false; } }));
+      this.setState({ found });
+    } catch (e) { this.setState({ reply: 'Could not load production/ep01/episode.json' }); }
+  }
+  persist() {
+    if (this.state.live) { clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500); return; }
+    try { localStorage.setItem(DRAFT, JSON.stringify(this.state.ep)); } catch (e) {} if (!this.state.hasDraft) this.setState({ hasDraft: true });
+  }
+  async save() {
+    const text = JSON.stringify(this.state.ep, null, 2) + '\n';
+    if (text === this.lastText) return;
+    this.lastText = text;
+    try { await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: text }); } catch (e) { this.flash('Could not save to disk. Is npm run studio still running?'); }
+  }
+  changedIds(a, b) {
+    const ids = [], all = (e) => [...e.scenes, ...e.shorts.scenes], A = {};
+    all(a).forEach(s => { A[s.id] = JSON.stringify(s); });
+    all(b).forEach(s => { if (A[s.id] !== JSON.stringify(s)) ids.push(s.id); });
+    return ids;
+  }
+  async poll() {
+    if (!this.state.live || !this.state.ep) return;
+    try {
+      const [r, a] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('production/ep01/activity.json', { cache: 'no-store' }).catch(() => null)]);
+      const text = await r.text();
+      if (text !== this.lastText && !this.saveT_pending) {
+        const remote = JSON.parse(text), ids = this.changedIds(this.state.ep, remote), now = Date.now();
+        this.lastText = text;
+        const fl = { ...this.state.flashIds }; ids.forEach(id => { fl[id] = now; });
+        const patch = { ep: remote, flashIds: fl };
+        if (this.state.follow && ids.length) { const L = remote.template === 'shorts' ? remote.shorts.scenes : remote.scenes; const i = L.findIndex(s => s.id === ids[ids.length - 1]); if (i >= 0) patch.sel = i; }
+        this.setState(patch);
+      }
+      if (a && a.ok) { const log = await a.json(); if (Array.isArray(log)) { const last = log.length ? Date.parse(log[log.length - 1].at) : 0; this.setState({ activity: log.slice(-25).reverse(), lastAgentAt: last }); } }
+    } catch (e) {}
+  }
+  addNote(sceneId, text) {
+    if (!text.trim()) return;
+    const n = { id: 'n' + Date.now(), scene: sceneId, text: text.trim(), by: 'you', status: 'open', at: new Date().toISOString() };
+    this.setState(p => ({ ep: { ...p.ep, notes: [...(p.ep.notes || []), n] }, noteDraft: '' }), () => this.persist());
+    this.push('you', 'add_note(' + JSON.stringify({ scene: sceneId, text: n.text }) + ')');
+  }
+  resolveNote(id, reply, by = 'agent') {
+    this.setState(p => ({ ep: { ...p.ep, notes: (p.ep.notes || []).map(n => n.id === id ? { ...n, status: 'fixed', reply, fixedAt: new Date().toISOString() } : n) } }), () => this.persist());
+    this.push(by, 'resolve_note(' + JSON.stringify({ id, reply }) + ')');
+  }
+
+  list(ep = this.state.ep) { return ep ? (ep.template === 'shorts' ? ep.shorts.scenes : ep.scenes) : []; }
+  scene(i = this.state.sel) { return this.list()[i] || null; }
+  src(s) { return this.state.clips[s.id] || (this.state.found[s.id] ? s.footage : ''); }
+  push(by, call) { this.setState(p => ({ log: [{ by, call }, ...p.log].slice(0, 14) })); }
+
+  update(id, fields, by = 'you') {
+    const fix = (arr) => arr.map(s => s.id === id ? { ...s, ...fields, ...(fields.narration !== undefined ? { narrationIsDirection: false } : {}) } : s);
+    this.setState(p => ({ ep: { ...p.ep, scenes: fix(p.ep.scenes), shorts: { ...p.ep.shorts, scenes: fix(p.ep.shorts.scenes) } } }), () => this.persist());
+    this.push(by, `update_scene(${JSON.stringify({ id, ...fields })})`);
+  }
+  setEp(fields, call, by = 'you') { this.setState(p => ({ ep: { ...p.ep, ...fields } }), () => this.persist()); this.push(by, call); }
+  setVoice(v, by = 'you') {
+    const voice = { ...this.state.ep.voice, ...v };
+    try { localStorage.setItem('ds_ep01_voice', JSON.stringify(voice)); } catch (e) {}
+    this.setEp({ voice }, `set_voice(${JSON.stringify(v)})`, by);
+  }
+
+  speak(text, onEnd) {
+    try {
+      speechSynthesis.cancel();
+      const ep = this.state.ep, u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 1 + (parseFloat(ep.voice.rate) || 0) / 100;
+      const vs = speechSynthesis.getVoices(), sn = shortName(ep.voice.id);
+      u.voice = vs.find(v => sn && v.name.includes(sn) && /Online|Natural/i.test(v.name)) || vs.find(v => v.lang === 'en-US') || null;
+      u.onstart = () => { if (this.bgmAudio) this.bgmAudio.volume = 0.04; };
+      u.onend = () => { if (this.bgmAudio) this.bgmAudio.volume = 0.12; onEnd && onEnd(); };
+      speechSynthesis.speak(u);
+    } catch (e) { onEnd && onEnd(); }
+  }
+  sfx(name) { if (name && name !== 'none') { const a = new Audio(`sfx/${name}.wav`); a.volume = 0.6; a.play().catch(() => {}); } }
+
+  play(i, all) {
+    this.stop(true);
+    const s = this.scene(i);
+    this.spoken = s.narrationIsDirection || !s.narration;
+    this.setState({ sel: i, playing: true, all, t0: performance.now(), now: performance.now() }, () => {
+      this.sfx(s.sfx);
+      if (this.video) { this.video.currentTime = 0; this.video.play().catch(() => {}); }
+      if (!this.spoken) this.speak(s.narration, () => { this.spoken = true; });
+    });
+  }
+  stop(keepAll) { try { speechSynthesis.cancel(); } catch (e) {} if (this.video) this.video.pause(); this.setState(p => ({ playing: false, all: keepAll ? p.all : false })); }
+  dur(s) { const has = !!this.src(s); const est = Math.max(2.5, wordsOf(s.narration) / 2.4 + 0.8); return has ? Math.min(secs(s.time), Math.max(est, (this.video && isFinite(this.video.duration)) ? this.video.duration : est)) : est; }
+  checkDone() {
+    const s = this.scene(); if (!s) return;
+    const el = (this.state.now - this.state.t0) / 1000;
+    if (el >= this.dur(s) && this.spoken) {
+      const n = this.state.sel + 1;
+      if (this.state.all && n < this.list().length) this.play(n, true); else this.stop();
+    }
+  }
+
+  async runAgent(prompt) {
+    if (!prompt.trim() || this.state.busy) return;
+    this.setState({ busy: true, reply: '' });
+    const self = this;
+    const tools = [
+      { name: 'list_scenes', description: 'List all scenes in the current cut with id, beat, time, kind, narration, onScreen, sfx, visual, narrationIsDirection, hasFootage.', input_schema: { type: 'object', properties: {} },
+        run: async () => JSON.stringify(self.list().map(s => ({ id: s.id, beat: s.beat, time: s.time, kind: s.kind, narration: s.narration, narrationIsDirection: !!s.narrationIsDirection, onScreen: s.onScreen, sfx: s.sfx, visual: s.visual, hasFootage: !!self.src(s) }))) },
+      { name: 'update_scene', description: 'Update fields of one scene. Never set verdicts.', input_schema: { type: 'object', properties: { id: { type: 'string' }, narration: { type: 'string' }, onScreen: { type: 'string', description: 'max 6 words' }, sfx: { type: 'string', enum: SFX }, visual: { type: 'string' }, edit: { type: 'string' } }, required: ['id'] },
+        run: async (inp) => { const { id, ...f } = inp; if (f.onScreen && wordsOf(f.onScreen) > 6) return 'Error: onScreen over 6 words'; self.update(id, f, 'agent'); return 'ok'; } },
+      { name: 'list_voices', description: 'List available edge-tts en-US voices with tone and best-fit templates.', input_schema: { type: 'object', properties: {} },
+        run: async () => JSON.stringify(self.state.voices.map(v => ({ id: v.id, gender: v.gender, age: v.age, tone: v.tone, bestFor: v.bestFor }))) },
+      { name: 'set_voice', description: 'Set the narration voice and speaking rate for the whole episode.', input_schema: { type: 'object', properties: { id: { type: 'string' }, rate: { type: 'string', enum: RATES } }, required: ['id'] },
+        run: async ({ id, rate }) => { if (!self.state.voices.find(v => v.id === id)) return 'Error: unknown voice'; self.setVoice(rate ? { id, rate } : { id }, 'agent'); return 'ok'; } },
+      { name: 'set_template', description: 'Switch output template.', input_schema: { type: 'object', properties: { template: { type: 'string', enum: ['longform', 'shorts'] } }, required: ['template'] },
+        run: async ({ template }) => { self.setState({ sel: 0 }); self.setEp({ template }, `set_template("${template}")`, 'agent'); return 'ok'; } },
+      { name: 'set_bgm', description: 'Turn background music on or off.', input_schema: { type: 'object', properties: { on: { type: 'boolean' } }, required: ['on'] },
+        run: async ({ on }) => { self.toggleBgm(on, 'agent'); return 'ok'; } },
+      { name: 'list_notes', description: 'Open review notes the creator left on scenes.', input_schema: { type: 'object', properties: {} },
+        run: async () => JSON.stringify((self.state.ep.notes || []).filter(n => n.status === 'open')) },
+      { name: 'resolve_note', description: 'Mark a note fixed after editing the scene, with a one-sentence reply.', input_schema: { type: 'object', properties: { id: { type: 'string' }, reply: { type: 'string' } }, required: ['id', 'reply'] },
+        run: async ({ id, reply }) => { self.resolveNote(id, reply); return 'ok'; } }
+    ];
+    const system = 'You edit the storyboard of a faceless Roblox horror Myth Lab episode (character RHM_INVESTIGATOR_01) for a US YouTube audience. Rules: never invent Roblox mechanics, results, verdicts, secrets, player counts or footage; myth lines ask the question and never pre-announce a verdict; no greetings; onScreen max 6 words, uppercase; write narration as spoken English, short sentences. The selected scene is ' + this.scene().id + '. Use the tools, then reply in one or two plain sentences saying what you changed.';
+    try {
+      const text = await window.claude.complete({ system, max_tokens: 2000, messages: [{ role: 'user', content: prompt }], tools });
+      this.setState({ reply: text, busy: false, ask: '' });
+    } catch (e) { this.setState({ reply: 'Agent error: ' + (e.message || e), busy: false }); }
+  }
+
+  genVals(s, L) {
+    const ep = this.state.ep, g = s.gen || { source: 'gameplay' };
+    if (g.source !== 'generated') return { isGen: false, isGameplay: true, genNote: g.note || 'Gameplay footage only. Generated images can\u2019t stand in as evidence.', subjects: [], genPrompt: '', ingr: [] };
+    const r = ep.subjectRules[g.subject];
+    const i = L.indexOf(s), prev = i > 0 ? L[i - 1] : null;
+    const subj = g.subject === 'avatar' ? 'RHM_INVESTIGATOR_01 (use the attached master reference)' : r.label;
+    const prompt = [g.camera + '. ' + subj + ' ' + g.action + '. ' + g.context + '. ' + ep.style + '.',
+      'Ingredients: ' + g.ingredients.map(k => ep.ingredients[k].file).join(', ') + '.',
+      g.chain && prev ? 'First frame: last frame of ' + prev.id + ' (' + prev.beat + ').' : 'Start fresh (hard cut).',
+      'Keep fixed: ' + r.lock + '. May change: ' + r.vary + '. Motion: ' + r.motion + '.',
+      'Avoid: ' + ep.negative + '.'].join('\n');
+    return { isGen: true, isGameplay: false, genPrompt: prompt, genRef: g.promptRef || '', chainLabel: g.chain ? 'Chained to previous' : 'Hard cut',
+      toggleChain: () => this.update(s.id, { gen: { ...g, chain: !g.chain } }),
+      subjects: Object.entries(ep.subjectRules).map(([k, v]) => ({ label: v.label, bg: g.subject === k ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: g.subject === k ? '#0A0C12' : '#F4F7FC', onClick: () => this.update(s.id, { gen: { ...g, subject: k } }) })),
+      ingr: g.ingredients.map(k => ({ name: k, file: ep.ingredients[k].file, status: ep.ingredients[k].status, color: ep.ingredients[k].status === 'missing' ? WARN : OK })),
+      copyPrompt: () => { navigator.clipboard.writeText(prompt); this.push('you', 'copy_prompt({id:"' + s.id + '", target:"Flow / Veo 3.1"})'); } };
+  }
+
+  toggleBgm(on, by = 'you') {
+    const v = on === undefined ? !this.state.bgm : on;
+    this.setState({ bgm: v });
+    if (this.bgmAudio) { v ? this.bgmAudio.play().catch(() => {}) : this.bgmAudio.pause(); }
+    this.push(by, `set_bgm({on:${v}})`);
+  }
+
+  conceptOf() { const ep = this.state.ep; return (ep.template === 'shorts' ? ep.shorts.concept : ep.concept) || ep.concept || ep.shorts.concept || null; }
+  isSpecial(k) { return k === 'char' || k.indexOf('thumb') === 0; }
+  frameOf(k) { const ep = this.state.ep; if (this.isSpecial(k)) return (ep.frames || {})[k] || null; const s = [...ep.scenes, ...ep.shorts.scenes].find(x => x.id === k); return s ? s.frame || null : null; }
+  frameUrl(k, fr) { if (!fr) return ''; return fr.engine === 'gemini' ? (this.state.frameObj[k] || '') : (fr.url || ''); }
+  setFrame(k, frame) {
+    this.setState(p => { const ep = p.ep; if (this.isSpecial(k)) return { ep: { ...ep, frames: { ...(ep.frames || {}), [k]: frame } } };
+      const fix = (arr) => arr.map(s => s.id === k ? { ...s, frame } : s);
+      return { ep: { ...ep, scenes: fix(ep.scenes), shorts: { ...ep.shorts, scenes: fix(ep.shorts.scenes) } } }; }, () => this.persist());
+  }
+  promptFor(k) {
+    const ep = this.state.ep, c = this.conceptOf(), look = (c && c.characterLook) || CHAR_DESC, style = ep.style || '';
+    if (k === 'char') return 'Character reference sheet showing front, three-quarter, side and back views at identical scale on a neutral gray-blue studio background: ' + look + '. Clean even lighting, all accessories visible, no text. ' + style;
+    if (k.indexOf('thumb') === 0) { const t = this.tpl(); return 'YouTube thumbnail image, readable at small size. ' + (t ? t.thumbnail.rules + '. ' : '') + 'Main subject: ' + look + '. Story: ' + ((c && c.logline) || ep.title) + '. One focal point, strong contrast, clear empty area for a short title, no text in the image. ' + style; }
+    const s = [...ep.scenes, ...ep.shorts.scenes].find(x => x.id === k), g = s.gen || {};
+    const subj = !g.subject || g.subject === 'avatar' ? look : ((ep.subjectRules[g.subject] || {}).label || '');
+    const core = g.source === 'generated' ? [g.camera, subj + ' ' + (g.action || ''), g.context, s.visual].filter(Boolean).join('. ') : 'Storyboard frame of a gameplay moment: ' + s.visual + '. The player avatar is ' + look;
+    return (core + '. ' + style + '. Avoid: ' + (ep.negative || '') + '.').slice(0, 1400);
+  }
+  async genFrame(k, reseed) {
+    const st = this.state, ep = st.ep, prev = this.frameOf(k);
+    const tall = ep.template === 'shorts' && !this.isSpecial(k), w = tall ? 720 : 1280, h = tall ? 1280 : 720;
+    const seed = reseed || !prev ? Math.floor(Math.random() * 1e6) : prev.seed, prompt = this.promptFor(k);
+    this.setFrame(k, { ...(prev || {}), status: 'loading', seed, prompt, engine: st.engine });
+    try {
+      if (st.engine === 'gemini') {
+        if (!st.geminiKey) throw new Error('Paste your Gemini API key first.');
+        const ref = k !== 'char' ? st.frameData.char : null;
+        const parts = [{ text: prompt + (ref ? ' Keep the character identical to the attached reference image.' : '') }];
+        if (ref) { const m = /^data:([^;]+);base64,(.*)$/.exec(ref); if (m) parts.push({ inline_data: { mime_type: m[1], data: m[2] } }); }
+        const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': st.geminiKey },
+          body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { aspectRatio: tall ? '9:16' : '16:9' } } }) });
+        const j = await r.json(); if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status));
+        const p = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).find(x => x.inlineData || x.inline_data);
+        if (!p) throw new Error('Gemini returned no image. Try again.');
+        const d = p.inlineData || p.inline_data, url = 'data:' + (d.mimeType || d.mime_type) + ';base64,' + d.data;
+        await idb.put(k, url); const ou = dataToObj(url); this.setState(s2 => ({ frameData: { ...s2.frameData, [k]: url }, frameObj: { ...s2.frameObj, [k]: ou } }));
+        this.setFrame(k, { status: 'review', seed, prompt, engine: 'gemini', idb: true });
+      } else {
+        const url = POLL(prompt, w, h, seed);
+        await new Promise((res, rej) => { const im = new Image(), to = setTimeout(() => rej(new Error('Timed out. Try again.')), 120000); im.onload = () => { clearTimeout(to); res(); }; im.onerror = () => { clearTimeout(to); rej(new Error('Free service is busy. Wait 15s and press New.')); }; im.src = url; });
+        this.setFrame(k, { status: 'review', seed, prompt, engine: 'pollinations', url });
+      }
+    } catch (e) { this.setFrame(k, { ...(prev || {}), status: 'error', error: String(e.message || e), seed, prompt, engine: st.engine }); }
+  }
+  async genAll() {
+    if (this.state.queue) { this.cancelQ = true; return; }
+    const ep = this.state.ep, ch = this.frameOf('char'), th = this.frameOf('thumb_' + ep.template);
+    const need = (fr) => !fr || fr.status === 'error' || fr.status === 'rejected';
+    const keys = [...(need(ch) ? ['char'] : []), ...this.list().filter(s => need(s.frame)).map(s => s.id), ...(need(th) ? ['thumb_' + ep.template] : [])];
+    if (!keys.length) { this.flash('Every image is generated. Use ✓ or ↻ on each card.'); return; }
+    this.cancelQ = false; this.setState({ queue: { done: 0, total: keys.length } });
+    for (let i = 0; i < keys.length && !this.cancelQ; i++) {
+      const t0 = Date.now(); await this.genFrame(keys[i], true);
+      this.setState({ queue: { done: i + 1, total: keys.length } });
+      if (this.state.engine === 'pollinations' && i < keys.length - 1 && !this.cancelQ) { const wait = 16000 - (Date.now() - t0); if (wait > 0) await new Promise(r => setTimeout(r, wait)); }
+    }
+    this.setState({ queue: null });
+  }
+  frameView(k, fr) {
+    const url = this.frameUrl(k, fr), stt = fr ? fr.status : 'none';
+    const T = { none: ['No image yet', 'rgba(232,237,245,0.55)'], loading: ['Generating…', '#8DEBFF'], review: ['Keep this image?', '#8DEBFF'], approved: ['✓ Using this image', OK], rejected: ['Rejected', WARN], error: [(fr && fr.error) || 'Failed', WARN] }[stt] || ['', ''];
+    return { bg: url ? 'url("' + url + '")' : STRIPES, empty: !url && stt !== 'loading', loading: stt === 'loading', canJudge: !!url && stt !== 'loading', stText: T[0], stColor: T[1],
+      border: stt === 'approved' ? 'rgba(120,220,160,0.55)' : stt === 'review' ? 'rgba(141,235,255,0.4)' : 'rgba(244,247,252,0.08)',
+      gen: () => this.genFrame(k, true), redo: () => this.genFrame(k, true), use: () => this.setFrame(k, { ...fr, status: 'approved' }) };
+  }
+  tpl() { const n = this.state.niches; return n ? (n.templates.find(t => t.id === this.state.tplId) || n.templates[0]) : null; }
+  async generateBoard() {
+    const st = this.state, ep = st.ep, t = this.tpl();
+    if (!st.idea.trim()) { this.setState({ genErr: 'Write the idea first.' }); return; }
+    if (st.genBusy) return;
+    const cut = ep.template, rules = ep.templates[cut].rules, short = cut === 'shorts';
+    this.setState({ genBusy: true, genErr: '' });
+    const system = 'You are a senior YouTube storyboard writer for the US market. Return ONLY one JSON object, no prose. Schema: {"title":string,"concept":{"logline":string,"hook":string,"audience":string,"whyItWorks":string,"characterLook":"one sentence fixing the main character or subject look (hair, outfit, colors, props) so every image matches"},"scenes":[{"time":"MM:SS–MM:SS","beat":string,"kind":"intro"|"myth"|"board"|"outro"|"scene","source":"gameplay"|"generated","visual":string,"narration":string,"onScreen":string,"sfx":string,"edit":string,"evidence":string,"subject":string,"camera":string,"action":string,"context":string,"chain":boolean}]}. Rules: total length ' + rules.targetSec[0] + '–' + rules.targetSec[1] + ' seconds; first scene is the hook and lasts at most ' + rules.hookSec + 's; change the picture every ' + rules.changeEverySec.join('–') + 's; scene times are contiguous from 00:00; narration is final spoken English in short sentences, no greeting, roughly 2.4 words per second of scene; onScreen max 6 words uppercase or empty; sfx one of ' + SFX.join(', ') + '; source "gameplay" means the creator records it, and visual must say exactly what to record; source "generated" only for setup, boards, transitions and CTA, with subject one of ' + Object.keys(ep.subjectRules).join(', ') + ' plus camera, action and context; myth scenes are always gameplay, state the evidence needed, and never announce a verdict or invent game mechanics, secrets or results.' + (() => { try { const L = JSON.parse(localStorage.getItem('ds_lessons') || '[]').filter(l => l.on !== false).map(l => l.rule); return L.length ? ' Lessons learned from this channel\'s own results (follow them): ' + L.join(' | ') : ''; } catch (e) { return ''; } })();
+    const user = 'Template: ' + JSON.stringify(t ? { label: t.label, concept: t.concept, audience: t.audience, hook: t.hook, structure: short ? t.structure.short : t.structure.long, subject: t.subject, visual: t.visual, motion: t.motion, compliance: t.compliance } : {}) + '\nFormat: ' + ep.templates[cut].label + '\nIdea: ' + st.idea + (st.game ? '\nGame or subject: ' + st.game : '');
+    try {
+      const text = await window.claude.complete({ system, max_tokens: short ? 3000 : 8000, messages: [{ role: 'user', content: user }] });
+      const out = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+      const subj = Object.keys(ep.subjectRules), ingr = Object.keys(ep.ingredients || {}).slice(0, 3);
+      const scenes = out.scenes.map((x, i) => { const id = (short ? 'sh' : 'sc') + (i + 1); const myth = x.kind === 'myth';
+        const gen = x.source === 'generated' && !myth ? { source: 'generated', subject: subj.includes(x.subject) ? x.subject : subj[0], camera: x.camera || 'Medium shot, slow push-in', action: x.action || '', context: x.context || '', ingredients: ingr, chain: !!x.chain } : { source: 'gameplay', note: 'Record: ' + (x.visual || '') };
+        return { id, time: x.time, beat: x.beat, kind: myth ? 'myth' : (x.kind || 'scene'), visual: x.visual || '', narration: x.narration || '', onScreen: (x.onScreen || '').toUpperCase(), edit: x.edit || '', sfx: SFX.includes(x.sfx) ? x.sfx : 'none', footage: 'footage/' + id + '.mp4', gen, ...(myth ? { evidence: x.evidence || '', verdict: 'pending' } : {}) }; });
+      const concept = { ...out.concept, idea: st.idea, game: st.game, template: t ? t.id : null };
+      if (short) this.setEp({ shorts: { ...ep.shorts, title: out.title || ep.shorts.title, concept, scenes } }, 'generate_storyboard({cut:"shorts"})', 'agent');
+      else this.setEp({ title: out.title || ep.title, concept, scenes }, 'generate_storyboard({cut:"longform"})', 'agent');
+      this.setState({ genBusy: false, sel: 0, step: 2, review: '' });
+    } catch (e) { this.setState({ genBusy: false, genErr: 'Could not build the storyboard (' + (e.message || e) + '). Try again or shorten the idea.' }); }
+  }
+  async reviewBoard() {
+    const ep = this.state.ep, L = this.list(), t = this.tpl();
+    this.setState({ review: 'Reviewing…' });
+    try {
+      const text = await window.claude.complete({ system: 'You review YouTube storyboards for retention. Reply in plain text: a score out of 10, then at most 5 short bullet points naming the scene id and the fix. No preamble.', max_tokens: 800,
+        messages: [{ role: 'user', content: 'Template: ' + (t ? t.label : '') + '\nCut: ' + ep.template + '\nScenes: ' + JSON.stringify(L.map(s => ({ id: s.id, time: s.time, beat: s.beat, source: s.gen && s.gen.source, visual: s.visual, narration: s.narration, onScreen: s.onScreen }))) }] });
+      this.setState({ review: text });
+    } catch (e) { this.setState({ review: 'Review failed: ' + (e.message || e) }); }
+  }
+  boardVals(ep, L, shorts) {
+    const st = this.state, t = this.tpl(), rules = ep.templates[ep.template].rules;
+    const c = (shorts ? ep.shorts.concept : ep.concept) || null;
+    const longest = L.filter(s => secs(s.time) > rules.changeEverySec[1] * (shorts ? 1.8 : 3)).length;
+    const len = L.reduce((a, s) => a + secs(s.time), 0), dir = L.filter(s => s.narrationIsDirection).length, capBad = L.filter(s => wordsOf(s.onScreen) > 6).length;
+    const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';
+    const checks = [
+      { text: 'Hook ' + secs(L[0] ? L[0].time : '') + 's (max ' + rules.hookSec + 's)', color: L[0] && secs(L[0].time) <= rules.hookSec + 2 ? OK : WARN },
+      { text: 'Length ' + fmt(len), color: len >= rules.targetSec[0] && len <= rules.targetSec[1] ? OK : WARN },
+      { text: dir ? dir + ' lines missing' : 'All lines written', color: dir ? WARN : OK },
+      { text: capBad ? capBad + ' captions too long' : 'Captions ≤ 6 words', color: capBad ? BAD : OK },
+      { text: longest ? longest + ' slow scenes' : 'Pacing OK', color: longest ? WARN : OK }
+    ];
+    const imgScenes = L.filter(s => s.frame && s.frame.status === 'approved').length;
+    const q = st.queue;
+    return {
+      engines: [['pollinations', 'Free · no key'], ['gemini', 'Gemini · your key']].map(([id, label]) => ({ label, bg: st.engine === id ? '#F4F7FC' : 'transparent', fg: st.engine === id ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
+      needsKey: st.engine === 'gemini', key: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
+      genAll: () => this.genAll(), genAllLabel: q ? '■ Stop (' + q.done + '/' + q.total + ')' : '✦ Generate all images',
+      imgStatus: 'Approved ' + imgScenes + '/' + L.length + ' scenes',
+      engineNote: st.engine === 'gemini' ? 'Nano Banana (' + GEMINI_MODEL + ') with your own key from aistudio.google.com. The character sheet is sent as a reference with every scene, so the character stays the same. Free quota depends on your Google account.' : 'Pollinations: free, no key, about one image every 15 seconds and it may add a small watermark. It can’t take reference images, so every prompt repeats the same character description. Order: character sheet, scenes, thumbnail.',
+      specials: [['char', 'Character sheet'], ['thumb_' + ep.template, 'Thumbnail']].map(([k, title]) => ({ title, ...this.frameView(k, this.frameOf(k)) })),
+      minCard: shorts ? '210px' : '270px',
+      cutLabel: ep.templates[ep.template].label.toUpperCase(),
+      logline: c && c.logline ? c.logline : (shorts ? ep.shorts.title : ep.title),
+      facts: [{ k: 'Hook', v: c && c.hook ? c.hook : (L[0] ? L[0].narration : '') }, { k: 'Audience', v: c && c.audience ? c.audience : (t ? t.audience : '') }, { k: 'Why it works', v: c && c.whyItWorks ? c.whyItWorks : (t ? t.concept : '') }],
+      checks, review: st.review,
+      cards: L.map((s, i) => { const gen = !!(s.gen && s.gen.source === 'generated');
+        return { ...this.frameView(s.id, s.frame), ar: shorts ? '9/16' : '16/9', onVisual: (e) => this.update(s.id, { visual: e.target.value }), n: String(i + 1).padStart(2, '0'), time: s.time, beat: s.beat, visual: s.visual, onScreen: s.onScreen, narration: s.narration, sfx: s.sfx === 'none' ? '' : s.sfx, isDir: !!s.narrationIsDirection, isGen: gen, src: gen ? 'AI SHOT' : 'RECORD · AI PREVIEW', srcBg: gen ? '#8DEBFF' : 'oklch(0.83 0.14 80)',
+          onNarr: (e) => this.update(s.id, { narration: e.target.value }), hear: () => this.speak(s.narration),
+          rewrite: () => this.runAgent('Rewrite scene ' + s.id + ' (' + s.beat + ') so it hooks harder and flows from the scene before it. Update narration and onScreen only.'),
+          note: () => { this.setState({ sel: i }); setTimeout(() => this.noteEl && this.noteEl.focus(), 50); },
+          notes: (ep.notes || []).filter(n => n.scene === s.id).map(n => ({ text: n.text, reply: n.reply || '', color: n.status === 'fixed' ? OK : WARN })),
+          ...(Date.now() - (st.flashIds[s.id] || 0) < 5000 ? { border: '#8DEBFF' } : {}) }; })
+    };
+  }
+  flash(msg) { this.setState({ note: msg }); clearTimeout(this.nt); this.nt = setTimeout(() => this.setState({ note: '' }), 2600); }
+  stepVals(ep, L, s, shorts) {
+    const st = this.state, n = st.step, go = (k) => { this.stop(); this.setState({ step: k }); };
+    const myths = L.filter(x => x.kind === 'myth');
+    const foot = L.filter(x => this.src(x)).length, lines = L.filter(x => !x.narrationIsDirection).length, verd = myths.filter(x => x.verdict && x.verdict !== 'pending').length;
+    const tot = (arr) => arr.reduce((a, x) => a + secs(x.time), 0);
+    const fmt = (t) => t >= 60 ? Math.floor(t / 60) + 'm ' + String(t % 60).padStart(2, '0') + 's' : t + 's';
+    const rules = ep.templates[ep.template].rules, len = tot(L), lenOk = len >= rules.targetSec[0] && len <= rules.targetSec[1];
+    const visOk = (x) => !!this.src(x) || !!(x.frame && x.frame.status === 'approved' && x.gen && x.gen.source === 'generated');
+    const visN = L.filter(visOk).length, imgN = L.filter(x => x.frame && x.frame.status === 'approved').length;
+    const doneArr = [true, lines === L.length && imgN === L.length, visN === L.length, true, false];
+    const LABELS = ['Idea', 'Storyboard', 'Visuals', 'Voice & sound', 'Export'];
+    const steps = LABELS.map((label, i) => { const k = i + 1, on = k === n, done = k < n && doneArr[i], warn = k < n && !doneArr[i];
+      return { label, notLast: k < 5, weight: on ? 800 : 600, bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.07)', fg: on ? '#0A0C12' : 'rgba(232,237,245,0.8)',
+        mark: done ? '✓' : String(k), dotBg: on ? '#0A0C12' : done ? '#8DEBFF' : warn ? WARN : 'rgba(244,247,252,0.14)', dotFg: on ? '#F4F7FC' : (done || warn) ? '#0A0C12' : '#F4F7FC', onClick: () => go(k) }; });
+    const vis = (arr, d) => arr.includes(n) ? d : 'none';
+    const show = { c0: vis([3, 4], 'flex'), c1: vis([4], 'flex'), c2: vis([3, 4], 'flex'), c3: vis([3], 'flex'), c4: vis([3], 'flex'), agent: vis([2, 3, 4, 5], 'flex'),
+      blk2: 'none', flex2: 'none', blk3: vis([3], 'block'), blk4: vis([4], 'block'), flex4: vis([4], 'flex') };
+    const btn = (label, fn, primary) => ({ label, onClick: fn, bg: primary ? '#F4F7FC' : 'rgba(244,247,252,0.12)', fg: primary ? '#0A0C12' : '#F4F7FC' });
+    const jump = (pred) => { const i = L.findIndex((x, j) => j > st.sel && pred(x)); const k = i >= 0 ? i : L.findIndex(pred); if (k >= 0) { this.stop(); this.setState({ sel: k }); } else this.flash('Every scene is done.'); };
+    const setCut = (id) => { if (ep.template !== id) { this.stop(); this.setState({ sel: 0 }); this.setEp({ template: id }, 'set_template("' + id + '")'); } };
+    const choice = (title, sub, on, fn) => ({ title, sub, onClick: fn, bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC', ring: on ? '0 0 0 3px rgba(141,235,255,0.6)' : 'none' });
+    const agentPrompt = 'Use the dreamscript MCP tools on episode ep01, cut "' + ep.template + '". 1) validate_episode and list the issues. 2) synthesize_voice for the whole cut. 3) Tell me which lines are too long for their scene and suggest shorter versions. Do not set verdicts.';
+    const G = {
+      1: { title: 'Start with the idea', text: 'Type one sentence on the left and pick the format. AI writes the whole storyboard in one go. Nothing is recorded or generated yet.',
+        choices: [choice('YouTube Short · 9:16', fmt(tot(ep.shorts.scenes)) + ' · ' + ep.shorts.scenes.length + ' scenes', shorts, () => setCut('shorts')), choice('Long video · 16:9', fmt(tot(ep.scenes)) + ' · ' + ep.scenes.length + ' scenes', !shorts, () => setCut('longform'))],
+        hideChoices: true, actions: [] },
+      2: { title: 'Generate the images, keep the good ones', text: 'Press Generate all images. AI draws the character sheet, every scene and the thumbnail. On each card press ✓ Use if it works or ↻ New for another version. Edit "We see" to change a picture, or the narrator line to change the words.',
+        status: ['Images approved ' + imgN + '/' + L.length + ' · lines ' + lines + '/' + L.length, (imgN + lines) / (2 * L.length), imgN === L.length && lines === L.length ? OK : WARN],
+        actions: [btn(st.queue ? '■ Stop generating' : '✦ Generate all images', () => this.genAll(), imgN < L.length), btn('✓ Approve storyboard', () => go(3), imgN === L.length), btn(st.busy ? 'Writing…' : '✦ Fill missing lines', () => this.runAgent('Find every scene whose narration is still a direction and replace it with a final spoken line that follows the rules.')), btn('✦ AI review', () => this.reviewBoard()), btn('↻ New idea', () => go(1))] },
+      3: { title: 'Finish the visuals', text: 'AI SHOT scenes already use your approved image. To turn one into moving video, copy its prompt into Flow or Veo and load the clip. RECORD scenes show an AI preview of what to capture: record it in Roblox and press Load clip.',
+        status: ['Scenes ready ' + visN + '/' + L.length, visN / L.length, visN === L.length ? OK : visN ? WARN : BAD],
+        actions: [btn('Next scene to finish', () => jump(x => !visOk(x)), true)] },
+      4: { title: 'Pick the voice and sounds', text: 'Choose one narrator for the whole video, then a sound effect for each scene. Myth scenes keep the game audio.',
+        actions: [btn('▶ Hear this scene', () => this.speak(s.narration), true), btn(st.bgm ? '♪ Music on' : '♪ Music off', () => this.toggleBgm()), btn('✦ AI: best voice', () => this.runAgent('List the voices, pick the best one and rate for a calm, curious US Roblox horror investigator, set it, and say why in one sentence.'))] },
+      5: { title: 'Watch it, then export', text: 'Play the whole cut. Then copy the agent prompt into Claude Code or Codex (with the dreamscript MCP connected). It makes the voice files and checks everything on your computer.',
+        checks: [{ text: 'Lines ' + lines + '/' + L.length, color: lines === L.length ? OK : WARN }, { text: 'Visuals ' + visN + '/' + L.length + ' (' + foot + ' clips)', color: visN === L.length ? OK : BAD }, ...(myths.length ? [{ text: 'Verdicts ' + verd + '/' + myths.length, color: verd === myths.length ? OK : WARN }] : []), { text: 'Length ' + fmt(len) + ' (target ' + fmt(rules.targetSec[0]) + '–' + fmt(rules.targetSec[1]) + ')', color: lenOk ? OK : WARN }],
+        actions: [btn(st.all ? '■ Stop' : '▶ Play all', () => (st.all ? this.stop() : this.play(0, true)), true), btn('Copy agent prompt', () => { navigator.clipboard.writeText(agentPrompt); this.flash('Prompt copied · paste it into your agent'); }), btn('Copy episode.json', () => { navigator.clipboard.writeText(JSON.stringify(ep, null, 2)); this.flash('episode.json copied · paste over production/ep01/episode.json'); }), btn('Agent setup', () => { location.href = 'mcp/README.md'; })] }
+    };
+    const g = G[n];
+    return { steps, show, note: st.note, isIdea: n === 1, isBoard: n === 2, isPlayer: n >= 3,
+      board: n === 2 ? this.boardVals(ep, L, shorts) : { facts: [], checks: [], cards: [] },
+      idea: { text: st.idea, onText: (e) => this.setState({ idea: e.target.value, genErr: '' }), game: st.game, onGame: (e) => this.setState({ game: e.target.value }),
+        placeholder: this.tpl() ? 'e.g. ' + this.tpl().hook.patterns[0].replace(/\{(\w+)\}/g, (m, k) => ({ claim: 'hiding makes you safe', game: 'this game', n: 'ten', character: 'Milo', Character: 'Milo', thing: 'the moon key', Thing: 'The moon key', does: 'gets lost', Topic: 'The new rule' })[k] || 'this') : 'One sentence about the video',
+        templates: st.niches ? st.niches.templates.map(x => ({ label: x.label, bg: x.id === st.tplId ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: x.id === st.tplId ? '#0A0C12' : '#F4F7FC', onClick: () => { try { localStorage.setItem('rhm_template', x.id); } catch (e) {} this.setState({ tplId: x.id }); } })) : [],
+        generate: () => this.generateBoard(), genLabel: st.genBusy ? 'Writing the storyboard…' : '✦ Generate storyboard', useExisting: () => go(2), err: st.genErr }, hasPrev: n > 1, hasNext: n < 5, prevStep: () => go(n - 1), nextStep: () => go(n + 1), nextLabel: 'Next: ' + (LABELS[n] || '') + ' ›',
+      guide: { n, title: g.title, text: g.text, hasStatus: !!g.status, statusLabel: g.status ? g.status[0] : '', statusPct: g.status ? Math.round(g.status[1] * 100) + '%' : '0%', statusColor: g.status ? g.status[2] : OK,
+        hasChoices: !!g.choices && !g.hideChoices, choices: g.choices || [], hasChecks: !!g.checks, checks: g.checks || [], actions: g.actions } };
+  }
+
+  renderVals() {
+    const st = this.state, ep = st.ep;
+    if (!ep) return { subjects: [], ingr: [], title: 'Loading storyboard…', kicker: '', templates: [], strip: [], pills: [], cur: {}, frame: { w: '100%', ar: '16/9', maxH: '60vh', vTop: '0%', isLong: true, pad: '0', radius: '22px' }, onField: {}, sfxChips: [], verdicts: [], quick: [], log: [], progress: '0%', voiceOpts: [], rateOpts: [], clock: '', live: { label: '…' }, notes: { items: [] }, steps: [], show: {}, isIdea: false, isBoard: false, isPlayer: true, board: { facts: [], checks: [], cards: [] }, idea: { templates: [] }, guide: { actions: [], choices: [], checks: [] } };
+    const s = this.scene();
+    const shorts = ep.template === 'shorts';
+    const sel = (on) => ({ bg: on ? '#F4F7FC' : 'transparent', fg: on ? '#0A0C12' : 'rgba(232,237,245,0.8)' });
+    const vsrc = this.src(s);
+    const L = this.list();
+    const myths = L.filter(x => x.kind === 'myth');
+    const el = st.playing ? (st.now - st.t0) / 1000 : 0;
+    const field = (k) => (e) => this.update(s.id, { [k]: k === 'onScreen' ? e.target.value.toUpperCase() : e.target.value });
+    const canVerdict = !!vsrc;
+    const tr = ep.templates[ep.template].rules, tot = L.reduce((a, x) => a + secs(x.time), 0), lenOk = tot >= tr.targetSec[0] && tot <= tr.targetSec[1];
+    const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';
+    const foot = L.filter(x => this.src(x)).length, lines = L.filter(x => !x.narrationIsDirection).length, verd = myths.filter(x => x.verdict && x.verdict !== 'pending').length;
+    const vo = st.voices.find(v => v.id === ep.voice.id);
+    return {
+      ...this.stepVals(ep, L, s, shorts),
+      kicker: ep.templates[ep.template].label + ' · ' + L.length + ' scenes · voice ' + (vo ? vo.name : ep.voice.id),
+      title: shorts ? ep.shorts.title : ep.title,
+      clock: st.clock.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+      lengthText: fmt(tot) + ' / ' + fmt(tr.targetSec[0]) + '–' + fmt(tr.targetSec[1]), lengthColor: lenOk ? OK : WARN,
+      rulesText: 'Hook ≤ ' + tr.hookSec + 's · new beat every ' + tr.changeEverySec.join('–') + 's · ' + tr.source,
+      pills: [
+        { label: `Footage ${foot}/${L.length}`, color: foot === L.length ? OK : foot ? WARN : BAD },
+        { label: `Lines ${lines}/${L.length}`, color: lines === L.length ? OK : WARN },
+        ...(myths.length ? [{ label: `Verdicts ${verd}/${myths.length}`, color: verd ? WARN : 'rgba(244,247,252,0.3)' }] : [])
+      ],
+      ...this.genVals(s, L),
+      templates: Object.entries(ep.templates).map(([id, t]) => ({ label: id === 'shorts' ? 'Shorts 9:16' : 'Long 16:9', ...sel(ep.template === id), onClick: () => { this.stop(); this.setState({ sel: 0 }); this.setEp({ template: id }, `set_template("${id}")`); } })),
+      toggleBgm: () => this.toggleBgm(), bgmBg: st.bgm ? '#8DEBFF' : 'rgba(244,247,252,0.1)', bgmFg: st.bgm ? '#0A0C12' : '#F4F7FC',
+      toggleSubs: () => this.setState({ subs: !st.subs }), subsBg: st.subs ? '#F4F7FC' : 'rgba(244,247,252,0.1)', subsFg: st.subs ? '#0A0C12' : '#F4F7FC',
+      playAll: () => (st.all ? this.stop() : this.play(0, true)), playAllLabel: st.all ? '■ Stop' : '▶ Play all',
+      playCur: () => (st.playing ? this.stop() : this.play(st.sel, false)), playIcon: st.playing ? '■' : '▶',
+      copyJson: () => { navigator.clipboard.writeText(JSON.stringify(ep, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }); },
+      copyLabel: st.copied ? 'Copied' : 'Copy episode.json',
+      hasDraft: st.hasDraft && !st.live, draftText: st.live ? 'Live: edits save to episode.json on disk.' : st.hasDraft ? 'Edits saved in this browser.' : 'Showing episode.json from disk.',
+      resetDraft: () => { try { localStorage.removeItem(DRAFT); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
+      frame: shorts
+        ? { pad: '16px', radius: '10px', w: 'auto', h: '64vh', ar: '9/16', maxH: '64vh', vTop: '30%', isShorts: true, isLong: false, bandH: '21%', capSize: 'clamp(16px,2.6vh,30px)', subBottom: '25%', subSize: 'clamp(11px,1.6vh,18px)' }
+        : { pad: '0', radius: '22px', w: '100%', h: 'auto', ar: '16/9', maxH: '62vh', vTop: '0%', isShorts: false, isLong: true, capSize: 'clamp(11px,1.4vw,20px)', subBottom: '6%', subSize: 'clamp(12px,1.5vw,22px)' },
+      cur: { ...s, hasVideo: !!vsrc, noVideo: !vsrc, videoSrc: vsrc, isDirection: !!s.narrationIsDirection, isMyth: s.kind === 'myth', words: wordsOf(s.onScreen), wordColor: wordsOf(s.onScreen) > 6 ? BAD : 'rgba(232,237,245,0.5)',
+        ...(() => { const fu = this.frameUrl(s.id, s.frame), has = !!fu && !vsrc; const isGen = !!(s.gen && s.gen.source === 'generated');
+          return { hasFrame: has, frameBg: fu ? 'url("' + fu + '")' : 'none', slotBg: has ? 'transparent' : 'repeating-linear-gradient(135deg,rgba(244,247,252,0.05) 0 14px,rgba(244,247,252,0.015) 14px 28px)', slotAlign: has ? 'flex-end' : 'center', slotJustify: has ? 'flex-end' : 'center',
+            slotLabel: has ? (isGen ? 'AI IMAGE · load a Flow/Veo clip to animate' : 'AI PREVIEW · record this in Roblox') : ((isGen ? 'GENERATED INSERT · ' : 'ROBLOX GAMEPLAY · ') + s.footage) }; })(),
+        verdictChip: s.kind === 'myth' ? (s.verdict || 'pending').toUpperCase() : '', verdictBg: s.verdict && s.verdict !== 'pending' ? VCOL[s.verdict] : WARN },
+      zoom: st.playing ? 1.12 : 1, zoomDur: st.playing ? this.dur(s) + 's' : '0s',
+      videoRef: this.videoRef, muted: false, showSub: st.subs && !s.narrationIsDirection,
+      progress: st.playing ? Math.min(100, (el / this.dur(s)) * 100) + '%' : '0%',
+      onClip: (e) => { const f = e.target.files && e.target.files[0]; if (f) { this.setState(p => ({ clips: { ...p.clips, [s.id]: URL.createObjectURL(f) } })); this.push('you', `attach_footage({id:"${s.id}"}) · preview only, save the file at ${s.footage}`); } },
+      strip: L.map((x, i) => { const on = i === st.sel, v = this.src(x), gen = !!(x.gen && x.gen.source === 'generated'); const fu = this.frameUrl(x.id, x.frame); return { beat: x.beat, hasVideo: !!v, videoSrc: v, hasFrame: !!fu && !v, frameBg: fu ? 'url("' + fu + '")' : 'none', src: gen ? 'GEN' : 'PLAY',
+        ring: on ? '0 0 0 3px #0A0C12, 0 0 0 5px #F4F7FC' : (Date.now() - (st.flashIds[x.id] || 0) < 5000 ? '0 0 0 3px #0A0C12, 0 0 0 5px #8DEBFF, 0 0 24px rgba(141,235,255,0.6)' : '0 6px 16px rgba(0,0,0,0.3)'), weight: on ? 700 : 500, color: on ? '#F4F7FC' : 'rgba(232,237,245,0.6)',
+        dotF: v ? OK : 'rgba(244,247,252,0.25)', dotL: x.narrationIsDirection ? WARN : OK, dotV: x.kind === 'myth' ? VCOL[x.verdict || 'pending'] : 'transparent', onClick: () => { this.stop(); this.setState({ sel: i }); } }; }),
+      onField: { visual: field('visual'), narration: field('narration'), onScreen: field('onScreen'), edit: field('edit') },
+      voiceId: ep.voice.id,
+      voiceOpts: st.voices.map(v => ({ id: v.id, label: `${v.name} · ${v.gender === 'male' ? 'M' : 'F'}${v.age === 'child' ? ' child' : ''} · ${v.tone}` })),
+      onVoice: (e) => this.setVoice({ id: e.target.value }),
+      rateOpts: RATES.map(r => ({ label: r, ...sel(ep.voice.rate === r), onClick: () => this.setVoice({ rate: r }) })),
+      speakCur: () => this.speak(s.narration),
+      sfxChips: SFX.map(n => ({ name: n, bg: s.sfx === n ? '#8DEBFF' : 'rgba(244,247,252,0.08)', fg: s.sfx === n ? '#0A0C12' : '#F4F7FC', onClick: () => { this.sfx(n); if (s.sfx !== n) this.update(s.id, { sfx: n }); } })),
+      verdicts: ['pending', 'confirmed', 'busted', 'inconclusive'].map(v => { const on = (s.verdict || 'pending') === v, dis = v !== 'pending' && !canVerdict; return { label: v, disabled: dis, cursor: dis ? 'not-allowed' : 'pointer', opacity: dis ? 0.35 : 1, bg: on ? (v === 'pending' ? '#F4F7FC' : VCOL[v]) : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC', onClick: () => this.update(s.id, { verdict: v }) }; }),
+      verdictNote: canVerdict ? 'Set only after reviewing the uncut footage.' : 'Locked until this scene has gameplay footage.',
+      quick: [
+        { label: 'Write this scene\u2019s line', onClick: () => this.runAgent(`Scene ${s.id}: write the final spoken line from the visual direction and the edit note.`) },
+        { label: 'Fill all direction lines', onClick: () => this.runAgent('Find every scene whose narration is still a direction and replace it with a final spoken line that follows the rules.') },
+        { label: 'Pick SFX per scene', onClick: () => this.runAgent('Pick an SFX for each non-myth scene from the allowed list to match its edit note. Leave myth scenes at none so game audio stays clean.') },
+        { label: 'Best voice for this channel', onClick: () => this.runAgent('List the voices, pick the best one and rate for a calm, curious US Roblox horror investigator, set it, and say why in one sentence.') }
+      ],
+      ask: st.ask, onAsk: (e) => this.setState({ ask: e.target.value }), onAskKey: (e) => { if (e.key === 'Enter') this.runAgent(st.ask); },
+      sendAsk: () => this.runAgent(st.ask), askLabel: st.busy ? '…' : 'Ask', agentReply: st.reply,
+      log: (st.live && st.activity.length ? st.activity.map(a => ({ by: a.by + ' ' + new Date(a.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }), call: a.tool + (a.detail ? ' · ' + a.detail : '') + (a.error ? ' · failed' : ''), kind: a.kind })) : st.log).map(l => ({ ...l, color: l.kind === 'read' ? 'rgba(232,237,245,0.5)' : (String(l.by).indexOf('agent') === 0 ? '#8DEBFF' : WARN) })),
+      live: (() => { const busy = st.live && Date.now() - st.lastAgentAt < 12000;
+        if (!st.bridge) return { label: 'Connect agent', title: 'Run: cd mcp && npm run studio, then open http://localhost:4747', bg: 'rgba(244,247,252,0.1)', fg: '#F4F7FC', dot: 'rgba(244,247,252,0.35)', glow: 'none', onClick: () => this.flash('For live mode run: cd mcp && npm run studio, then open http://localhost:4747/Home.dc.html') };
+        return { label: busy ? 'LIVE · agent working' : (st.follow ? 'LIVE · following agent' : 'LIVE'), title: 'Click to turn Follow agent on or off', bg: busy ? 'rgba(141,235,255,0.2)' : 'rgba(244,247,252,0.1)', fg: busy ? '#8DEBFF' : '#F4F7FC', dot: busy ? '#8DEBFF' : OK, glow: busy ? '0 0 10px #8DEBFF' : 'none', onClick: () => this.setState({ follow: !st.follow }) }; })(),
+      notes: (() => { const all = ep.notes || [], open = all.filter(n => n.status === 'open'), nameOf = (id) => { const sc = [...ep.scenes, ...ep.shorts.scenes].find(x => x.id === id); return sc ? sc.beat : id; };
+        const prompt = 'Use the dreamscript MCP tools on episode ep01: call list_notes, fix each open note with update_scene (stay inside the template rules), then resolve_note with a one-sentence reply. Do not set verdicts.';
+        return { count: open.length ? open.length + ' open note' + (open.length > 1 ? 's' : '') : 'No open notes', countColor: open.length ? WARN : 'rgba(232,237,245,0.5)',
+          draft: st.noteDraft, onDraft: (e) => this.setState({ noteDraft: e.target.value }), onKey: (e) => { if (e.key === 'Enter') this.addNote(s.id, st.noteDraft); }, add: () => this.addNote(s.id, st.noteDraft), ref: (el) => { this.noteEl = el; },
+          items: all.slice(-6).reverse().map(n => ({ where: nameOf(n.scene), text: n.text, reply: n.reply || '', color: n.status === 'fixed' ? OK : WARN, onClick: () => { const i = L.findIndex(x => x.id === n.scene); if (i >= 0) this.setState({ sel: i }); } })),
+          fixLabel: st.busy ? 'Fixing…' : '✦ Fix notes now', fix: () => open.length ? this.runAgent('Call list_notes, then fix every open note by editing its scene with update_scene, then call resolve_note for each with a one-sentence reply.') : this.flash('No open notes.'),
+          copy: () => { navigator.clipboard.writeText(prompt); this.flash('Prompt copied · paste into Claude Code or Codex'); } }; })()
+    };
+  }
+}
+</script>
+</body>
+</html>

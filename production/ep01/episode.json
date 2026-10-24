@@ -1,0 +1,607 @@
+{
+  "specVersion": 1,
+  "id": "rhm-ep01",
+  "source": "content/roblox-horror-myth-lab-ep01/storyboard.md",
+  "title": "I Tested 10 Roblox Horror Myths to See Which Were Real",
+  "character": "RHM_INVESTIGATOR_01",
+  "experience": {
+    "name": null,
+    "link": null,
+    "version": null,
+    "note": "Choose before recording. Verdicts stay pending until footage is reviewed."
+  },
+  "templates": {
+    "longform": {
+      "label": "YouTube 16:9",
+      "platform": "youtube",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "caption": "small chip top-left, max 6 words",
+      "rules": {
+        "targetSec": [
+          480,
+          660
+        ],
+        "source": "video-format-system.md: Myth Lab 8–11 min",
+        "hookSec": 5,
+        "changeEverySec": [
+          20,
+          40
+        ],
+        "bigChangeEverySec": [
+          60,
+          90
+        ]
+      }
+    },
+    "shorts": {
+      "label": "YouTube Shorts 9:16",
+      "platform": "youtube",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "caption": "band above the gameplay, max 6 words",
+      "safeZone": {
+        "top": 170,
+        "bottom": 440,
+        "left": 64,
+        "right": 150
+      },
+      "rules": {
+        "targetSec": [
+          25,
+          35
+        ],
+        "maxSec": 180,
+        "source": "Shorts up to 3 min; 25–35s is the common high-performing range; one beat every 5–7s for story Shorts",
+        "hookSec": 3,
+        "changeEverySec": [
+          5,
+          7
+        ]
+      }
+    }
+  },
+  "template": "longform",
+  "voice": {
+    "engine": "edge-tts",
+    "id": "en-US-AndrewNeural",
+    "rate": "-5%"
+  },
+  "bgm": {
+    "file": "sfx/bgm_warm_pad.wav",
+    "gainDb": -22,
+    "duckDb": -8
+  },
+  "scenes": [
+    {
+      "id": "s01",
+      "time": "00:00–00:08",
+      "beat": "Cold open",
+      "kind": "intro",
+      "visual": "Strongest genuine recorded moment; punch-in, then hold on evidence. Use a temporary placeholder if footage is missing.",
+      "narration": "Roblox horror is full of myths. Ten claims. One rule: we test them instead of taking them on faith.",
+      "onScreen": "REAL OR FAKE?",
+      "edit": "Cold hit, low drone, no long logo intro.",
+      "sfx": "sub_drop",
+      "footage": "footage/s01.mp4",
+      "gen": {
+        "source": "gameplay"
+      }
+    },
+    {
+      "id": "s02",
+      "time": "00:08–00:17",
+      "beat": "Promise montage",
+      "kind": "intro",
+      "visual": "3–4 fast cuts from actual tests, no spoilers for every result.",
+      "narration": "Some sound obvious. Others could change how you survive.",
+      "onScreen": "",
+      "edit": "Tight cuts, restrained whooshes.",
+      "sfx": "whoosh_fast",
+      "footage": "footage/s02.mp4",
+      "gen": {
+        "source": "gameplay"
+      }
+    },
+    {
+      "id": "s03",
+      "time": "00:17–00:30",
+      "beat": "Challenge setup",
+      "kind": "intro",
+      "visual": "Investigator beside ten numbered cards.",
+      "narration": "Explain setup, attempt, evidence, verdict.",
+      "narrationIsDirection": true,
+      "onScreen": "10 MYTHS",
+      "edit": "Establish music pulse.",
+      "sfx": "blip",
+      "footage": "footage/s03.mp4",
+      "gen": {
+        "source": "generated",
+        "subject": "avatar",
+        "camera": "Medium three-quarter shot, slow dolly-in",
+        "action": "stands beside a wall of ten numbered mystery cards, lantern raised",
+        "context": "dark ruined corridor, negative space left for a title",
+        "ingredients": [
+          "character",
+          "corridor",
+          "style"
+        ],
+        "chain": false,
+        "promptRef": "image-generation.md scene 2"
+      }
+    },
+    {
+      "id": "s04",
+      "time": "00:30–00:45",
+      "beat": "Verdict key",
+      "kind": "intro",
+      "visual": "Three cards: green CONFIRMED, red BUSTED, amber INCONCLUSIVE.",
+      "narration": "Define each verdict and evidence standard.",
+      "narrationIsDirection": true,
+      "onScreen": "CONFIRMED · BUSTED · INCONCLUSIVE",
+      "edit": "Short stingers; readable for at least 2 seconds.",
+      "sfx": "pop",
+      "footage": "footage/s04.mp4",
+      "gen": {
+        "source": "generated",
+        "subject": "avatar",
+        "camera": "Medium shot, static, slight push-in",
+        "action": "gestures toward three blank green, red and amber panels",
+        "context": "same corridor as s03",
+        "ingredients": [
+          "character",
+          "corridor",
+          "style"
+        ],
+        "chain": true,
+        "promptRef": "image-generation.md scene 3"
+      }
+    },
+    {
+      "id": "m01",
+      "time": "00:45–01:25",
+      "beat": "Myth 1: slow movement",
+      "kind": "myth",
+      "visual": "Show named game, enemy, route and controlled conditions; compare slow vs normal movement.",
+      "narration": "Does slow movement reduce enemy detection? Verdict follows captured evidence.",
+      "onScreen": "MYTH 1 · SLOW MOVEMENT",
+      "edit": "Keep game audio; annotate replay.",
+      "sfx": "none",
+      "footage": "footage/m01.mp4",
+      "evidence": "Comparable slow/normal attempts under similar conditions",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m02",
+      "time": "01:25–02:05",
+      "beat": "Myth 2: hiding safety",
+      "kind": "myth",
+      "visual": "Show hiding spot, enemy departure, and what happens afterward.",
+      "narration": "Is a hiding place safe after the enemy leaves?",
+      "onScreen": "MYTH 2 · HIDING",
+      "edit": "Build tension; lower music during evidence.",
+      "sfx": "none",
+      "footage": "footage/m02.mp4",
+      "evidence": "Full departure and post-departure observation",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m03",
+      "time": "02:05–02:45",
+      "beat": "Myth 3: light reveals clues",
+      "kind": "myth",
+      "visual": "Before/after views of the same room and conditions.",
+      "narration": "Can a light source reveal a hidden clue?",
+      "onScreen": "MYTH 3 · LIGHT CLUES",
+      "edit": "Flashlight sweep; never fabricate a clue.",
+      "sfx": "none",
+      "footage": "footage/m03.mp4",
+      "evidence": "Before/after views under the same conditions",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m04",
+      "time": "02:45–03:25",
+      "beat": "Myth 4: directional audio",
+      "kind": "myth",
+      "visual": "Compare sound direction against a visible source or repeatable event.",
+      "narration": "Can audio reliably reveal danger direction?",
+      "onScreen": "MYTH 4 · AUDIO",
+      "edit": "Duck BGM and preserve game audio.",
+      "sfx": "none",
+      "footage": "footage/m04.mp4",
+      "evidence": "Repeatable sound source and visible ground truth",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m05",
+      "time": "03:25–04:05",
+      "beat": "Myth 5: noise attracts enemies",
+      "kind": "myth",
+      "visual": "Quiet vs noisy comparison with other variables held stable.",
+      "narration": "Does running or noise attract an enemy?",
+      "onScreen": "MYTH 5 · NOISE",
+      "edit": "Split-screen only when attempts are comparable.",
+      "sfx": "none",
+      "footage": "footage/m05.mp4",
+      "evidence": "Quiet vs noisy comparison; other variables controlled",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "s05",
+      "time": "04:05–04:15",
+      "beat": "Midpoint reset",
+      "kind": "board",
+      "visual": "Results board with first five actual verdicts only.",
+      "narration": "Five tests down. The next ones get stranger—but we still need proof.",
+      "onScreen": "5 / 10",
+      "edit": "Brief musical lift.",
+      "sfx": "whoosh_cinematic",
+      "footage": "footage/s05.mp4",
+      "gen": {
+        "source": "generated",
+        "subject": "avatar",
+        "camera": "Wide shot, slow lateral track",
+        "action": "stands beside five tested cards, result tiles blank",
+        "context": "same corridor",
+        "ingredients": [
+          "character",
+          "corridor",
+          "style"
+        ],
+        "chain": false,
+        "promptRef": "image-generation.md scene 9"
+      }
+    },
+    {
+      "id": "m06",
+      "time": "04:15–04:55",
+      "beat": "Myth 6: distraction",
+      "kind": "myth",
+      "visual": "Test the specific item/sound and observe the enemy over a defined window.",
+      "narration": "Can an item or sound distract an enemy?",
+      "onScreen": "MYTH 6 · DISTRACTION",
+      "edit": "Show conditions, then replay.",
+      "sfx": "none",
+      "footage": "footage/m06.mp4",
+      "evidence": "Exact item use and observable response",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m07",
+      "time": "04:55–05:35",
+      "beat": "Myth 7: chase interruption",
+      "kind": "myth",
+      "visual": "Capture chase state before and after hiding; distinguish delay from escape.",
+      "narration": "Can hiding interrupt an active chase?",
+      "onScreen": "MYTH 7 · CHASE",
+      "edit": "Fast chase cuts, slower evidence replay.",
+      "sfx": "none",
+      "footage": "footage/m07.mp4",
+      "evidence": "Chase state before/after hiding; delay vs escape distinguished",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m08",
+      "time": "05:35–06:15",
+      "beat": "Myth 8: looking at enemy",
+      "kind": "myth",
+      "visual": "Controlled gaze vs no-gaze comparison, if game allows it.",
+      "narration": "Does looking at an enemy change its behavior?",
+      "onScreen": "MYTH 8 · GAZE",
+      "edit": "Gaze indicator; avoid causal claims from one uncontrolled run.",
+      "sfx": "none",
+      "footage": "footage/m08.mp4",
+      "evidence": "Controlled gaze vs no-gaze comparison",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m09",
+      "time": "06:15–06:55",
+      "beat": "Myth 9: secret interaction",
+      "kind": "myth",
+      "visual": "Show prerequisites, full interaction and resulting access.",
+      "narration": "Can a specific interaction unlock a secret area?",
+      "onScreen": "MYTH 9 · SECRET",
+      "edit": "No “secret found” claim unless the footage proves it.",
+      "sfx": "none",
+      "footage": "footage/m09.mp4",
+      "evidence": "Prerequisites, interaction, and resulting access recorded",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "m10",
+      "time": "06:55–07:35",
+      "beat": "Myth 10: alternate route",
+      "kind": "myth",
+      "visual": "Map the alternate route and show whether it bypasses danger.",
+      "narration": "Can an alternate route bypass a dangerous encounter?",
+      "onScreen": "MYTH 10 · ROUTE",
+      "edit": "Higher stakes, authentic gameplay only.",
+      "sfx": "none",
+      "footage": "footage/m10.mp4",
+      "evidence": "Route footage and evidence the encounter was bypassed",
+      "verdict": "pending",
+      "gen": {
+        "source": "gameplay",
+        "note": "Gameplay is the evidence. Generated inserts (image-generation.md 5–8) may only illustrate and must be labeled."
+      }
+    },
+    {
+      "id": "s06",
+      "time": "07:35–08:10",
+      "beat": "Results board",
+      "kind": "board",
+      "visual": "Ten-card grid with evidence-linked verdicts and caveats.",
+      "narration": "Summarize only supported outcomes.",
+      "narrationIsDirection": true,
+      "onScreen": "RESULTS",
+      "edit": "Hold long enough to read.",
+      "sfx": "pop",
+      "footage": "footage/s06.mp4",
+      "gen": {
+        "source": "generated",
+        "subject": "avatar",
+        "camera": "Wide shot, static",
+        "action": "stands beside ten empty result tiles",
+        "context": "same corridor",
+        "ingredients": [
+          "character",
+          "corridor",
+          "style"
+        ],
+        "chain": false,
+        "promptRef": "image-generation.md scene 10"
+      }
+    },
+    {
+      "id": "s07",
+      "time": "08:10–08:45",
+      "beat": "Best finding",
+      "kind": "outro",
+      "visual": "Replay the most surprising verified test, or the most useful if none is surprising.",
+      "narration": "Explain why it matters and what it does not prove.",
+      "narrationIsDirection": true,
+      "onScreen": "BEST FINDING",
+      "edit": "Freeze-frame and 1–2 callouts.",
+      "sfx": "hit",
+      "footage": "footage/s07.mp4",
+      "gen": {
+        "source": "gameplay"
+      }
+    },
+    {
+      "id": "s08",
+      "time": "08:45–09:15",
+      "beat": "Limitations",
+      "kind": "outro",
+      "visual": "Show game/version, number of attempts, and uncontrolled variables.",
+      "narration": "This is what we observed in this experience—not a universal rule for every Roblox horror game.",
+      "onScreen": "LIMITS",
+      "edit": "Music down; honest and direct.",
+      "sfx": "none",
+      "footage": "footage/s08.mp4",
+      "gen": {
+        "source": "gameplay"
+      }
+    },
+    {
+      "id": "s09",
+      "time": "09:15–09:35",
+      "beat": "CTA",
+      "kind": "outro",
+      "visual": "Investigator points toward two empty next-video cards.",
+      "narration": "Which myth should we test next? Leave the claim and game below.",
+      "onScreen": "WHICH MYTH NEXT?",
+      "edit": "Clean end screen.",
+      "sfx": "whoosh_fast",
+      "footage": "footage/s09.mp4",
+      "gen": {
+        "source": "generated",
+        "subject": "avatar",
+        "camera": "Medium shot, gentle push-in",
+        "action": "holds the cyan lantern and points toward two empty video-card spaces",
+        "context": "same corridor, clean end-screen space",
+        "ingredients": [
+          "character",
+          "corridor",
+          "style"
+        ],
+        "chain": false,
+        "promptRef": "image-generation.md scene 11"
+      }
+    }
+  ],
+  "style": "premium collectible Roblox-inspired 3D game render, cinematic horror lighting, deep graphite shadows, electric-blue/cyan edge light, restrained red danger light from the environment, no text in image",
+  "negative": "starter avatar, changed hair or crown, colored hoodie, missing backpack, different lantern, realistic human proportions, extra fingers, brand logos, embedded text, gore, fake game UI",
+  "ingredients": {
+    "character": {
+      "file": "assets/character-reference.png",
+      "status": "missing",
+      "note": "Approve the turnaround from prompts/image-generation.md first"
+    },
+    "corridor": {
+      "file": "assets/loc-corridor.png",
+      "status": "missing",
+      "note": "One location plate reused for every corridor shot"
+    },
+    "style": {
+      "file": "assets/style-frame.png",
+      "status": "missing",
+      "note": "One approved frame that sets light and color"
+    }
+  },
+  "continuity": [
+    "Same ingredients in every generated shot: character + location + style (Veo accepts up to 3 reference images).",
+    "Continuous action: scene N starts from the last frame of scene N-1 (first/last-frame or scene extension). New location = hard cut, no chaining.",
+    "Screen direction: if the subject exits right, it enters the next shot from the left (180° rule).",
+    "Cut on movement and continue that movement in the next shot (match on action).",
+    "One camera move per shot. Don’t reverse the previous move unless it’s a reveal.",
+    "Keep key-light direction and palette between consecutive shots; only the environment turns red for danger.",
+    "Keep subject speed the same across a cut; change speed only on a story beat."
+  ],
+  "subjectRules": {
+    "avatar": {
+      "label": "Roblox avatar",
+      "lock": "block proportions, face, hair with three tufts, silver-blue crown, black techwear jacket, backpack with cyan core, cargo pants, sneakers, cyan lantern",
+      "vary": "pose, expression, camera, lighting, environment",
+      "motion": "blocky limb swing, weight on chunky feet, no realistic anatomy or cloth stretch"
+    },
+    "human": {
+      "label": "Human",
+      "lock": "face, hair, wardrobe, body type, accessories",
+      "vary": "expression, pose, camera, lighting",
+      "motion": "natural gait, consistent walking speed, hands stay anatomically plausible"
+    },
+    "vehicle": {
+      "label": "Vehicle",
+      "lock": "body shape, color, wheels, livery, damage",
+      "vary": "angle, lighting, road, speed only on a beat",
+      "motion": "wheels rotate with direction of travel, camera tracks parallel, never flip direction between cuts"
+    },
+    "landscape": {
+      "label": "Landscape",
+      "lock": "time of day, weather, horizon height, landmark positions",
+      "vary": "camera position, focal length",
+      "motion": "slow push, pan or drone with parallax; no sudden weather change"
+    },
+    "building": {
+      "label": "Building / interior",
+      "lock": "layout (doors, windows, stairs), materials, light fixtures",
+      "vary": "camera path, which room is lit",
+      "motion": "dolly or steady walk that respects geometry; doors stay where they were"
+    },
+    "product": {
+      "label": "Product / object",
+      "lock": "shape, label, color, scale",
+      "vary": "angle, background, light",
+      "motion": "macro slide or slow orbit; no label morphing"
+    }
+  },
+  "shorts": {
+    "id": "rhm-ep01-short-m02",
+    "source": "storyboard.md \"Repeatable 40-second experiment structure\", compressed to 33s, built on Myth 2",
+    "title": "Is a Roblox Hiding Spot Safe After the Monster Leaves? #Shorts",
+    "scenes": [
+      {
+        "id": "sh1",
+        "time": "00:00–00:03",
+        "beat": "Hook",
+        "kind": "intro",
+        "visual": "Real moment of tension: enemy right outside the hiding spot. Start mid-action.",
+        "narration": "Is this hiding spot still safe after the monster leaves?",
+        "onScreen": "SAFE AFTER IT LEAVES?",
+        "edit": "No intro, no logo. Game audio up.",
+        "sfx": "sub_drop",
+        "footage": "footage/sh1.mp4",
+        "gen": {
+          "source": "gameplay"
+        }
+      },
+      {
+        "id": "sh2",
+        "time": "00:03–00:08",
+        "beat": "Setup",
+        "kind": "intro",
+        "visual": "Game name/version, the spot, and what counts as success.",
+        "narration": "State the game, version, and success rule.",
+        "narrationIsDirection": true,
+        "onScreen": "GAME · VERSION",
+        "edit": "Name card over footage, under 2 seconds.",
+        "sfx": "blip",
+        "footage": "footage/sh2.mp4",
+        "gen": {
+          "source": "gameplay"
+        }
+      },
+      {
+        "id": "sh3",
+        "time": "00:08–00:20",
+        "beat": "Attempt",
+        "kind": "myth",
+        "visual": "Minimally edited evidence: full departure, then the wait.",
+        "narration": "It’s leaving. Now we wait.",
+        "onScreen": "WAIT…",
+        "edit": "Keep game audio; duck music.",
+        "sfx": "none",
+        "footage": "footage/sh3.mp4",
+        "evidence": "Full departure and post-departure observation",
+        "verdict": "pending",
+        "gen": {
+          "source": "gameplay"
+        }
+      },
+      {
+        "id": "sh4",
+        "time": "00:20–00:27",
+        "beat": "Replay",
+        "kind": "myth",
+        "visual": "Replay the relevant moment, slowed, one callout. Don’t change its meaning.",
+        "narration": "Here’s the moment that decides it.",
+        "onScreen": "REPLAY",
+        "edit": "Freeze-frame and one callout.",
+        "sfx": "whoosh_fast",
+        "footage": "footage/sh4.mp4",
+        "evidence": "Same clip as sh3, slowed",
+        "verdict": "pending",
+        "gen": {
+          "source": "gameplay"
+        }
+      },
+      {
+        "id": "sh5",
+        "time": "00:27–00:33",
+        "beat": "Verdict",
+        "kind": "outro",
+        "visual": "Verdict card over the last frame.",
+        "narration": "Confirmed, busted or inconclusive, plus a one-sentence reason.",
+        "narrationIsDirection": true,
+        "onScreen": "VERDICT PENDING",
+        "edit": "Hold 2 seconds; loop back to the hook frame.",
+        "sfx": "pop",
+        "footage": "footage/sh5.mp4",
+        "gen": {
+          "source": "gameplay"
+        }
+      }
+    ]
+  }
+}

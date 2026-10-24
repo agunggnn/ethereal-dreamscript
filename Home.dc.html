@@ -70,7 +70,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)', ICE = '#8DEBFF', MUTE = 'rgba(232,237,245,0.5)';
-const W = { city: 'assets/wall_megacity.jpg', star: 'assets/wall_starfall.jpg', aur: 'assets/wall_aurora.jpg', cit: 'assets/wall_citadel.jpg' };
+const W = { dream: 'assets/wall_dreamscript.jpg', city: 'assets/wall_megacity.jpg', star: 'assets/wall_starfall.jpg', aur: 'assets/wall_aurora.jpg', cit: 'assets/wall_citadel.jpg' };
 const WALLS = Object.values(W);
 const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); return m ? (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]) : 0; };
 const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';

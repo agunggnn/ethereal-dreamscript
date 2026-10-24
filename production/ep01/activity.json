@@ -1,0 +1,11 @@
+[
+  {
+    "at": "2026-10-24T03:13:29.410Z",
+    "by": "agent",
+    "tool": "get_episode",
+    "kind": "read",
+    "scene": null,
+    "detail": "",
+    "error": false
+  }
+]

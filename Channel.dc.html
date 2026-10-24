@@ -101,6 +101,8 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
+const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
 const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)';
 const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly';
 const POLL = (p, w, h) => 'https://image.pollinations.ai/prompt/' + encodeURIComponent(p) + '?width=' + w + '&height=' + h + '&seed=' + Math.floor(Math.random() * 1e6) + '&model=flux&nologo=true';
@@ -146,7 +148,7 @@ class Component extends DCLogic {
       this.setState({ ch: { title: item.snippet.title, thumb: item.snippet.thumbnails && item.snippet.thumbnails.default ? item.snippet.thumbnails.default.url : '', subs: +item.statistics.subscriberCount, views: +item.statistics.viewCount, videos: +item.statistics.videoCount }, vids, busy: '' });
     } catch (e) { this.setState({ err: String(e.message || e), busy: '', token: null }); }
   }
-  async ask(system, content, max) { return window.claude.complete({ system, max_tokens: max || 1500, messages: [{ role: 'user', content }] }); }
+  async ask(system, content, max) { return claudeComplete({ system, max_tokens: max || 1500, messages: [{ role: 'user', content }] }); }
   async makeBrand() {
     if (this.state.busy) return; const t = this.tpl(); this.setState({ busy: 'brand' });
     try {

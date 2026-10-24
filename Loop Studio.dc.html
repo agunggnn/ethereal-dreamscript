@@ -150,6 +150,8 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Aurora&quot;,&quot;Starfall&quot;,&quot;Citadel&quot;,&quot;Megacity&quot;],&quot;default&quot;:&quot;Aurora&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#8DEBFF&quot;,&quot;#B79CFF&quot;,&quot;#FFC86B&quot;,&quot;#7CF0B0&quot;],&quot;default&quot;:&quot;#8DEBFF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;glass&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
+const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
 const AEGIS = [['01', 'Citadel Twilight', '01_citadel_twilight'], ['02', 'Mystical Forest Shrine', '02_mystical_forest_shrine'], ['03', 'Mountain Aurora Fortress', '03_mountain_aurora_fortress', '03_mountain_aurora_snow'], ['04', 'Celestial Dunes Oasis', '04_celestial_dunes_oasis'], ['05', 'Floating Sky Citadel', '05_floating_sky_citadel'], ['06', 'Volcanic Obsidian Forge', '06_volcanic_obsidian_forge'], ['07', 'Sunken Coral Atlantis', '07_sunken_coral_atlantis'], ['08', 'Cyber Aegis Megacity', '08_cyber_aegis_megacity'], ['09', 'Autumn Dragon Valley', '09_autumn_dragon_valley'], ['10', 'Celestial Starfall Spire', '10_celestial_starfall_spire'], ['11', 'Ethereal Dreamscript Nexus', '11_ethereal_dreamscript']].map(([id, name, base, live]) => ({ id, name, jpg: 'aegis/' + base + '_4k.jpg', mp4: 'aegis/' + (live || base) + '_live.mp4' }));
 const WALLS = ['assets/wall_dreamscript.jpg', 'assets/wall_aurora.jpg', 'assets/wall_starfall.jpg', 'assets/wall_citadel.jpg', 'assets/wall_megacity.jpg'];
 const FX = [['zoom', 'Slow zoom'], ['drift', 'Drift'], ['rain', 'Rain'], ['snow', 'Snow'], ['fireflies', 'Fireflies'], ['flicker', 'Light flicker'], ['vignette', 'Vignette']];
@@ -218,7 +220,7 @@ class Component extends DCLogic {
     const s = this.state; if (!s.wallPrompt.trim() || s.improving) return;
     this.setState({ improving: true });
     try {
-      const out = await window.claude.complete({ system: 'You write image prompts for Flux and Gemini image models that produce premium wallpapers for a looping ambient music video. Return ONE paragraph, max 110 words, no preamble, no quotes. Include: subject and setting; a wide composition with one clear focal point and separate foreground, midground and background layers (they make the motion look deep); time of day and lighting (rim light, volumetric light, warm glow sources); atmosphere (mist, rain, floating particles); a tight colour palette; the art style; quality terms (highly detailed, sharp focus, 4k). Keep calm empty areas. No text, no watermark, no logos, no people in focus.', max_tokens: 400,
+      const out = await claudeComplete({ system: 'You write image prompts for Flux and Gemini image models that produce premium wallpapers for a looping ambient music video. Return ONE paragraph, max 110 words, no preamble, no quotes. Include: subject and setting; a wide composition with one clear focal point and separate foreground, midground and background layers (they make the motion look deep); time of day and lighting (rim light, volumetric light, warm glow sources); atmosphere (mist, rain, floating particles); a tight colour palette; the art style; quality terms (highly detailed, sharp focus, 4k). Keep calm empty areas. No text, no watermark, no logos, no people in focus.', max_tokens: 400,
         messages: [{ role: 'user', content: 'Idea: ' + s.wallPrompt + '\nStyle: ' + (STYLES[s.style] ? STYLES[s.style][0] : 'any') + '\nFormat: ' + (s.tall ? 'vertical 9:16' : 'wide 16:9') + (s.fx.rain ? '\nIt will have animated rain.' : '') + (s.fx.snow ? '\nIt will have animated snow.' : '') }] });
       this.setState({ wallPrompt: out.trim().replace(/^"|"$/g, ''), improving: false });
     } catch (e) { this.setState({ improving: false }); this.flash('Could not improve the prompt: ' + (e.message || e)); }
@@ -228,7 +230,7 @@ class Component extends DCLogic {
     this.setState({ motionBusy: true });
     try {
       const cur = s.items.find(x => x.type === 'wall' && this.srcOf(x) === s.wall);
-      const text = await window.claude.complete({ system: MOTION_SYS, max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nMotion request: ' + s.motionPrompt }] });
+      const text = await claudeComplete({ system: MOTION_SYS, max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nMotion request: ' + s.motionPrompt }] });
       const r = clampRecipe(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)));
       const it = await this.addItem({ type: 'motion', name: r.name, recipe: r, prompt: s.motionPrompt });
       this.setState({ ai: r, aiId: it.id, motionBusy: false, motionPrompt: '' });
@@ -332,10 +334,10 @@ class Component extends DCLogic {
   }
   async askVision(system, text, dataUrl, max) {
     if (dataUrl && this.visionOk !== false) {
-      try { const out = await window.claude.complete({ system, max_tokens: max, messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } }, { type: 'text', text }] }] }); this.visionOk = true; return { out, vision: true }; }
+      try { const out = await claudeComplete({ system, max_tokens: max, messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } }, { type: 'text', text }] }] }); this.visionOk = true; return { out, vision: true }; }
       catch (e) { this.visionOk = false; }
     }
-    return { out: await window.claude.complete({ system, max_tokens: max, messages: [{ role: 'user', content: text }] }), vision: false };
+    return { out: await claudeComplete({ system, max_tokens: max, messages: [{ role: 'user', content: text }] }), vision: false };
   }
   describeMark(mk) {
     const P = this.pix, S = this.seg, sm = this.state.sceneMap, lab = this.elemLabels(), pts = mk.type === 'path' ? mk.pts : [[mk.x, mk.y]];
@@ -390,7 +392,7 @@ class Component extends DCLogic {
     const s = this.state; if (!s.ai || !s.adjustPrompt.trim() || s.adjustBusy) return;
     this.setState({ adjustBusy: true });
     try {
-      const text = await window.claude.complete({ system: MOTION_SYS + ' You are editing an existing recipe: change only what the request asks and return the full updated JSON.', max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nCurrent recipe: ' + JSON.stringify(s.ai) + '\nChange: ' + s.adjustPrompt }] });
+      const text = await claudeComplete({ system: MOTION_SYS + ' You are editing an existing recipe: change only what the request asks and return the full updated JSON.', max_tokens: 1500, messages: [{ role: 'user', content: this.sceneContext() + '\nCurrent recipe: ' + JSON.stringify(s.ai) + '\nChange: ' + s.adjustPrompt }] });
       this.saveRecipe(clampRecipe(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)))); this.setState({ adjustBusy: false, adjustPrompt: '' });
     } catch (e) { this.setState({ adjustBusy: false }); this.flash('Could not adjust: ' + (e.message || e)); }
   }
@@ -582,7 +584,7 @@ class Component extends DCLogic {
     this.setState({ metaBusy: true });
     try {
       const fx = FX.filter(([k]) => s.fx[k]).map(([, l]) => l).join(', ');
-      const out = await window.claude.complete({ system: 'You write YouTube metadata for a US ambient music channel. Plain text: TITLE (max 70 chars, no clickbait), then DESCRIPTION (3 short lines plus a line saying the music and art are AI-generated or original), then TAGS (10, comma-separated). No emoji.', max_tokens: 500, messages: [{ role: 'user', content: 'Mood: ' + MOODS[s.mood].label + '. Motion: ' + fx + '. Wallpaper: ' + (s.wallPrompt || 'fantasy landscape') + '. Planned length: 1 hour. Format: ' + (s.tall ? 'Shorts teaser' : 'long video') + '.' }] });
+      const out = await claudeComplete({ system: 'You write YouTube metadata for a US ambient music channel. Plain text: TITLE (max 70 chars, no clickbait), then DESCRIPTION (3 short lines plus a line saying the music and art are AI-generated or original), then TAGS (10, comma-separated). No emoji.', max_tokens: 500, messages: [{ role: 'user', content: 'Mood: ' + MOODS[s.mood].label + '. Motion: ' + fx + '. Wallpaper: ' + (s.wallPrompt || 'fantasy landscape') + '. Planned length: 1 hour. Format: ' + (s.tall ? 'Shorts teaser' : 'long video') + '.' }] });
       this.setState({ meta: out, metaBusy: false });
     } catch (e) { this.setState({ meta: 'Could not write metadata: ' + (e.message || e), metaBusy: false }); }
   }

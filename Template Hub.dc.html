@@ -90,6 +90,8 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
+const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
 const KEY = 'rhm_template';
 class Component extends DCLogic {
   state = { data: null, tab: 'pick', active: null, hover: null, fUrl: '', fText: '', fOut: '', fBusy: false, cName: '', cText: '', cOut: '', cBusy: false, copied: false };
@@ -106,7 +108,7 @@ class Component extends DCLogic {
   choose(id) { try { localStorage.setItem(KEY, id); } catch (e) {} this.setState({ active: id, tab: 'tpl' }); }
   async ask(system, content, key) {
     this.setState({ [key + 'Busy']: true, [key + 'Out']: '' });
-    try { const out = await window.claude.complete({ system, max_tokens: 3000, messages: [{ role: 'user', content }] }); this.setState({ [key + 'Out']: out }); }
+    try { const out = await claudeComplete({ system, max_tokens: 3000, messages: [{ role: 'user', content }] }); this.setState({ [key + 'Out']: out }); }
     catch (e) { this.setState({ [key + 'Out']: 'Agent error: ' + (e.message || e) }); }
     this.setState({ [key + 'Busy']: false });
   }

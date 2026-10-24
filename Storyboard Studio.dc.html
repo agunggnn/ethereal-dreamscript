@@ -287,6 +287,8 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
+const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
 const SFX = ['none', 'sub_drop', 'whoosh_cinematic', 'whoosh_fast', 'pop', 'hit', 'blip', 'mouse_click'];
 const RATES = ['-10%', '-5%', '+0%', '+5%', '+10%'];
 const VCOL = { confirmed: 'oklch(0.78 0.15 150)', busted: 'oklch(0.7 0.19 25)', inconclusive: 'oklch(0.83 0.14 80)', pending: 'rgba(244,247,252,0.2)' };
@@ -333,13 +335,17 @@ class Component extends DCLogic {
 
   async load(ignoreDraft) {
     try {
-      const [file, vj] = await Promise.all([fetch('production/ep01/episode.json').then(r => r.json()), fetch('templates/voices.json').then(r => r.json()).catch(() => ({ voices: [] }))]);
+      const [res, vj] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('templates/voices.json').then(r => r.json()).catch(() => ({ voices: [] }))]);
+      const text = await res.text(), file = JSON.parse(text);
       let bridge = false; try { bridge = (await fetch('api/ping', { cache: 'no-store' })).ok; } catch (e) {}
-      this.setState({ bridge, live: bridge }); this.lastText = JSON.stringify(file, null, 2) + '\n';
+      this.setState({ bridge, live: bridge }); this.lastText = text; this.base = JSON.parse(text); this.etag = res.headers.get('ETag'); this.conflicts = 0;
       let draft = null, over = null;
       try { if (!ignoreDraft && !bridge) draft = JSON.parse(localStorage.getItem(DRAFT) || 'null'); over = JSON.parse(localStorage.getItem('ds_ep01_voice') || 'null'); } catch (e) {}
       const ep = draft || file;
-      if (over && over.id) ep.voice = { ...ep.voice, ...over };
+      // Live mode: disk is the source of truth. A voice picked in Audio Lab is applied once and saved, never kept as a standing override.
+      let handoff = null;
+      if (bridge) { if (over && over.id && (over.id !== ep.voice.id || (over.rate && over.rate !== ep.voice.rate))) handoff = { id: over.id, ...(over.rate ? { rate: over.rate } : {}) }; try { localStorage.removeItem('ds_ep01_voice'); } catch (e) {} }
+      else if (over && over.id) ep.voice = { ...ep.voice, ...over };
       if (/[?&]t=shorts/.test(location.search)) ep.template = 'shorts';
       let tplId = 'roblox-horror'; try { tplId = localStorage.getItem('rhm_template') || tplId; } catch (e) {}
       const niches = await fetch('templates/niches.json').then(r => r.json()).catch(() => null);
@@ -347,6 +353,7 @@ class Component extends DCLogic {
       const clean = (fr) => fr && fr.status === 'loading' ? undefined : fr;
       ep.scenes = ep.scenes.map(s => ({ ...s, frame: clean(s.frame) })); ep.shorts.scenes = ep.shorts.scenes.map(s => ({ ...s, frame: clean(s.frame) }));
       this.setState({ ep, voices: vj.voices || [], hasDraft: !!draft, sel: 0, niches, tplId, engine, geminiKey });
+      if (handoff) this.setVoice(handoff);
       const keys = [...ep.scenes, ...ep.shorts.scenes].filter(s => s.frame && s.frame.idb).map(s => s.id).concat(Object.entries(ep.frames || {}).filter(([k, v]) => v && v.idb).map(([k]) => k));
       if (keys.length) { const fd = {}, fo = {}; for (const k of keys) { try { fd[k] = await idb.get(k); if (fd[k]) fo[k] = dataToObj(fd[k]); } catch (e) {} } this.setState({ frameData: fd, frameObj: fo }); }
       const found = {};
@@ -358,11 +365,20 @@ class Component extends DCLogic {
     if (this.state.live) { clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500); return; }
     try { localStorage.setItem(DRAFT, JSON.stringify(this.state.ep)); } catch (e) {} if (!this.state.hasDraft) this.setState({ hasDraft: true });
   }
+  // PUT with If-Match: if the agent saved since our last sync, the server answers 409; we pull its version, merge, and try again.
   async save() {
     const text = JSON.stringify(this.state.ep, null, 2) + '\n';
     if (text === this.lastText) return;
-    this.lastText = text;
-    try { await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: text }); } catch (e) { this.flash('Could not save to disk. Is npm run studio still running?'); }
+    if (this.saving) { this.saveAgain = true; return; }
+    this.saving = true;
+    try {
+      const r = await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(this.etag ? { 'If-Match': this.etag } : {}) }, body: text });
+      if (r.status === 409 && (this.conflicts = (this.conflicts || 0) + 1) <= 3) { await this.poll(true); this.saveAgain = true; }
+      else if (r.ok) { this.conflicts = 0; this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag'); }
+      else this.flash('Could not save to disk (' + r.status + '). Reload the page to get the latest episode.json.');
+    } catch (e) { this.flash('Could not save to disk. Is npm run studio still running?'); }
+    this.saving = false;
+    if (this.saveAgain) { this.saveAgain = false; this.save(); }
   }
   changedIds(a, b) {
     const ids = [], all = (e) => [...e.scenes, ...e.shorts.scenes], A = {};
@@ -370,17 +386,38 @@ class Component extends DCLogic {
     all(b).forEach(s => { if (A[s.id] !== JSON.stringify(s)) ids.push(s.id); });
     return ids;
   }
-  async poll() {
-    if (!this.state.live || !this.state.ep) return;
+  // Three-way merge: start from the disk version and re-apply whatever this tab changed since base (per scene, per note, per top-level field).
+  merge(base, local, remote) {
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const fields = (L, B, R, skip) => { const o = { ...R }; Object.keys(L).forEach(k => { if (!skip.includes(k) && !same(L[k], B[k])) o[k] = L[k]; }); return o; };
+    const scenes = (L, B, R) => {
+      if (!same(L.map(s => s.id), B.map(s => s.id))) return L;
+      const b = {}, l = {}; B.forEach(s => { b[s.id] = s; }); L.forEach(s => { l[s.id] = s; });
+      return R.map(s => (l[s.id] && !same(l[s.id], b[s.id]) ? l[s.id] : s));
+    };
+    const out = fields(local, base, remote, ['scenes', 'shorts', 'notes']);
+    out.scenes = scenes(local.scenes, base.scenes, remote.scenes);
+    out.shorts = { ...fields(local.shorts, base.shorts, remote.shorts, ['scenes']), scenes: scenes(local.shorts.scenes, base.shorts.scenes, remote.shorts.scenes) };
+    if (local.notes || remote.notes) {
+      const bn = {}, notes = [...(remote.notes || [])]; (base.notes || []).forEach(n => { bn[n.id] = n; });
+      (local.notes || []).forEach(n => { if (same(n, bn[n.id])) return; const i = notes.findIndex(x => x.id === n.id); if (i >= 0) notes[i] = n; else notes.push(n); });
+      out.notes = notes;
+    }
+    return out;
+  }
+  async poll(force) {
+    if (!this.state.live || !this.state.ep || (this.saving && !force)) return;
     try {
       const [r, a] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('production/ep01/activity.json', { cache: 'no-store' }).catch(() => null)]);
       const text = await r.text();
-      if (text !== this.lastText && !this.saveT_pending) {
-        const remote = JSON.parse(text), ids = this.changedIds(this.state.ep, remote), now = Date.now();
-        this.lastText = text;
+      if (this.saving && !force) return;
+      if (r.ok && text !== this.lastText) {
+        const remote = JSON.parse(text), ids = this.changedIds(this.base, remote), now = Date.now();
+        const ep = this.merge(this.base, this.state.ep, remote);
+        this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag');
         const fl = { ...this.state.flashIds }; ids.forEach(id => { fl[id] = now; });
-        const patch = { ep: remote, flashIds: fl };
-        if (this.state.follow && ids.length) { const L = remote.template === 'shorts' ? remote.shorts.scenes : remote.scenes; const i = L.findIndex(s => s.id === ids[ids.length - 1]); if (i >= 0) patch.sel = i; }
+        const patch = { ep, flashIds: fl };
+        if (this.state.follow && ids.length) { const L = ep.template === 'shorts' ? ep.shorts.scenes : ep.scenes; const i = L.findIndex(s => s.id === ids[ids.length - 1]); if (i >= 0) patch.sel = i; }
         this.setState(patch);
       }
       if (a && a.ok) { const log = await a.json(); if (Array.isArray(log)) { const last = log.length ? Date.parse(log[log.length - 1].at) : 0; this.setState({ activity: log.slice(-25).reverse(), lastAgentAt: last }); } }
@@ -403,15 +440,19 @@ class Component extends DCLogic {
   push(by, call) { this.setState(p => ({ log: [{ by, call }, ...p.log].slice(0, 14) })); }
 
   update(id, fields, by = 'you') {
-    const fix = (arr) => arr.map(s => s.id === id ? { ...s, ...fields, ...(fields.narration !== undefined ? { narrationIsDirection: false } : {}) } : s);
+    // A new line makes its synthesized voice file stale, same as the MCP update_scene.
+    const fix = (arr) => arr.map(s => { if (s.id !== id) return s; const n = { ...s, ...fields }; if (fields.narration !== undefined) { n.narrationIsDirection = false; delete n.voiceFile; delete n.voiceSec; } return n; });
     this.setState(p => ({ ep: { ...p.ep, scenes: fix(p.ep.scenes), shorts: { ...p.ep.shorts, scenes: fix(p.ep.shorts.scenes) } } }), () => this.persist());
     this.push(by, `update_scene(${JSON.stringify({ id, ...fields })})`);
   }
   setEp(fields, call, by = 'you') { this.setState(p => ({ ep: { ...p.ep, ...fields } }), () => this.persist()); this.push(by, call); }
   setVoice(v, by = 'you') {
-    const voice = { ...this.state.ep.voice, ...v };
-    try { localStorage.setItem('ds_ep01_voice', JSON.stringify(voice)); } catch (e) {}
-    this.setEp({ voice }, `set_voice(${JSON.stringify(v)})`, by);
+    const ep = this.state.ep, voice = { ...ep.voice, ...v };
+    if (!this.state.live) { try { localStorage.setItem('ds_ep01_voice', JSON.stringify(voice)); } catch (e) {} }
+    // Like the MCP set_voice: a different voice or rate makes every synthesized file stale.
+    const changed = voice.id !== ep.voice.id || voice.rate !== ep.voice.rate;
+    const clear = (arr) => (changed ? arr.map(({ voiceFile, voiceSec, ...s }) => s) : arr);
+    this.setEp({ voice, scenes: clear(ep.scenes), shorts: { ...ep.shorts, scenes: clear(ep.shorts.scenes) } }, `set_voice(${JSON.stringify(v)})`, by);
   }
 
   speak(text, onEnd) {
@@ -473,7 +514,7 @@ class Component extends DCLogic {
     ];
     const system = 'You edit the storyboard of a faceless Roblox horror Myth Lab episode (character RHM_INVESTIGATOR_01) for a US YouTube audience. Rules: never invent Roblox mechanics, results, verdicts, secrets, player counts or footage; myth lines ask the question and never pre-announce a verdict; no greetings; onScreen max 6 words, uppercase; write narration as spoken English, short sentences. The selected scene is ' + this.scene().id + '. Use the tools, then reply in one or two plain sentences saying what you changed.';
     try {
-      const text = await window.claude.complete({ system, max_tokens: 2000, messages: [{ role: 'user', content: prompt }], tools });
+      const text = await claudeComplete({ system, max_tokens: 2000, messages: [{ role: 'user', content: prompt }], tools });
       this.setState({ reply: text, busy: false, ask: '' });
     } catch (e) { this.setState({ reply: 'Agent error: ' + (e.message || e), busy: false }); }
   }
@@ -578,7 +619,7 @@ class Component extends DCLogic {
     const system = 'You are a senior YouTube storyboard writer for the US market. Return ONLY one JSON object, no prose. Schema: {"title":string,"concept":{"logline":string,"hook":string,"audience":string,"whyItWorks":string,"characterLook":"one sentence fixing the main character or subject look (hair, outfit, colors, props) so every image matches"},"scenes":[{"time":"MM:SS–MM:SS","beat":string,"kind":"intro"|"myth"|"board"|"outro"|"scene","source":"gameplay"|"generated","visual":string,"narration":string,"onScreen":string,"sfx":string,"edit":string,"evidence":string,"subject":string,"camera":string,"action":string,"context":string,"chain":boolean}]}. Rules: total length ' + rules.targetSec[0] + '–' + rules.targetSec[1] + ' seconds; first scene is the hook and lasts at most ' + rules.hookSec + 's; change the picture every ' + rules.changeEverySec.join('–') + 's; scene times are contiguous from 00:00; narration is final spoken English in short sentences, no greeting, roughly 2.4 words per second of scene; onScreen max 6 words uppercase or empty; sfx one of ' + SFX.join(', ') + '; source "gameplay" means the creator records it, and visual must say exactly what to record; source "generated" only for setup, boards, transitions and CTA, with subject one of ' + Object.keys(ep.subjectRules).join(', ') + ' plus camera, action and context; myth scenes are always gameplay, state the evidence needed, and never announce a verdict or invent game mechanics, secrets or results.' + (() => { try { const L = JSON.parse(localStorage.getItem('ds_lessons') || '[]').filter(l => l.on !== false).map(l => l.rule); return L.length ? ' Lessons learned from this channel\'s own results (follow them): ' + L.join(' | ') : ''; } catch (e) { return ''; } })();
     const user = 'Template: ' + JSON.stringify(t ? { label: t.label, concept: t.concept, audience: t.audience, hook: t.hook, structure: short ? t.structure.short : t.structure.long, subject: t.subject, visual: t.visual, motion: t.motion, compliance: t.compliance } : {}) + '\nFormat: ' + ep.templates[cut].label + '\nIdea: ' + st.idea + (st.game ? '\nGame or subject: ' + st.game : '');
     try {
-      const text = await window.claude.complete({ system, max_tokens: short ? 3000 : 8000, messages: [{ role: 'user', content: user }] });
+      const text = await claudeComplete({ system, max_tokens: short ? 3000 : 8000, messages: [{ role: 'user', content: user }] });
       const out = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
       const subj = Object.keys(ep.subjectRules), ingr = Object.keys(ep.ingredients || {}).slice(0, 3);
       const scenes = out.scenes.map((x, i) => { const id = (short ? 'sh' : 'sc') + (i + 1); const myth = x.kind === 'myth';
@@ -594,7 +635,7 @@ class Component extends DCLogic {
     const ep = this.state.ep, L = this.list(), t = this.tpl();
     this.setState({ review: 'Reviewing…' });
     try {
-      const text = await window.claude.complete({ system: 'You review YouTube storyboards for retention. Reply in plain text: a score out of 10, then at most 5 short bullet points naming the scene id and the fix. No preamble.', max_tokens: 800,
+      const text = await claudeComplete({ system: 'You review YouTube storyboards for retention. Reply in plain text: a score out of 10, then at most 5 short bullet points naming the scene id and the fix. No preamble.', max_tokens: 800,
         messages: [{ role: 'user', content: 'Template: ' + (t ? t.label : '') + '\nCut: ' + ep.template + '\nScenes: ' + JSON.stringify(L.map(s => ({ id: s.id, time: s.time, beat: s.beat, source: s.gen && s.gen.source, visual: s.visual, narration: s.narration, onScreen: s.onScreen }))) }] });
       this.setState({ review: text });
     } catch (e) { this.setState({ review: 'Review failed: ' + (e.message || e) }); }
@@ -722,7 +763,7 @@ class Component extends DCLogic {
       copyJson: () => { navigator.clipboard.writeText(JSON.stringify(ep, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }); },
       copyLabel: st.copied ? 'Copied' : 'Copy episode.json',
       hasDraft: st.hasDraft && !st.live, draftText: st.live ? 'Live: edits save to episode.json on disk.' : st.hasDraft ? 'Edits saved in this browser.' : 'Showing episode.json from disk.',
-      resetDraft: () => { try { localStorage.removeItem(DRAFT); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
+      resetDraft: () => { try { localStorage.removeItem(DRAFT); localStorage.removeItem('ds_ep01_voice'); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
       frame: shorts
         ? { pad: '16px', radius: '10px', w: 'auto', h: '64vh', ar: '9/16', maxH: '64vh', vTop: '30%', isShorts: true, isLong: false, bandH: '21%', capSize: 'clamp(16px,2.6vh,30px)', subBottom: '25%', subSize: 'clamp(11px,1.6vh,18px)' }
         : { pad: '0', radius: '22px', w: '100%', h: 'auto', ar: '16/9', maxH: '62vh', vTop: '0%', isShorts: false, isLong: true, capSize: 'clamp(11px,1.4vw,20px)', subBottom: '6%', subSize: 'clamp(12px,1.5vw,22px)' },

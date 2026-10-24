@@ -2,7 +2,7 @@
 
 Lets any MCP client edit the episode and make the narration. It reads and writes files in this project folder.
 
-**Status:** written but **not run yet**. Test it with the MCP Inspector (step 3) before relying on it.
+**Status:** tested. `npm test` starts both servers against a temp copy of the project (step 4).
 
 ## 1. Install
 ```
@@ -41,6 +41,11 @@ Open http://localhost:4747/Home.dc.html. The Studio then reads and writes `episo
 
 ## 4. Test
 ```
+cd mcp
+npm test
+```
+This covers the tool list, caption and verdict rules, parallel edits, the `episode` path check, and what the Studio server serves. To try tools by hand:
+```
 npx @modelcontextprotocol/inspector node mcp/server.mjs
 ```
 Call `get_episode`, then `validate_episode`.
@@ -64,7 +69,9 @@ Agents can't set verdicts. A person sets them in the Studio after watching the u
 ## Live mode: watch, review, fix
 1. **Watch:** the top bar shows **LIVE**. Every tool call shows up in the Studio's agent feed (from `production/ep01/activity.json`). Changed scenes glow, and with **Follow agent** on the Studio jumps to the scene being edited.
 2. **Review:** select a scene and write a note in the agent panel, e.g. "make this scarier" or "line too long". On the storyboard board, use **✎ Note** on any card.
-3. **Fix:** in Claude Code or Codex, say "Fix my open notes in dreamscript". The agent calls `list_notes`, edits with `update_scene`, then calls `resolve_note` with a one-line reply, which appears under your note. **✦ Fix notes now** in the Studio does the same with the in-browser agent.
+3. **Fix:** in Claude Code or Codex, say "Fix my open notes in dreamscript". The agent calls `list_notes`, edits with `update_scene`, then calls `resolve_note` with a one-line reply, which appears under your note. **✦ Fix notes now** in the Studio does the same with the in-browser agent (only inside the Claude app).
+
+If you and the agent edit at the same time, the Studio merges scene by scene instead of overwriting the agent's change.
 
 ## Try this prompt
 > Use dreamscript. Validate the shorts cut, write final lines for any direction-only scenes, pick the best voice for a calm US Roblox horror investigator, then synthesize the voice and tell me which lines are too long.

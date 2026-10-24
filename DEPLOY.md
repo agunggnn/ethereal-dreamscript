@@ -27,4 +27,4 @@ GitHub rejects files over 100 MB. If an `aegis/*.mp4` is larger, run `git lfs in
 
 ## 3. Use it remotely with an agent
 - **Same network:** the studio server listens only on this PC (`127.0.0.1`). Agents running on this PC (Claude Code, Codex, Cursor, Antigravity) connect through MCP and you watch them work in live mode.
-- **From another device:** run a tunnel such as `cloudflared tunnel --url http://localhost:4747` (or Tailscale). The studio server has no login, so share the tunnel URL only with yourself.
+- **From another device:** run a tunnel such as `cloudflared tunnel --url http://localhost:4747` (or Tailscale). The studio server only answers to `localhost` and `127.0.0.1`, so start it with the tunnel's host name allowed: `$env:STUDIO_HOSTS = "abc.trycloudflare.com"; npm run studio` (comma-separate several). It serves only the Studio's pages and media, never `.git`, dotfiles or `mcp/` internals. It has no login, so share the tunnel URL only with yourself.

@@ -58,6 +58,8 @@ const srtEnd = (srt) => {
 
 const GUIDE = [
   'You are working inside the creator\'s Dreamscript Studio. The creator watches every call live.',
+  'This project is NOT media-fabric. Never read, run or copy media-fabric, its AffiliateReel composition or formats.json, production/AUDIT.md or github.md. The only sources are these tools, templates/, prompts/ and production/<ep>/. Full playbook: AGENTS.md.',
+  'Rendering the MP4 is not built yet: stop after synthesize_voice, images and post_review. Do not render with any other pipeline.',
   '1. Call get_brief first. It holds their idea, the active channel template, the chosen episode format with the global channel lock, channel lessons and open notes. Follow all of it; do not work from memory of an earlier session.',
   '2. Call check_job to see what is missing or breaks the template rules.',
   '3. Fix only what is yours to fix (scenes, captions, image jobs, notes) with the write tools. Anything marked owner "creator" (footage, approvals, verdicts, picking a template or format) goes into your review instead.',
@@ -68,7 +70,8 @@ const GUIDE = [
 const server = new McpServer({ name: 'dreamscript', version: '0.3.0' }, { instructions: GUIDE });
 
 // Every call is appended to production/<ep>/activity.json so the Studio (live mode) can show what the agent is doing.
-const READS = new Set(['list_templates', 'get_template', 'list_voices', 'get_episode', 'list_scenes', 'validate_episode', 'list_notes', 'list_image_jobs', 'get_brief', 'check_job']);
+const READS = new Set(['list_templates', 'get_template', 'list_voices', 'get_episode', 'list_scenes', 'validate_episode', 'list_notes', 'list_image_jobs', 'get_brief', 'check_job', 'list_realm_jobs']);
+const NO_BRIEF = new Set(['update_realm_job', 'finish_realm_job']); // realm jobs carry their own full context
 async function logActivity(episode, name, args, res) {
   const file = P('production', episode, 'activity.json');
   await serial(file, async () => {
@@ -102,8 +105,8 @@ async function snapshot(episode) {
 const tool = (name, desc, shape, fn) => server.tool(name, desc, shape, async (args) => {
   const episode = (args && args.episode) || 'ep01';
   let res;
-  if (!READS.has(name) && briefed[episode] !== await contextSig(episode)) res = fail('Context changed or not loaded yet (template, episode format, idea or cut). Call get_brief, then retry.');
-  else { if (!READS.has(name) && name !== 'post_review') await snapshot(episode); res = await fn(args); if (name === 'set_template' && !res.isError) briefed[episode] = await contextSig(episode); }
+  if (!READS.has(name) && !NO_BRIEF.has(name) && briefed[episode] !== await contextSig(episode)) res = fail('Context changed or not loaded yet (template, episode format, idea or cut). Call get_brief, then retry.');
+  else { if (!READS.has(name) && !NO_BRIEF.has(name) && name !== 'post_review') await snapshot(episode); res = await fn(args); if (name === 'set_template' && !res.isError) briefed[episode] = await contextSig(episode); }
   await logActivity(episode, name, args, res);
   return res;
 });
@@ -339,6 +342,41 @@ tool('post_review', 'Show your analysis to the creator in the Studio storyboard:
     await writeJson(f, s);
     return ok(s.agentReview);
   });
+});
+
+// Realm jobs: Realm Builder queues generate / fix / check jobs in production/realms/<id>.job.json.
+// Each job carries the full element spec (ids, boxes, depth layers, motion) so every agent works from the same idea.
+const RD = P('production', 'realms');
+const realmId = z.string().regex(/^[a-z0-9][a-z0-9-]*$/);
+const readJob = async (id) => { const f = path.join(RD, id + '.job.json'); return (await exists(f)) ? { f, job: await readJson(f) } : null; };
+tool('list_realm_jobs', 'Wallpaper jobs the creator queued in Realm Builder. Each has type (generate, fix or check), the full prompt, every element with its id, box [x,y,w,h] as fractions, depth layer, required flag and motion, plus the current image path for fix/check. Follow the element boxes exactly; they drive the animation later.', {},
+  async () => {
+    if (!(await exists(RD))) return ok([]);
+    const out = [];
+    for (const n of (await readdir(RD)).filter((x) => x.endsWith('.job.json'))) { const j = await readJson(path.join(RD, n)).catch(() => null); if (j && (j.status === 'queued' || j.status === 'working')) out.push({ id: n.slice(0, -9), ...j }); }
+    return ok(out);
+  });
+tool('update_realm_job', 'Say what you are doing on a realm job; it shows live on the creator\'s canvas.', { id: realmId, note: z.string().max(140) },
+  async ({ id, note }) => { const r = await readJob(id); if (!r) return fail('No job for ' + id); await writeJson(r.f, { ...r.job, status: 'working', note }); return ok({ id, note }); });
+tool('finish_realm_job', 'Finish a realm job. For generate/fix pass the image (file path or base64). Always pass check: for EVERY element id, whether it is clearly visible, its box and a short note. Be honest; missing elements get sent back to you.', {
+  id: realmId, file: z.string().optional(), base64: z.string().optional(), mime: z.enum(['image/png', 'image/jpeg', 'image/webp']).default('image/png'), model: z.string().max(60).optional(),
+  check: z.record(z.object({ present: z.boolean(), box: z.array(z.number()).length(4).nullable().optional(), note: z.string().max(90).optional() })).optional(),
+  note: z.string().max(160).optional(), error: z.string().max(160).optional()
+}, async ({ id, file, base64, mime, model, check, note, error }) => {
+  const r = await readJob(id); if (!r) return fail('No job for ' + id);
+  if (error) { await writeJson(r.f, { ...r.job, status: 'error', note: error }); return ok({ id, status: 'error' }); }
+  let image = null;
+  if (file || base64) {
+    const ext = file ? (path.extname(file).toLowerCase() === '.webp' ? '.webp' : /\.jpe?g$/i.test(file) ? '.jpg' : '.png') : { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp' }[mime];
+    const out = path.join(RD, id + ext);
+    if (file) { const src = path.resolve(ROOT, file); if (!(await exists(src))) return fail('File not found: ' + file); await copyFile(src, out); } else await writeFile(out, Buffer.from(base64.replace(/^data:[^,]+,/, ''), 'base64'));
+    image = path.relative(ROOT, out).split(path.sep).join('/');
+  } else if (r.job.type !== 'check') return fail('A ' + r.job.type + ' job needs the image (file or base64).');
+  const ids = (r.job.elements || []).map((e) => e.id), missingIds = ids.filter((x) => !check || !(x in check));
+  if (missingIds.length) return fail('Add a check for every element. Missing: ' + missingIds.join(', '));
+  await writeJson(r.f, { ...r.job, status: 'done', doneAt: new Date().toISOString(), result: { image, model: model || '', check, note: note || '' } });
+  const absent = ids.filter((x) => check[x] && !check[x].present);
+  return ok({ id, image, absent, next: absent.length ? 'Some elements are missing. The creator can send it back as a fix job.' : 'Done. The creator reviews it in Realm Builder.' });
 });
 
 server.prompt('guide_episode', 'Guided pass over the current episode: brief, check, fix, review.', {}, () => ({ messages: [{ role: 'user', content: { type: 'text', text: GUIDE + '\n\nStart now: call get_brief for ep01.' } }] }));

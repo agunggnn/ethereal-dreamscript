@@ -51,6 +51,26 @@
           </div>
         </sc-for>
       </div>
+      <sc-if value="{{ hasFormats }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Episode formats" style="display:flex;flex-direction:column;gap:14px;background:rgba(16,19,27,0.62);border:1px solid rgba(200,212,228,0.1);border-radius:18px;padding:20px;backdrop-filter:blur(12px)">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap"><span style="font-size:20px;font-weight:700">Episode formats · {{ fmtCount }}</span><span style="font:500 11px 'JetBrains Mono',monospace;color:rgba(200,212,228,0.6)">prompts/video-format-prompts.md</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ formats }}" as="fm" hint-placeholder-count="18"><button onClick="{{ fm.onClick }}" style="height:34px;padding:0 14px;border-radius:17px;border:{{ fm.border }};background:{{ fm.bg }};color:{{ fm.fg }};font-size:13px;font-weight:700;cursor:pointer;display:flex;gap:6px;align-items:center"><span style="font:600 11px 'JetBrains Mono',monospace;opacity:0.7">{{ fm.id }}</span>{{ fm.name }}</button></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font:600 11px 'JetBrains Mono',monospace;color:#8DEBFF;letter-spacing:0.08em">{{ fmt.id }} · {{ fmt.name }}</span>
+              <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(244,247,252,0.92);text-wrap:pretty">{{ fmt.prompt }}</p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap"><button onClick="{{ copyFmt }}" style="height:40px;padding:0 18px;border:none;border-radius:20px;background:#F4F7FC;color:#10131B;font-size:13px;font-weight:800;cursor:pointer">{{ fmtCopyLabel }}</button><span style="font-size:12.5px;line-height:1.4;color:rgba(200,212,228,0.7);align-self:center;max-width:340px">Includes the global channel lock, this format and the handoff template.</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;border-left:1px solid rgba(200,212,228,0.12);padding-left:16px">
+              <span style="font:600 11px 'JetBrains Mono',monospace;color:#8DEBFF;letter-spacing:0.08em">HANDOFF · FILL BEFORE GENERATING</span>
+              <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="12"><span style="font-size:13px;line-height:1.4;color:rgba(244,247,252,0.85)">{{ h }}</span></sc-for>
+              <span style="font-size:12.5px;line-height:1.45;color:#FFC98A;margin-top:4px">{{ handoffRule }}</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -90,27 +110,100 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-// window.claude only exists inside the Claude app; elsewhere say so instead of failing with a TypeError.
-const claudeComplete = (req) => (window.claude ? window.claude.complete(req) : Promise.reject(new Error('In-browser AI only works inside the Claude app. On localhost, ask your MCP agent instead (see mcp/README.md).')));
+// Claude app completion with localhost studio-server and direct Gemini fallback
+const claudeComplete = async (req) => {
+  if (window.claude && typeof window.claude.complete === 'function') {
+    return window.claude.complete(req);
+  }
+  const key = (typeof localStorage !== 'undefined' && (localStorage.getItem('ds_gemini_key') || localStorage.getItem('ds_ai_key'))) || '';
+  try {
+    const res = await fetch('/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(key ? { 'x-api-key': key } : {}) },
+      body: JSON.stringify({ ...req, apiKey: key })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.text) return data.text;
+      if (data.content) return data.content;
+    } else {
+      const err = await res.json().catch(() => ({}));
+      if (err.error && !key) throw new Error(err.error);
+    }
+  } catch (netErr) {
+    if (!key) throw netErr;
+  }
+
+  if (key) {
+    const model = 'gemini-2.5-flash';
+    const systemPrompt = req.system || '';
+    const contents = (req.messages || []).map((m) => {
+      let parts = [];
+      if (typeof m.content === 'string') {
+        parts = [{ text: m.content }];
+      } else if (Array.isArray(m.content)) {
+        parts = m.content.map((p) => {
+          if (p.type === 'text') return { text: p.text };
+          if (p.type === 'image' && p.source) {
+            return { inlineData: { mimeType: p.source.media_type, data: p.source.data } };
+          }
+          return { text: JSON.stringify(p) };
+        });
+      }
+      return { role: m.role === 'assistant' ? 'model' : 'user', parts };
+    });
+
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...(systemPrompt ? { systemInstruction: { parts: [{ text: systemPrompt }] } } : {}),
+        contents,
+        generationConfig: { maxOutputTokens: req.max_tokens || 4096, temperature: 0.7 }
+      })
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error((j.error && j.error.message) || `Gemini error ${r.status}`);
+    const text = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).map((p) => p.text).join('');
+    if (!text) throw new Error('Gemini returned an empty response.');
+    return text;
+  }
+
+  throw new Error('On localhost, enter your Gemini API key in the studio settings, or ask your MCP agent in chat to build the storyboard.');
+};
 const KEY = 'rhm_template';
 class Component extends DCLogic {
   state = { data: null, tab: 'pick', active: null, hover: null, fUrl: '', fText: '', fOut: '', fBusy: false, cName: '', cText: '', cOut: '', cBusy: false, copied: false };
   async componentDidMount() {
     const data = await (await fetch('templates/niches.json')).json();
-    let active = null; try { active = localStorage.getItem(KEY); } catch (e) {}
+    let active = null, fmt = null; try { active = localStorage.getItem(KEY); fmt = localStorage.getItem('ds_format'); } catch (e) {}
+    if (active) this.syncSession(active, fmt);
     const q = new URLSearchParams(location.search).get('tab');
-    this.setState({ data, active, tab: ['pick', 'tpl', 'factory', 'inspect'].includes(q) && (q !== 'tpl' || active) ? q : (active ? 'tpl' : 'pick') });
+    this.setState({ data, active, fmt, tab: ['pick', 'tpl', 'factory', 'inspect'].includes(q) && (q !== 'tpl' || active) ? q : (active ? 'tpl' : 'pick') });
     this.onKey = (e) => { if (e.key === 'Escape' && !/INPUT|TEXTAREA/.test(e.target.tagName)) location.href = 'Home.dc.html'; };
     window.addEventListener('keydown', this.onKey);
   }
   componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
   tpl(id) { const d = this.state.data; return d ? (d.templates.find(t => t.id === id) || d.templates[0]) : null; }
-  choose(id) { try { localStorage.setItem(KEY, id); } catch (e) {} this.setState({ active: id, tab: 'tpl' }); }
+  choose(id) { try { localStorage.setItem(KEY, id); } catch (e) {} this.setState({ active: id, tab: 'tpl' }); this.syncSession(id, this.state.fmt); }
+  // Tells the MCP agent which template and episode format are active (production/ep01/session.json via the local Studio server).
+  syncSession(template, format) { fetch('api/session/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hub: { template, format: format || null, at: new Date().toISOString() } }) }).catch(() => {}); }
   async ask(system, content, key) {
     this.setState({ [key + 'Busy']: true, [key + 'Out']: '' });
     try { const out = await claudeComplete({ system, max_tokens: 3000, messages: [{ role: 'user', content }] }); this.setState({ [key + 'Out']: out }); }
     catch (e) { this.setState({ [key + 'Out']: 'Agent error: ' + (e.message || e) }); }
     this.setState({ [key + 'Busy']: false });
+  }
+  fmtVals(t) {
+    const F = t && t.formats; if (!F) return { hasFormats: false, formats: [], fmt: {}, handoff: [] };
+    const cur = F.list.find(f => f.id === this.state.fmt) || F.list[0], g = F.globalLock;
+    const full = ['GLOBAL CHANNEL LOCK', 'Character: ' + g.character, 'Style: ' + g.style, 'Accuracy:\n- ' + g.accuracy.join('\n- '), 'Retention: ' + g.retention, 'Required output: ' + g.output.join('; ') + '. Do not claim production is complete until files and rendered media exist.', '', 'FORMAT ' + cur.id + ' — ' + cur.name, cur.prompt, '', 'HANDOFF', ...F.handoff.map(h => '- ' + h + ':'), F.handoffRule].join('\n');
+    return {
+      hasFormats: true, fmtCount: F.list.length, fmt: cur, handoff: F.handoff, handoffRule: F.handoffRule,
+      formats: F.list.map(f => { const on = f.id === cur.id; return { id: f.id, name: f.name, bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.06)', fg: on ? '#10131B' : '#F4F7FC', border: on ? '1px solid #F4F7FC' : '1px solid rgba(200,212,228,0.18)', onClick: () => { try { localStorage.setItem('ds_format', f.id); } catch (e) {} this.setState({ fmt: f.id }); this.syncSession(t.id, f.id); } }; }),
+      fmtCopyLabel: this.state.fmtCopied ? 'Copied' : 'Copy episode prompt',
+      copyFmt: () => navigator.clipboard.writeText(full).then(() => { this.setState({ fmtCopied: true }); setTimeout(() => this.setState({ fmtCopied: false }), 1500); }),
+    };
   }
   renderVals() {
     const s = this.state, d = s.data;
@@ -125,7 +218,7 @@ class Component extends DCLogic {
       tabs: [['pick', 'Templates'], ['tpl', 'Active'], ['factory', 'Template factory'], ['inspect', 'Competitor inspector']].map(([id, label]) => ({ label, ...sel(s.tab === id), onClick: () => this.setState({ tab: id }) })),
       is: { pick: s.tab === 'pick', tpl: s.tab === 'tpl' && !!s.active, factory: s.tab === 'factory', inspect: s.tab === 'inspect' },
       cards: d ? d.templates.map(x => ({ label: x.label, concept: x.concept, bgUrl: `url('${x.bg}')`, chosen: x.id === s.active, border: x.id === s.active ? '2px solid #8DEBFF' : '1px solid rgba(200,212,228,0.14)', shade: `linear-gradient(0deg, oklch(0.18 0.04 ${x.hue} / 0.95) 25%, oklch(0.3 0.08 ${x.hue} / 0.35))`, onClick: () => this.choose(x.id), onHover: () => this.setState({ hover: x.id }) })) : [],
-      t, facets,
+      t, facets, ...this.fmtVals(t),
       copyTpl: () => navigator.clipboard.writeText(JSON.stringify(t, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }),
       copyLabel: s.copied ? 'Copied' : 'Copy template JSON',
       fUrl: s.fUrl, onFUrl: (e) => this.setState({ fUrl: e.target.value }), fText: s.fText, onFText: (e) => this.setState({ fText: e.target.value }),

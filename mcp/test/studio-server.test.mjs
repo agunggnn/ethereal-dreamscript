@@ -68,3 +68,56 @@ test('PUT with a stale If-Match is refused, a current one saves', async () => {
   assert.equal(JSON.parse(await readFile(file, 'utf8')).title, 'fresh');
   assert.notEqual(fresh.headers.etag, etag);
 });
+
+test('POST /api/complete validates payload and requires key', async () => {
+  const bad = await request('/api/complete', { method: 'POST', body: 'invalid-json' });
+  assert.equal(bad.status, 400);
+  assert.match(bad.body, /invalid json/);
+
+  const noKey = await request('/api/complete', { method: 'POST', body: JSON.stringify({ system: 'hi', messages: [{ role: 'user', content: 'test' }] }) });
+  assert.equal(noKey.status, 400);
+  assert.match(noKey.body, /No AI API key found/);
+});
+
+test('PUT /api/session/ep01 writes session.json and strips client-supplied agentReview', async () => {
+  const sFile = path.join(root, 'production/ep01/session.json');
+  await writeFile(sFile, JSON.stringify({ step: 1, agentReview: { status: 'pass', summary: 'agent only' } }));
+  const res = await request('/api/session/ep01', {
+    method: 'PUT',
+    body: JSON.stringify({ step: 4, selId: '02', agentReview: { status: 'hacked' } })
+  });
+  assert.equal(res.status, 200);
+  const saved = JSON.parse(await readFile(sFile, 'utf8'));
+  assert.equal(saved.step, 4);
+  assert.equal(saved.selId, '02');
+  assert.equal(saved.agentReview.summary, 'agent only');
+});
+
+test('POST /api/snapshot/ep01 and GET /api/history/ep01 list and serve snapshots', async () => {
+  const snap = await request('/api/snapshot/ep01', { method: 'POST' });
+  assert.equal(snap.status, 200);
+  assert.equal(JSON.parse(snap.body).saved, true);
+
+  const hist = await request('/api/history/ep01');
+  assert.equal(hist.status, 200);
+  const list = JSON.parse(hist.body);
+  assert.ok(Array.isArray(list) && list.length >= 1);
+  assert.match(list[0].name, /^episode-\d{13}\.json$/);
+
+  const snapGet = await request(`/production/ep01/history/${list[0].name}`);
+  assert.equal(snapGet.status, 200);
+});
+
+test('PUT /api/frame/ep01/char saves PNG frame and serves it back', async () => {
+  const dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+  const put = await request('/api/frame/ep01/char', {
+    method: 'PUT',
+    body: dataUrl
+  });
+  assert.equal(put.status, 200);
+  const { url } = JSON.parse(put.body);
+  assert.match(url, /^production\/ep01\/frames\/char\.png\?v=\d+$/);
+
+  const getFrame = await request('/production/ep01/frames/char.png');
+  assert.equal(getFrame.status, 200);
+});

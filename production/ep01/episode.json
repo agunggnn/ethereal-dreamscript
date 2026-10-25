@@ -63,7 +63,7 @@
       }
     }
   },
-  "template": "longform",
+  "template": "shorts",
   "voice": {
     "engine": "edge-tts",
     "id": "en-US-AndrewNeural",

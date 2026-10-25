@@ -1,6 +1,6 @@
 // One-off light-theme converter used to move the dark screens onto the Realm Builder palette.
 // Kept so another agent can re-run it on newly added dark screens: node -e "..." or paste into a script.
-const BG = "linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4";
+const BG = "linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('assets/bg/ui_realm_1080.jpg') center/cover fixed,#EADFC4";
 const muted = (a) => Math.min(1, +(a * 0.55 + 0.42).toFixed(2));
 function theme(s, canvasSafe) {
   s = s.replace(/html,body\{margin:0;background:#(0A0C12|10131B);color:#F4F7FC/, 'html,body{margin:0;background:' + BG + ';color:#1C2830');

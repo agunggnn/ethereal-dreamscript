@@ -1,0 +1,84 @@
+{
+  "id": "dalmasca-oasis",
+  "name": "Dalmasca Celestial Oasis",
+  "type": "generate",
+  "status": "done",
+  "width": 1920,
+  "height": 1080,
+  "aspect": "16:9",
+  "style": "Painterly fantasy",
+  "time": "Midday",
+  "mood": "Calm",
+  "palette": ["#E8CA7A", "#2B6A98", "#3E8A5A", "#FFFBF0"],
+  "prompt": "Bright painterly fantasy world vista for a menu background. Warm golden sand dunes in the foreground, green grassland and an oasis river in the middle, a distant sandstone city with tall towers, bright clear blue sky with soft white clouds, sunny midday light. Calm, low detail in the center and lower half so menus stay readable. No text, no people, no logos.",
+  "elements": [
+    {
+      "id": "S1",
+      "label": "Sunny Blue Sky",
+      "detail": "Bright clear blue sky with sweeping soft white clouds",
+      "layer": "sky",
+      "motion": "drift",
+      "box": [0.0, 0.0, 1.0, 0.42],
+      "required": true
+    },
+    {
+      "id": "S2",
+      "label": "Sandstone Citadel Towers",
+      "detail": "Majestic distant sandstone city with soaring towers and sky arches",
+      "layer": "far",
+      "motion": "still",
+      "box": [0.18, 0.15, 0.64, 0.40],
+      "required": true
+    },
+    {
+      "id": "S3",
+      "label": "Turquoise Oasis River",
+      "detail": "Winding tranquil oasis waterway with soft reflections",
+      "layer": "mid",
+      "motion": "flow",
+      "box": [0.22, 0.45, 0.58, 0.28],
+      "required": true
+    },
+    {
+      "id": "S4",
+      "label": "Emerald Grassland & Palms",
+      "detail": "Lush vibrant greenery flanking the river banks",
+      "layer": "mid",
+      "motion": "sway",
+      "box": [0.10, 0.42, 0.80, 0.24],
+      "required": true
+    },
+    {
+      "id": "S5",
+      "label": "Golden Foreground Dunes",
+      "detail": "Warm rippled sand dunes, calm and low-detail for UI readability",
+      "layer": "near",
+      "motion": "still",
+      "box": [0.0, 0.62, 1.0, 0.38],
+      "required": true
+    },
+    {
+      "id": "S6",
+      "label": "Sunlit Atmospheric Motes",
+      "detail": "Floating desert stardust motes and subtle heat shimmer",
+      "layer": "fx",
+      "motion": "rise",
+      "box": [0.15, 0.20, 0.70, 0.60],
+      "required": false
+    }
+  ],
+  "doneAt": "2026-10-26T00:15:00.000Z",
+  "result": {
+    "image": "production/realms/dalmasca-oasis.jpg",
+    "model": "imagen-3.0-generate-002",
+    "check": {
+      "S1": { "present": true, "box": [0.0, 0.0, 1.0, 0.42], "note": "Clear azure sky with high cirrus clouds" },
+      "S2": { "present": true, "box": [0.18, 0.15, 0.64, 0.40], "note": "Dalmasca style towers and sky bridge visible" },
+      "S3": { "present": true, "box": [0.22, 0.45, 0.58, 0.28], "note": "Winding turquoise oasis waterway" },
+      "S4": { "present": true, "box": [0.10, 0.42, 0.80, 0.24], "note": "Verdant oasis greenery and palms" },
+      "S5": { "present": true, "box": [0.0, 0.62, 1.0, 0.38], "note": "Clean warm golden sand dunes" },
+      "S6": { "present": true, "box": [0.15, 0.20, 0.70, 0.60], "note": "Subtle midday sun rays" }
+    },
+    "note": "Wallpaper generated matching dreamscript brief mailbox/open/01-background-art.md"
+  }
+}

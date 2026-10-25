@@ -7,7 +7,7 @@
 </head>
 <body>
 <x-dc>
-<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('assets/bg/ui_realm_1080.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
 <div data-screen-label="Home" style="position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:transparent">
   <sc-for list="{{ walls }}" as="w" hint-placeholder-count="0"><div style="position:absolute;inset:0;background-image:{{ w.bgi }};background-size:cover;background-position:center;opacity:{{ w.op }};transform:scale({{ w.scale }});transition:opacity 0.9s ease,transform 9s cubic-bezier(.2,.7,.2,1)"></div></sc-for>
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,251,240,0.94) 0%,rgba(255,251,240,0.62) 40%,rgba(255,251,240,0.08) 78%)"></div>
@@ -70,8 +70,8 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const OK = 'oklch(0.5 0.13 150)', WARN = 'oklch(0.6 0.14 70)', BAD = 'oklch(0.55 0.19 25)', ICE = '#2A6A98', MUTE = 'rgba(28,40,48,0.7)';
-const W = { city: 'aegis/05_floating_sky_citadel_4k.jpg', star: 'aegis/09_autumn_dragon_valley_4k.jpg', aur: 'aegis/09_autumn_dragon_valley_4k.jpg', cit: 'aegis/05_floating_sky_citadel_4k.jpg' };
-const REALM_BG = 'aegis/05_floating_sky_citadel_4k.jpg';
+const W = { city: 'assets/bg/ui_realm_1080.jpg', star: 'assets/bg/dragon_valley_1080.jpg', aur: 'assets/bg/sky_citadel_1080.jpg', cit: 'assets/bg/ui_realm_1080.jpg' };
+const REALM_BG = 'assets/bg/ui_realm_1080.jpg';
 const WALLS = Object.values(W);
 const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); return m ? (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]) : 0; };
 const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';

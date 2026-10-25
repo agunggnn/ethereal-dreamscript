@@ -25,5 +25,14 @@
     "scene": null,
     "detail": "{\"cut\":\"shorts\"}",
     "error": false
+  },
+  {
+    "at": "2026-10-25T17:11:31.139Z",
+    "by": "agent",
+    "tool": "get_brief",
+    "kind": "read",
+    "scene": null,
+    "detail": "",
+    "error": false
   }
 ]

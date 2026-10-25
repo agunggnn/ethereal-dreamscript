@@ -7,35 +7,35 @@
 </head>
 <body>
 <x-dc>
-<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}textarea,input,select,button{font-family:inherit}::-webkit-scrollbar{height:6px;width:6px}::-webkit-scrollbar-thumb{background:rgba(244,247,252,0.14);border-radius:3px}</style></helmet>
-<sc-if value="{{ restore.show }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:min(680px,calc(100vw - 32px));padding:12px 14px 12px 18px;border-radius:16px;background:rgba(22,26,36,0.96);border:1px solid rgba(141,235,255,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.5);color:#F4F7FC;font-size:14px;line-height:1.4"><span style="flex:1;min-width:200px">{{ restore.text }}</span><button onClick="{{ restore.yes }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Restore it</button><button onClick="{{ restore.no }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">Keep disk version</button></div></sc-if>
-<div data-screen-label="Storyboard Studio" style="position:relative;min-height:100vh;display:flex;flex-direction:column;background:#0A0C12;overflow:hidden">
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}textarea,input,select,button{font-family:inherit}::-webkit-scrollbar{height:6px;width:6px}::-webkit-scrollbar-thumb{background:rgba(28,40,48,0.14);border-radius:3px}</style></helmet>
+<sc-if value="{{ restore.show }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:min(680px,calc(100vw - 32px));padding:12px 14px 12px 18px;border-radius:16px;background:rgba(255,251,240,0.96);border:1px solid rgba(42,106,152,0.4);box-shadow:0 12px 40px rgba(40,60,80,0.23);color:#1C2830;font-size:14px;line-height:1.4"><span style="flex:1;min-width:200px">{{ restore.text }}</span><button onClick="{{ restore.yes }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:#1C2830;color:#FFFBF0;font-size:13px;font-weight:800;cursor:pointer">Restore it</button><button onClick="{{ restore.no }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">Keep disk version</button></div></sc-if>
+<div data-screen-label="Storyboard Studio" style="position:relative;min-height:100vh;display:flex;flex-direction:column;background:transparent;overflow:hidden">
   <img src="assets/wall_megacity.jpg" alt="" style="position:absolute;inset:-60px;width:calc(100% + 120px);height:calc(100% + 120px);object-fit:cover;opacity:0.28;filter:blur(40px)">
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.5),rgba(10,12,18,0.9) 60%)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,251,240,0.5),rgba(255,251,240,0.9) 60%)"></div>
 
   <div style="position:relative;display:flex;align-items:center;gap:16px;padding:20px 32px;flex-wrap:wrap">
-    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(28,40,48,0.1);color:#1C2830;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none" style-hover="background:rgba(28,40,48,0.2)">‹</a>
     <div style="display:flex;flex-direction:column;gap:3px;flex:1 1 280px;min-width:220px">
-      <span style="font-size:13px;font-weight:600;color:#8DEBFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ kicker }}</span>
+      <span style="font-size:13px;font-weight:600;color:#2A6A98;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ kicker }}</span>
       <span style="font-size:22px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ title }}</span>
     </div>
-    <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:14px;padding:4px">
+    <div style="display:flex;gap:4px;background:rgba(28,40,48,0.08);border-radius:14px;padding:4px">
       <sc-for list="{{ templates }}" as="tp" hint-placeholder-count="2"><button onClick="{{ tp.onClick }}" style="height:36px;padding:0 16px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:{{ tp.bg }};color:{{ tp.fg }}">{{ tp.label }}</button></sc-for>
     </div>
     <button onClick="{{ toggleBgm }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ bgmBg }};color:{{ bgmFg }}">♪ Music</button>
     <button onClick="{{ toggleSubs }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ subsBg }};color:{{ subsFg }}">CC</button>
-    <button onClick="{{ playAll }}" style="height:44px;padding:0 22px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:#F4F7FC;color:#0A0C12">{{ playAllLabel }}</button>
+    <button onClick="{{ playAll }}" style="height:44px;padding:0 22px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:#1C2830;color:#FFFBF0">{{ playAllLabel }}</button>
     <button onClick="{{ live.onClick }}" title="{{ live.title }}" style="height:44px;padding:0 14px;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;background:{{ live.bg }};color:{{ live.fg }}"><span style="width:9px;height:9px;border-radius:50%;background:{{ live.dot }};box-shadow:{{ live.glow }}"></span>{{ live.label }}</button>
     <span style="font-size:18px;font-variant-numeric:tabular-nums;padding-left:4px">{{ clock }}</span>
   </div>
   <div style="position:relative;display:flex;align-items:center;gap:6px;padding:0 32px 18px;flex-wrap:wrap">
     <sc-for list="{{ steps }}" as="sp" hint-placeholder-count="5">
       <button onClick="{{ sp.onClick }}" style="display:flex;align-items:center;gap:10px;height:46px;padding:0 18px 0 8px;border:none;border-radius:23px;cursor:pointer;background:{{ sp.bg }};color:{{ sp.fg }};font-size:15px;font-weight:{{ sp.weight }}"><span style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:{{ sp.dotBg }};color:{{ sp.dotFg }}">{{ sp.mark }}</span>{{ sp.label }}</button>
-      <sc-if value="{{ sp.notLast }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:2px;border-radius:1px;background:rgba(244,247,252,0.18)"></span></sc-if>
+      <sc-if value="{{ sp.notLast }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:2px;border-radius:1px;background:rgba(28,40,48,0.18)"></span></sc-if>
     </sc-for>
     <div style="margin-left:auto;display:flex;gap:8px">
-      <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prevStep }}" style="height:46px;padding:0 18px;border:none;border-radius:23px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:15px;font-weight:700;cursor:pointer">‹ Back</button></sc-if>
-      <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nextStep }}" style="height:46px;padding:0 24px;border:none;border-radius:23px;background:#F4F7FC;color:#0A0C12;font-size:15px;font-weight:800;cursor:pointer">{{ nextLabel }}</button></sc-if>
+      <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prevStep }}" style="height:46px;padding:0 18px;border:none;border-radius:23px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:15px;font-weight:700;cursor:pointer">‹ Back</button></sc-if>
+      <sc-if value="{{ hasNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nextStep }}" style="height:46px;padding:0 24px;border:none;border-radius:23px;background:#1C2830;color:#FFFBF0;font-size:15px;font-weight:800;cursor:pointer">{{ nextLabel }}</button></sc-if>
     </div>
   </div>
 
@@ -44,51 +44,50 @@
       <sc-if value="{{ isIdea }}" hint-placeholder-val="{{ false }}">
         <div data-screen-label="Idea" style="display:flex;flex-direction:column;gap:22px;max-width:860px;padding:6px 0 24px">
           <h1 style="margin:0;font-size:50px;font-weight:300;letter-spacing:-0.03em;line-height:1.05">What is this video about?</h1>
-          <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.8);max-width:680px">Write the idea in one sentence. AI turns it into a complete storyboard: every scene with what we see, what the narrator says and the caption. You read the whole board before anything is recorded or generated.</p>
-          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">CHANNEL TEMPLATE</span><div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ idea.templates }}" as="it" hint-placeholder-count="6"><button onClick="{{ it.onClick }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button></sc-for></div></div>
-          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">THE IDEA</span><textarea value="{{ idea.text }}" onChange="{{ idea.onText }}" rows="3" placeholder="{{ idea.placeholder }}" style="resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:18px;line-height:1.5;padding:14px 16px" style-focus="border-color:#8DEBFF;outline:none"></textarea></div>
-          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">GAME OR SUBJECT · OPTIONAL</span><input value="{{ idea.game }}" onChange="{{ idea.onGame }}" placeholder="e.g. the exact Roblox experience name" style="height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:15px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none"></div>
-          <div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">GEMINI API KEY · FOR IN-BROWSER AI</span><span style="font-size:11px;color:rgba(232,237,245,0.45)">Stays in this browser · or ask agent in chat</span></div><input type="password" value="{{ idea.geminiKey }}" onChange="{{ idea.onKey }}" placeholder="Paste your Gemini API key (optional if using MCP agent)" style="height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:15px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none"></div>
-          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">FORMAT</span><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></div>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.86);max-width:680px">Write the idea in one sentence. AI turns it into a complete storyboard: every scene with what we see, what the narrator says and the caption. You read the whole board before anything is recorded or generated.</p>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">CHANNEL TEMPLATE</span><div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ idea.templates }}" as="it" hint-placeholder-count="6"><button onClick="{{ it.onClick }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }}">{{ it.label }}</button></sc-for></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">THE IDEA</span><textarea value="{{ idea.text }}" onChange="{{ idea.onText }}" rows="3" placeholder="{{ idea.placeholder }}" style="resize:vertical;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:14px;color:#1C2830;font-size:18px;line-height:1.5;padding:14px 16px" style-focus="border-color:#2A6A98;outline:none"></textarea></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">GAME OR SUBJECT · OPTIONAL</span><input value="{{ idea.game }}" onChange="{{ idea.onGame }}" placeholder="e.g. the exact Roblox experience name" style="height:48px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:14px;color:#1C2830;font-size:15px;padding:0 16px" style-focus="border-color:#2A6A98;outline:none"></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">FORMAT</span><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-            <button onClick="{{ idea.generate }}" style="height:56px;padding:0 30px;border:none;border-radius:14px;background:#F4F7FC;color:#0A0C12;font-size:17px;font-weight:800;cursor:pointer">{{ idea.genLabel }}</button>
-            <button onClick="{{ idea.useExisting }}" style="height:56px;padding:0 22px;border:none;border-radius:14px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:15px;font-weight:700;cursor:pointer">Use the existing storyboard</button>
+            <button onClick="{{ idea.generate }}" style="height:56px;padding:0 30px;border:none;border-radius:14px;background:#1C2830;color:#FFFBF0;font-size:17px;font-weight:800;cursor:pointer">{{ idea.genLabel }}</button>
+            <button onClick="{{ idea.useExisting }}" style="height:56px;padding:0 22px;border:none;border-radius:14px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:15px;font-weight:700;cursor:pointer">Use the existing storyboard</button>
           </div>
-          <sc-if value="{{ idea.err }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:oklch(0.83 0.14 80)">{{ idea.err }}</span></sc-if>
+          <sc-if value="{{ idea.err }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:oklch(0.6 0.14 70)">{{ idea.err }}</span></sc-if>
         </div>
       </sc-if>
       <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
         <div data-screen-label="Storyboard board" style="display:flex;flex-direction:column;gap:18px;padding-bottom:24px">
-          <div style="background:rgba(22,26,36,0.75);border:1px solid rgba(244,247,252,0.08);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
-            <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">CONCEPT · {{ board.cutLabel }}</span>
+          <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
+            <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">CONCEPT · {{ board.cutLabel }}</span>
             <span style="font-size:28px;font-weight:600;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">{{ board.logline }}</span>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
-              <sc-for list="{{ board.facts }}" as="fa" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:700;color:#8DEBFF">{{ fa.k }}</span><span style="font-size:14px;line-height:1.45;color:rgba(232,237,245,0.88)">{{ fa.v }}</span></div></sc-for>
+              <sc-for list="{{ board.facts }}" as="fa" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:700;color:#2A6A98">{{ fa.k }}</span><span style="font-size:14px;line-height:1.45;color:rgba(28,40,48,0.9)">{{ fa.v }}</span></div></sc-for>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <sc-for list="{{ board.checks }}" as="ck" hint-placeholder-count="5"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ ck.color }}"></span>{{ ck.text }}</span></sc-for>
+              <sc-for list="{{ board.checks }}" as="ck" hint-placeholder-count="5"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(28,40,48,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ ck.color }}"></span>{{ ck.text }}</span></sc-for>
             </div>
-            <sc-if value="{{ board.review }}" hint-placeholder-val="{{ false }}"><div style="font-size:14px;line-height:1.6;color:rgba(232,237,245,0.88);white-space:pre-wrap;background:rgba(141,235,255,0.08);border-radius:14px;padding:14px">{{ board.review }}</div></sc-if>
+            <sc-if value="{{ board.review }}" hint-placeholder-val="{{ false }}"><div style="font-size:14px;line-height:1.6;color:rgba(28,40,48,0.9);white-space:pre-wrap;background:rgba(42,106,152,0.08);border-radius:14px;padding:14px">{{ board.review }}</div></sc-if>
           </div>
-          <div style="background:rgba(22,26,36,0.75);border:1px solid rgba(141,235,255,0.2);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
+          <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(42,106,152,0.2);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#8DEBFF">AI IMAGES</span>
-              <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:12px;padding:3px"><sc-for list="{{ board.engines }}" as="en" hint-placeholder-count="4"><button onClick="{{ en.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
-              <sc-if value="{{ board.needsKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ board.key }}" onChange="{{ board.onKey }}" placeholder="Gemini API key · stays in this browser" style="height:40px;min-width:240px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 12px"></sc-if>
-              <button onClick="{{ board.genAll }}" style="height:40px;padding:0 18px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ board.genAllLabel }}</button>
-              <span style="font-size:13px;font-weight:600;color:rgba(232,237,245,0.75)">{{ board.imgStatus }}</span>
+              <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#2A6A98">AI IMAGES</span>
+              <div style="display:flex;gap:4px;background:rgba(28,40,48,0.08);border-radius:12px;padding:3px"><sc-for list="{{ board.engines }}" as="en" hint-placeholder-count="4"><button onClick="{{ en.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
+              <sc-if value="{{ board.needsKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ board.key }}" onChange="{{ board.onKey }}" placeholder="Gemini API key · stays in this browser" style="height:40px;min-width:240px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:10px;color:#1C2830;font-size:13px;padding:0 12px"></sc-if>
+              <button onClick="{{ board.genAll }}" style="height:40px;padding:0 18px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">{{ board.genAllLabel }}</button>
+              <span style="font-size:13px;font-weight:600;color:rgba(28,40,48,0.83)">{{ board.imgStatus }}</span>
             </div>
-            <span style="font-size:12.5px;line-height:1.5;color:rgba(232,237,245,0.55)">{{ board.engineNote }}</span>
+            <span style="font-size:12.5px;line-height:1.5;color:rgba(28,40,48,0.72)">{{ board.engineNote }}</span>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
               <sc-for list="{{ board.specials }}" as="sx" hint-placeholder-count="0">
-                <div style="display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:rgba(10,12,18,0.5);border:1px solid {{ sx.border }}">
+                <div style="display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:rgba(255,251,240,0.5);border:1px solid {{ sx.border }}">
                   <div style="position:relative;aspect-ratio:16/9;background:{{ sx.bg }};background-size:cover;background-position:center">
-                    <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:#F4F7FC;color:#0A0C12">{{ sx.title }}</span>
-                    <sc-if value="{{ sx.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate</button></sc-if>
+                    <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:#1C2830;color:#FFFBF0">{{ sx.title }}</span>
+                    <sc-if value="{{ sx.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#1C2830;color:#FFFBF0;font-size:13px;font-weight:800;cursor:pointer">✦ Generate</button></sc-if>
                   </div>
                   <div style="display:flex;align-items:center;gap:6px;padding:10px 12px">
-                    <span style="font-size:12.5px;font-weight:600;flex:1;color:{{ sx.stColor }}">{{ sx.stText }}</span><sc-if value="{{ sx.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ sx.upload }}" style="display:none"></label></sc-if>
-                    <sc-if value="{{ sx.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ sx.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
+                    <span style="font-size:12.5px;font-weight:600;flex:1;color:{{ sx.stColor }}">{{ sx.stText }}</span><sc-if value="{{ sx.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ sx.upload }}" style="display:none"></label></sc-if>
+                    <sc-if value="{{ sx.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.5 0.13 150);color:#FFFBF0;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ sx.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -96,31 +95,31 @@
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax({{ board.minCard }},1fr));gap:14px">
             <sc-for list="{{ board.cards }}" as="bc" hint-placeholder-count="0">
-              <div style="display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(22,26,36,0.8);border:1px solid {{ bc.border }}">
+              <div style="display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(255,251,240,0.92);border:1px solid {{ bc.border }}">
                 <div style="position:relative;aspect-ratio:{{ bc.ar }};background:{{ bc.bg }};background-size:cover;background-position:center">
-                  <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:{{ bc.srcBg }};color:#0A0C12">{{ bc.src }}</span>
-                  <span style="position:absolute;right:10px;top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#F4F7FC;text-shadow:0 1px 4px rgba(0,0,0,0.9)">{{ bc.n }} · {{ bc.time }}</span>
-                  <sc-if value="{{ bc.onScreen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;bottom:10px;background:#F4F7FC;color:#0A0C12;font-size:12px;font-weight:800;padding:4px 8px;border-radius:6px;text-transform:uppercase">{{ bc.onScreen }}</span></sc-if>
-                  <sc-if value="{{ bc.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate image</button></sc-if>
-                  <sc-if value="{{ bc.loading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;background:rgba(10,12,18,0.75);padding:8px 12px;border-radius:10px;max-width:80%;text-align:center">{{ bc.stText }}</span></sc-if>
+                  <span style="position:absolute;left:10px;top:10px;font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;background:{{ bc.srcBg }};color:#FFFBF0">{{ bc.src }}</span>
+                  <span style="position:absolute;right:10px;top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#1C2830;text-shadow:0 1px 4px rgba(40,60,80,0.41)">{{ bc.n }} · {{ bc.time }}</span>
+                  <sc-if value="{{ bc.onScreen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;bottom:10px;background:#1C2830;color:#FFFBF0;font-size:12px;font-weight:800;padding:4px 8px;border-radius:6px;text-transform:uppercase">{{ bc.onScreen }}</span></sc-if>
+                  <sc-if value="{{ bc.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#1C2830;color:#FFFBF0;font-size:13px;font-weight:800;cursor:pointer">✦ Generate image</button></sc-if>
+                  <sc-if value="{{ bc.loading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;background:rgba(255,251,240,0.75);padding:8px 12px;border-radius:10px;max-width:80%;text-align:center">{{ bc.stText }}</span></sc-if>
                 </div>
                 <div style="display:flex;gap:6px;padding:10px 12px 0;align-items:center">
-                  <span style="flex:1;font-size:12.5px;font-weight:600;color:{{ bc.stColor }}">{{ bc.stText }}</span><sc-if value="{{ bc.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ bc.upload }}" style="display:none"></label></sc-if>
-                  <sc-if value="{{ bc.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ bc.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
+                  <span style="flex:1;font-size:12.5px;font-weight:600;color:{{ bc.stColor }}">{{ bc.stText }}</span><sc-if value="{{ bc.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ bc.upload }}" style="display:none"></label></sc-if>
+                  <sc-if value="{{ bc.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.5 0.13 150);color:#FFFBF0;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ bc.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 12px 14px">
-                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700">{{ bc.beat }}</span><sc-if value="{{ bc.isDir }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px;font-weight:800;color:#10131B;background:oklch(0.83 0.14 80);padding:2px 7px;border-radius:8px">NEEDS LINE</span></sc-if></div>
-                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">WE SEE</span>
-                  <textarea value="{{ bc.visual }}" onChange="{{ bc.onVisual }}" rows="2" style="resize:vertical;background:rgba(244,247,252,0.05);border:1px solid rgba(244,247,252,0.08);border-radius:10px;color:rgba(244,247,252,0.85);font-size:13px;line-height:1.45;padding:8px 10px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
-                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">NARRATOR</span>
-                  <textarea value="{{ bc.narration }}" onChange="{{ bc.onNarr }}" rows="3" style="resize:vertical;background:rgba(244,247,252,0.05);border:1px solid rgba(244,247,252,0.08);border-radius:10px;color:#F4F7FC;font-size:14px;line-height:1.45;padding:8px 10px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700">{{ bc.beat }}</span><sc-if value="{{ bc.isDir }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px;font-weight:800;color:#FFFBF0;background:oklch(0.6 0.14 70);padding:2px 7px;border-radius:8px">NEEDS LINE</span></sc-if></div>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">WE SEE</span>
+                  <textarea value="{{ bc.visual }}" onChange="{{ bc.onVisual }}" rows="2" style="resize:vertical;background:rgba(28,40,48,0.05);border:1px solid rgba(201,164,92,0.55);border-radius:10px;color:rgba(28,40,48,0.85);font-size:13px;line-height:1.45;padding:8px 10px" style-focus="border-color:#2A6A98;outline:none"></textarea>
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">NARRATOR</span>
+                  <textarea value="{{ bc.narration }}" onChange="{{ bc.onNarr }}" rows="3" style="resize:vertical;background:rgba(28,40,48,0.05);border:1px solid rgba(201,164,92,0.55);border-radius:10px;color:#1C2830;font-size:14px;line-height:1.45;padding:8px 10px" style-focus="border-color:#2A6A98;outline:none"></textarea>
                   <div style="display:flex;gap:6px;align-items:center">
-                    <button onClick="{{ bc.hear }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer">▶ Hear</button>
-                    <button onClick="{{ bc.rewrite }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(141,235,255,0.16);color:#8DEBFF;font-size:12px;font-weight:700;cursor:pointer">✦ Rewrite</button>
-                    <button onClick="{{ bc.note }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer">✎ Note</button>
-                    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(232,237,245,0.5)">{{ bc.sfx }}</span>
+                    <button onClick="{{ bc.hear }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:12px;font-weight:700;cursor:pointer">▶ Hear</button>
+                    <button onClick="{{ bc.rewrite }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(42,106,152,0.16);color:#2A6A98;font-size:12px;font-weight:700;cursor:pointer">✦ Rewrite</button>
+                    <button onClick="{{ bc.note }}" style="height:32px;padding:0 10px;border:none;border-radius:9px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:12px;font-weight:700;cursor:pointer">✎ Note</button>
+                    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(28,40,48,0.7)">{{ bc.sfx }}</span>
                   </div>
-                  <sc-for list="{{ bc.notes }}" as="bn" hint-placeholder-count="0"><div style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;background:rgba(244,247,252,0.04);border-radius:10px;padding:8px 10px"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ bn.color }}"></span><div style="display:flex;flex-direction:column;gap:3px"><span>{{ bn.text }}</span><sc-if value="{{ bn.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#8DEBFF">↳ {{ bn.reply }}</span></sc-if></div></div></sc-for>
+                  <sc-for list="{{ bc.notes }}" as="bn" hint-placeholder-count="0"><div style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;background:rgba(28,40,48,0.04);border-radius:10px;padding:8px 10px"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ bn.color }}"></span><div style="display:flex;flex-direction:column;gap:3px"><span>{{ bn.text }}</span><sc-if value="{{ bn.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#2A6A98">↳ {{ bn.reply }}</span></sc-if></div></div></sc-for>
                 </div>
               </div>
             </sc-for>
@@ -128,7 +127,7 @@
         </div>
       </sc-if>
       <sc-if value="{{ isPlayer }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">
-      <div style="display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,0.6);border-radius:22px;padding:{{ frame.pad }};min-height:320px;box-shadow:0 30px 80px rgba(0,0,0,0.5)">
+      <div style="display:flex;justify-content:center;align-items:center;background:rgba(40,60,80,0.27);border-radius:22px;padding:{{ frame.pad }};min-height:320px;box-shadow:0 30px 80px rgba(40,60,80,0.23)">
         <div style="position:relative;overflow:hidden;background:#000;border-radius:{{ frame.radius }};width:{{ frame.w }};height:{{ frame.h }};aspect-ratio:{{ frame.ar }};max-height:{{ frame.maxH }};max-width:100%">
           <sc-if value="{{ cur.hasFrame }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:{{ cur.frameBg }};background-size:cover;background-position:center;transform:scale({{ zoom }});transition:transform {{ zoomDur }} linear"></div></sc-if>
           <div style="position:absolute;left:0;right:0;top:{{ frame.vTop }};aspect-ratio:16/9">
@@ -137,8 +136,8 @@
             </sc-if>
             <sc-if value="{{ cur.noVideo }}" hint-placeholder-val="{{ true }}">
               <div style="position:relative;width:100%;height:100%;background:{{ cur.slotBg }};display:flex;flex-direction:column;align-items:{{ cur.slotAlign }};justify-content:{{ cur.slotJustify }};gap:12px;text-align:center;padding:16px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(232,237,245,0.75)">{{ cur.slotLabel }}</span>
-                <label style="height:40px;padding:0 18px;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;display:flex;align-items:center;cursor:pointer">Load clip<input type="file" accept="video/*" onChange="{{ onClip }}" style="display:none"></label>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(28,40,48,0.83)">{{ cur.slotLabel }}</span>
+                <label style="height:40px;padding:0 18px;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;display:flex;align-items:center;cursor:pointer">Load clip<input type="file" accept="video/*" onChange="{{ onClip }}" style="display:none"></label>
               </div>
             </sc-if>
           </div>
@@ -149,36 +148,36 @@
           </sc-if>
           <sc-if value="{{ frame.isLong }}" hint-placeholder-val="{{ true }}">
             <sc-if value="{{ cur.onScreen }}" hint-placeholder-val="{{ false }}">
-              <span style="position:absolute;left:3%;top:5%;background:#F4F7FC;color:#10131B;font-weight:800;font-size:{{ frame.capSize }};padding:0.4em 0.7em;border-radius:6px;text-transform:uppercase">{{ cur.onScreen }}</span>
+              <span style="position:absolute;left:3%;top:5%;background:#1C2830;color:#FFFBF0;font-weight:800;font-size:{{ frame.capSize }};padding:0.4em 0.7em;border-radius:6px;text-transform:uppercase">{{ cur.onScreen }}</span>
             </sc-if>
           </sc-if>
           <sc-if value="{{ cur.verdictChip }}" hint-placeholder-val="{{ false }}">
-            <span style="position:absolute;right:3%;top:5%;background:{{ cur.verdictBg }};color:#10131B;font-size:11px;font-weight:800;padding:5px 9px;border-radius:12px">{{ cur.verdictChip }}</span>
+            <span style="position:absolute;right:3%;top:5%;background:{{ cur.verdictBg }};color:#FFFBF0;font-size:11px;font-weight:800;padding:5px 9px;border-radius:12px">{{ cur.verdictChip }}</span>
           </sc-if>
           <sc-if value="{{ showSub }}" hint-placeholder-val="{{ false }}">
-            <span style="position:absolute;left:8%;right:8%;bottom:{{ frame.subBottom }};text-align:center;font-weight:700;font-size:{{ frame.subSize }};color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.9);text-wrap:balance">{{ cur.narration }}</span>
+            <span style="position:absolute;left:8%;right:8%;bottom:{{ frame.subBottom }};text-align:center;font-weight:700;font-size:{{ frame.subSize }};color:#fff;text-shadow:0 2px 10px rgba(40,60,80,0.41);text-wrap:balance">{{ cur.narration }}</span>
           </sc-if>
-          <div style="position:absolute;left:0;bottom:0;height:3px;width:{{ progress }};background:#8DEBFF"></div>
+          <div style="position:absolute;left:0;bottom:0;height:3px;width:{{ progress }};background:#2A6A98"></div>
         </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-        <button onClick="{{ playCur }}" title="Play scene (Space)" style="width:52px;height:52px;border-radius:50%;border:none;background:#F4F7FC;color:#0A0C12;font-size:17px;cursor:pointer;flex:none">{{ playIcon }}</button>
-        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:17px;font-weight:600">{{ cur.beat }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(232,237,245,0.55)">{{ cur.time }} · {{ cur.id }}</span></div>
+        <button onClick="{{ playCur }}" title="Play scene (Space)" style="width:52px;height:52px;border-radius:50%;border:none;background:#1C2830;color:#FFFBF0;font-size:17px;cursor:pointer;flex:none">{{ playIcon }}</button>
+        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:17px;font-weight:600">{{ cur.beat }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(28,40,48,0.72)">{{ cur.time }} · {{ cur.id }}</span></div>
         <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-          <span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ lengthColor }}"></span>{{ lengthText }}</span>
-          <sc-for list="{{ pills }}" as="p" hint-placeholder-count="3"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ p.color }}"></span>{{ p.label }}</span></sc-for>
+          <span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(28,40,48,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ lengthColor }}"></span>{{ lengthText }}</span>
+          <sc-for list="{{ pills }}" as="p" hint-placeholder-count="3"><span style="height:32px;padding:0 12px;border-radius:16px;background:rgba(28,40,48,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:{{ p.color }}"></span>{{ p.label }}</span></sc-for>
         </div>
       </div>
-      <span style="font-size:12.5px;color:rgba(232,237,245,0.45)">{{ rulesText }}</span>
+      <span style="font-size:12.5px;color:rgba(28,40,48,0.67)">{{ rulesText }}</span>
 
       <div style="display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:6px 6px 10px;margin:0 -6px">
         <sc-for list="{{ strip }}" as="c" hint-placeholder-count="19">
           <div onClick="{{ c.onClick }}" style="flex:none;width:150px;display:flex;flex-direction:column;gap:8px;cursor:pointer">
-            <div style="position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,rgba(244,247,252,0.06) 0 8px,rgba(244,247,252,0.02) 8px 16px);box-shadow:{{ c.ring }};transition:box-shadow 0.2s">
+            <div style="position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,rgba(28,40,48,0.06) 0 8px,rgba(28,40,48,0.02) 8px 16px);box-shadow:{{ c.ring }};transition:box-shadow 0.2s">
               <sc-if value="{{ c.hasFrame }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:{{ c.frameBg }};background-size:cover;background-position:center"></div></sc-if>
               <sc-if value="{{ c.hasVideo }}" hint-placeholder-val="{{ false }}"><video src="{{ c.videoSrc }}" muted="{{ true }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video></sc-if>
-              <span style="position:absolute;left:8px;top:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;color:rgba(244,247,252,0.8)">{{ c.src }}</span>
+              <span style="position:absolute;left:8px;top:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;color:rgba(28,40,48,0.8)">{{ c.src }}</span>
               <div style="position:absolute;left:8px;bottom:7px;display:flex;gap:4px"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotF }}"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotL }}"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotV }}"></span></div>
             </div>
             <span style="font-size:13px;font-weight:{{ c.weight }};line-height:1.25;height:32px;overflow:hidden;color:{{ c.color }}">{{ c.beat }}</span>
@@ -186,42 +185,42 @@
         </sc-for>
       </div>
 
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:rgba(232,237,245,0.6)">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:rgba(28,40,48,0.75)">
         <span>{{ draftText }}</span>
-        <sc-if value="{{ hasVersions }}" hint-placeholder-val="{{ false }}"><select value="" onChange="{{ onVersion }}" style="height:34px;background:rgba(244,247,252,0.1);color:#F4F7FC;border:none;border-radius:10px;font-size:13px;font-weight:700;padding:0 10px;cursor:pointer"><option value="">History…</option><sc-for list="{{ versions }}" as="v" hint-placeholder-count="0"><option value="{{ v.value }}">{{ v.label }}</option></sc-for></select></sc-if>
-        <button onClick="{{ copyJson }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ copyLabel }}</button>
-        <sc-if value="{{ hasDraft }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetDraft }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:none;color:rgba(232,237,245,0.7);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline">Reset to file</button></sc-if>
+        <sc-if value="{{ hasVersions }}" hint-placeholder-val="{{ false }}"><select value="" onChange="{{ onVersion }}" style="height:34px;background:rgba(28,40,48,0.1);color:#1C2830;border:none;border-radius:10px;font-size:13px;font-weight:700;padding:0 10px;cursor:pointer"><option value="">History…</option><sc-for list="{{ versions }}" as="v" hint-placeholder-count="0"><option value="{{ v.value }}">{{ v.label }}</option></sc-for></select></sc-if>
+        <button onClick="{{ copyJson }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">{{ copyLabel }}</button>
+        <sc-if value="{{ hasDraft }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetDraft }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:none;color:rgba(28,40,48,0.8);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline">Reset to file</button></sc-if>
         <span style="margin-left:auto">← → Scene · Space Play · Esc Home</span>
       </div>
       </div></sc-if>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:14px;min-height:0;max-height:calc(100vh - 172px);overflow:auto;padding-right:2px">
-      <div style="background:linear-gradient(160deg,rgba(22,119,255,0.3),rgba(22,26,36,0.82) 70%);border:1px solid rgba(141,235,255,0.28);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
-        <span style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:#8DEBFF">STEP {{ guide.n }} OF 5</span>
+      <div style="background:linear-gradient(160deg,rgba(22,119,255,0.3),rgba(255,251,240,0.92) 70%);border:1px solid rgba(42,106,152,0.28);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <span style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:#2A6A98">STEP {{ guide.n }} OF 5</span>
         <span style="font-size:26px;font-weight:600;letter-spacing:-0.01em;line-height:1.15">{{ guide.title }}</span>
-        <span style="font-size:14.5px;line-height:1.55;color:rgba(232,237,245,0.88)">{{ guide.text }}</span>
-        <sc-if value="{{ guide.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:700">{{ guide.statusLabel }}</span><div style="height:6px;border-radius:3px;background:rgba(244,247,252,0.15)"><div style="height:100%;border-radius:3px;width:{{ guide.statusPct }};background:{{ guide.statusColor }}"></div></div></div></sc-if>
+        <span style="font-size:14.5px;line-height:1.55;color:rgba(28,40,48,0.9)">{{ guide.text }}</span>
+        <sc-if value="{{ guide.hasStatus }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:700">{{ guide.statusLabel }}</span><div style="height:6px;border-radius:3px;background:rgba(28,40,48,0.15)"><div style="height:100%;border-radius:3px;width:{{ guide.statusPct }};background:{{ guide.statusColor }}"></div></div></div></sc-if>
         <sc-if value="{{ guide.hasChoices }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:10px"><sc-for list="{{ guide.choices }}" as="ch" hint-placeholder-count="2"><button onClick="{{ ch.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:none;cursor:pointer;text-align:left;background:{{ ch.bg }};color:{{ ch.fg }};box-shadow:{{ ch.ring }}"><span style="font-size:17px;font-weight:700">{{ ch.title }}</span><span style="font-size:13px;opacity:0.8">{{ ch.sub }}</span></button></sc-for></div></sc-if>
         <sc-if value="{{ guide.hasChecks }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ guide.checks }}" as="ck" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ ck.color }}"></span>{{ ck.text }}</div></sc-for></div></sc-if>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ guide.actions }}" as="ac" hint-placeholder-count="2"><button onClick="{{ ac.onClick }}" style="height:42px;padding:0 16px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:{{ ac.bg }};color:{{ ac.fg }}">{{ ac.label }}</button></sc-for></div>
-        <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:600;color:#8DEBFF">{{ note }}</span></sc-if>
+        <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:600;color:#2A6A98">{{ note }}</span></sc-if>
       </div>
-      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c0 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+      <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:18px;display:{{ show.c0 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
         <span style="font-size:24px;font-weight:600;letter-spacing:-0.01em">{{ cur.beat }}</span>
-        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VISUAL DIRECTION</span>
-        <textarea value="{{ cur.visual }}" onChange="{{ onField.visual }}" rows="3" style="display:{{ show.blk3 }};resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;line-height:1.5;padding:10px 12px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
+        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">VISUAL DIRECTION</span>
+        <textarea value="{{ cur.visual }}" onChange="{{ onField.visual }}" rows="3" style="display:{{ show.blk3 }};resize:vertical;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:14px;line-height:1.5;padding:10px 12px" style-focus="border-color:#2A6A98;outline:none"></textarea>
       </div>
 
-      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c1 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
-        <div style="display:{{ show.flex2 }};align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VOICE LINE</span><sc-if value="{{ cur.isDirection }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:800;color:#10131B;background:oklch(0.83 0.14 80);padding:3px 9px;border-radius:10px">DIRECTION, NOT A LINE YET</span></sc-if></div>
-        <textarea value="{{ cur.narration }}" onChange="{{ onField.narration }}" rows="3" style="display:{{ show.blk2 }};resize:vertical;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:15px;line-height:1.5;padding:10px 12px" style-focus="border-color:#8DEBFF;outline:none"></textarea>
-        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">NARRATOR VOICE · WHOLE VIDEO</span>
+      <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:18px;display:{{ show.c1 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <div style="display:{{ show.flex2 }};align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">VOICE LINE</span><sc-if value="{{ cur.isDirection }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:800;color:#FFFBF0;background:oklch(0.6 0.14 70);padding:3px 9px;border-radius:10px">DIRECTION, NOT A LINE YET</span></sc-if></div>
+        <textarea value="{{ cur.narration }}" onChange="{{ onField.narration }}" rows="3" style="display:{{ show.blk2 }};resize:vertical;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:15px;line-height:1.5;padding:10px 12px" style-focus="border-color:#2A6A98;outline:none"></textarea>
+        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">NARRATOR VOICE · WHOLE VIDEO</span>
         <div style="display:{{ show.flex4 }};gap:8px;align-items:center">
-          <select value="{{ voiceId }}" onChange="{{ onVoice }}" style="flex:1;min-width:0;height:42px;background:#161A24;border:1px solid rgba(244,247,252,0.12);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 10px">
+          <select value="{{ voiceId }}" onChange="{{ onVoice }}" style="flex:1;min-width:0;height:42px;background:#FFFFFF;border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:14px;padding:0 10px">
             <sc-for list="{{ voiceOpts }}" as="o" hint-placeholder-count="17"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
           </select>
-          <button onClick="{{ speakCur }}" style="height:42px;padding:0 16px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer;flex:none">▶ Hear</button>
+          <button onClick="{{ speakCur }}" style="height:42px;padding:0 16px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer;flex:none">▶ Hear</button>
         </div>
         <div style="display:{{ show.flex4 }};gap:4px;align-items:center;flex-wrap:wrap">
           <sc-for list="{{ rateOpts }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.onClick }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</button></sc-for>
@@ -229,59 +228,59 @@
         </div>
       </div>
 
-      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c2 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
-        <div style="display:{{ show.flex2 }};justify-content:space-between"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">ON-SCREEN CAPTION</span><span style="font-size:12px;font-weight:600;color:{{ cur.wordColor }}">{{ cur.words }}/6 words</span></div>
-        <input value="{{ cur.onScreen }}" onChange="{{ onField.onScreen }}" style="display:{{ show.blk2 }};height:44px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:15px;font-weight:700;padding:0 12px;text-transform:uppercase" style-focus="border-color:#8DEBFF;outline:none">
-        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">SOUND EFFECT · THIS SCENE</span>
+      <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:18px;display:{{ show.c2 }};flex-direction:column;gap:12px;backdrop-filter:blur(14px)">
+        <div style="display:{{ show.flex2 }};justify-content:space-between"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">ON-SCREEN CAPTION</span><span style="font-size:12px;font-weight:600;color:{{ cur.wordColor }}">{{ cur.words }}/6 words</span></div>
+        <input value="{{ cur.onScreen }}" onChange="{{ onField.onScreen }}" style="display:{{ show.blk2 }};height:44px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:15px;font-weight:700;padding:0 12px;text-transform:uppercase" style-focus="border-color:#2A6A98;outline:none">
+        <span style="display:{{ show.blk4 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">SOUND EFFECT · THIS SCENE</span>
         <div style="display:{{ show.flex4 }};gap:6px;flex-wrap:wrap">
           <sc-for list="{{ sfxChips }}" as="o" hint-placeholder-count="8"><button onClick="{{ o.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;background:{{ o.bg }};color:{{ o.fg }}">{{ o.name }}</button></sc-for>
         </div>
-        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">EDIT NOTE</span>
-        <input value="{{ cur.edit }}" onChange="{{ onField.edit }}" style="display:{{ show.blk3 }};height:42px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 12px" style-focus="border-color:#8DEBFF;outline:none">
+        <span style="display:{{ show.blk3 }};font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">EDIT NOTE</span>
+        <input value="{{ cur.edit }}" onChange="{{ onField.edit }}" style="display:{{ show.blk3 }};height:42px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:14px;padding:0 12px" style-focus="border-color:#2A6A98;outline:none">
       </div>
 
       <sc-if value="{{ cur.isMyth }}" hint-placeholder-val="{{ false }}">
-        <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c3 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
-          <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">EVIDENCE REQUIRED</span>
+        <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:18px;display:{{ show.c3 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+          <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">EVIDENCE REQUIRED</span>
           <span style="font-size:14px;line-height:1.5">{{ cur.evidence }}</span>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <sc-for list="{{ verdicts }}" as="v" hint-placeholder-count="4"><button onClick="{{ v.onClick }}" disabled="{{ v.disabled }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:{{ v.cursor }};opacity:{{ v.opacity }};background:{{ v.bg }};color:{{ v.fg }}">{{ v.label }}</button></sc-for>
           </div>
-          <span style="font-size:12.5px;color:rgba(232,237,245,0.55)">{{ verdictNote }}</span>
+          <span style="font-size:12.5px;color:rgba(28,40,48,0.72)">{{ verdictNote }}</span>
         </div>
       </sc-if>
 
-      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(244,247,252,0.06);border-radius:20px;padding:18px;display:{{ show.c4 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
-        <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(232,237,245,0.5)">VISUAL SOURCE</span>
-        <sc-if value="{{ isGameplay }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;line-height:1.5;color:rgba(232,237,245,0.8)">{{ genNote }}</span></sc-if>
+      <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:18px;display:{{ show.c4 }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:rgba(28,40,48,0.7)">VISUAL SOURCE</span>
+        <sc-if value="{{ isGameplay }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;line-height:1.5;color:rgba(28,40,48,0.86)">{{ genNote }}</span></sc-if>
         <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ subjects }}" as="sj" hint-placeholder-count="6"><button onClick="{{ sj.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:{{ sj.bg }};color:{{ sj.fg }}">{{ sj.label }}</button></sc-for></div>
-            <div style="display:flex;flex-direction:column;gap:4px;font-family:'JetBrains Mono',monospace;font-size:12px"><sc-for list="{{ ingr }}" as="ig" hint-placeholder-count="3"><div style="display:flex;gap:8px"><span style="color:{{ ig.color }}">●</span><span>{{ ig.name }}</span><span style="color:rgba(232,237,245,0.45)">{{ ig.file }} · {{ ig.status }}</span></div></sc-for></div>
-            <div style="display:flex;gap:8px;align-items:center"><button onClick="{{ toggleChain }}" style="height:32px;padding:0 12px;border:1px solid rgba(244,247,252,0.18);border-radius:10px;background:none;color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ chainLabel }}</button><span style="font-size:12px;color:rgba(232,237,245,0.45)">{{ genRef }}</span></div>
-            <pre style="margin:0;white-space:pre-wrap;background:rgba(244,247,252,0.05);border-radius:12px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.55;color:rgba(232,237,245,0.85)">{{ genPrompt }}</pre>
-            <button onClick="{{ copyPrompt }}" style="align-self:flex-start;height:40px;padding:0 16px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Copy prompt for Flow / Veo</button>
+            <div style="display:flex;flex-direction:column;gap:4px;font-family:'JetBrains Mono',monospace;font-size:12px"><sc-for list="{{ ingr }}" as="ig" hint-placeholder-count="3"><div style="display:flex;gap:8px"><span style="color:{{ ig.color }}">●</span><span>{{ ig.name }}</span><span style="color:rgba(28,40,48,0.67)">{{ ig.file }} · {{ ig.status }}</span></div></sc-for></div>
+            <div style="display:flex;gap:8px;align-items:center"><button onClick="{{ toggleChain }}" style="height:32px;padding:0 12px;border:1px solid rgba(201,164,92,0.55);border-radius:10px;background:none;color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">{{ chainLabel }}</button><span style="font-size:12px;color:rgba(28,40,48,0.67)">{{ genRef }}</span></div>
+            <pre style="margin:0;white-space:pre-wrap;background:rgba(28,40,48,0.05);border-radius:12px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.55;color:rgba(28,40,48,0.89)">{{ genPrompt }}</pre>
+            <button onClick="{{ copyPrompt }}" style="align-self:flex-start;height:40px;padding:0 16px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:13px;font-weight:800;cursor:pointer">Copy prompt for Flow / Veo</button>
           </div>
         </sc-if>
       </div>
 
-      <div style="background:rgba(22,26,36,0.72);border:1px solid rgba(141,235,255,0.18);border-radius:20px;padding:18px;display:{{ show.agent }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
-        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:#8DEBFF">AGENT</span><span style="margin-left:auto;font-size:12px;font-weight:700;color:{{ notes.countColor }}">{{ notes.count }}</span></div>
-        <div style="display:flex;flex-direction:column;gap:8px;background:rgba(244,247,252,0.04);border-radius:14px;padding:12px">
+      <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(42,106,152,0.18);border-radius:20px;padding:18px;display:{{ show.agent }};flex-direction:column;gap:10px;backdrop-filter:blur(14px)">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;color:#2A6A98">AGENT</span><span style="margin-left:auto;font-size:12px;font-weight:700;color:{{ notes.countColor }}">{{ notes.count }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:rgba(28,40,48,0.04);border-radius:14px;padding:12px">
           <span style="font-size:13px;font-weight:700">Review note on “{{ cur.beat }}”</span>
-          <div style="display:flex;gap:6px"><input ref="{{ notes.ref }}" value="{{ notes.draft }}" onChange="{{ notes.onDraft }}" onKeyDown="{{ notes.onKey }}" placeholder="e.g. scarier, shorter line, darker image" style="flex:1;min-width:0;height:40px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 10px" style-focus="border-color:#8DEBFF;outline:none"><button onClick="{{ notes.add }}" style="height:40px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Add</button></div>
-          <sc-for list="{{ notes.items }}" as="nt" hint-placeholder-count="0"><div onClick="{{ nt.onClick }}" style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ nt.color }}"></span><div style="display:flex;flex-direction:column;gap:2px"><span><b>{{ nt.where }}</b> · {{ nt.text }}</span><sc-if value="{{ nt.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#8DEBFF">↳ {{ nt.reply }}</span></sc-if></div></div></sc-for>
-          <div style="display:flex;gap:6px;flex-wrap:wrap"><button onClick="{{ notes.fix }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:#8DEBFF;color:#0A0C12;font-size:12.5px;font-weight:800;cursor:pointer">{{ notes.fixLabel }}</button><button onClick="{{ notes.copy }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12.5px;font-weight:700;cursor:pointer">Copy prompt for my agent</button></div>
+          <div style="display:flex;gap:6px"><input ref="{{ notes.ref }}" value="{{ notes.draft }}" onChange="{{ notes.onDraft }}" onKeyDown="{{ notes.onKey }}" placeholder="e.g. scarier, shorter line, darker image" style="flex:1;min-width:0;height:40px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:10px;color:#1C2830;font-size:13px;padding:0 10px" style-focus="border-color:#2A6A98;outline:none"><button onClick="{{ notes.add }}" style="height:40px;padding:0 14px;border:none;border-radius:10px;background:#1C2830;color:#FFFBF0;font-size:13px;font-weight:800;cursor:pointer">Add</button></div>
+          <sc-for list="{{ notes.items }}" as="nt" hint-placeholder-count="0"><div onClick="{{ nt.onClick }}" style="display:flex;gap:8px;font-size:12.5px;line-height:1.4;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;background:{{ nt.color }}"></span><div style="display:flex;flex-direction:column;gap:2px"><span><b>{{ nt.where }}</b> · {{ nt.text }}</span><sc-if value="{{ nt.reply }}" hint-placeholder-val="{{ false }}"><span style="color:#2A6A98">↳ {{ nt.reply }}</span></sc-if></div></div></sc-for>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><button onClick="{{ notes.fix }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:#2A6A98;color:#FFFBF0;font-size:12.5px;font-weight:800;cursor:pointer">{{ notes.fixLabel }}</button><button onClick="{{ notes.copy }}" style="height:34px;padding:0 12px;border:none;border-radius:10px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:12.5px;font-weight:700;cursor:pointer">Copy prompt for my agent</button></div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.onClick }}" style="height:32px;padding:0 12px;border:1px solid rgba(244,247,252,0.14);border-radius:10px;background:none;color:rgba(244,247,252,0.9);font-size:12.5px;font-weight:600;cursor:pointer" style-hover="background:rgba(244,247,252,0.08)">{{ q.label }}</button></sc-for>
+          <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.onClick }}" style="height:32px;padding:0 12px;border:1px solid rgba(201,164,92,0.55);border-radius:10px;background:none;color:rgba(28,40,48,0.9);font-size:12.5px;font-weight:600;cursor:pointer" style-hover="background:rgba(28,40,48,0.08)">{{ q.label }}</button></sc-for>
         </div>
         <div style="display:flex;gap:8px">
-          <input value="{{ ask }}" onChange="{{ onAsk }}" onKeyDown="{{ onAskKey }}" placeholder="e.g. make every myth line end on a question" style="flex:1;min-width:0;height:44px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.1);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 12px" style-focus="border-color:#8DEBFF;outline:none">
-          <button onClick="{{ sendAsk }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;background:#8DEBFF;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ askLabel }}</button>
+          <input value="{{ ask }}" onChange="{{ onAsk }}" onKeyDown="{{ onAskKey }}" placeholder="e.g. make every myth line end on a question" style="flex:1;min-width:0;height:44px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:14px;padding:0 12px" style-focus="border-color:#2A6A98;outline:none">
+          <button onClick="{{ sendAsk }}" style="height:44px;padding:0 16px;border:none;border-radius:12px;background:#2A6A98;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">{{ askLabel }}</button>
         </div>
-        <sc-if value="{{ agentReply }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;line-height:1.5;color:rgba(232,237,245,0.85)">{{ agentReply }}</span></sc-if>
-        <div style="display:flex;flex-direction:column;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.5;color:rgba(232,237,245,0.6)">
+        <sc-if value="{{ agentReply }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;line-height:1.5;color:rgba(28,40,48,0.89)">{{ agentReply }}</span></sc-if>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.5;color:rgba(28,40,48,0.75)">
           <sc-for list="{{ log }}" as="l" hint-placeholder-count="0"><div><span style="color:{{ l.color }}">{{ l.by }}</span> {{ l.call }}</div></sc-for>
         </div>
       </div>
@@ -293,7 +292,7 @@
 // Claude app completion with localhost studio-server and direct Gemini fallback
 const claudeComplete = async (req) => {
   if (window.claude && typeof window.claude.complete === 'function') {
-    return window.claude.complete(req);
+    return claudeComplete(req);
   }
   const key = (typeof localStorage !== 'undefined' && (localStorage.getItem('ds_gemini_key') || localStorage.getItem('ds_ai_key'))) || '';
   try {
@@ -353,14 +352,14 @@ const claudeComplete = async (req) => {
 };
 const SFX = ['none', 'sub_drop', 'whoosh_cinematic', 'whoosh_fast', 'pop', 'hit', 'blip', 'mouse_click'];
 const RATES = ['-10%', '-5%', '+0%', '+5%', '+10%'];
-const VCOL = { confirmed: 'oklch(0.78 0.15 150)', busted: 'oklch(0.7 0.19 25)', inconclusive: 'oklch(0.83 0.14 80)', pending: 'rgba(244,247,252,0.2)' };
-const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)';
+const VCOL = { confirmed: 'oklch(0.5 0.13 150)', busted: 'oklch(0.55 0.19 25)', inconclusive: 'oklch(0.6 0.14 70)', pending: 'rgba(28,40,48,0.2)' };
+const OK = 'oklch(0.5 0.13 150)', WARN = 'oklch(0.6 0.14 70)', BAD = 'oklch(0.55 0.19 25)';
 const DRAFT = 'ds_ep01_draft', BACKUP = 'ds_ep01_backup', SESS = 'ds_ep01_session';
 const GEMINI_MODEL = 'gemini-2.5-flash-image';
 const dataToObj = (u) => { try { const m = /^data:([^;]+);base64,(.*)$/.exec(u); const bin = atob(m[2]), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([a], { type: m[1] })); } catch (e) { return ''; } };
 const POLL = (prompt, w, h, seed) => 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=' + w + '&height=' + h + '&seed=' + seed + '&model=flux&nologo=true';
 const CHAR_DESC = 'an original Roblox-style blocky avatar: messy black swept fringe with three tufts, small silver-blue floating three-prong crown, cool-blue face accents, black techwear hoodie with white zipper and electric-blue piping, asymmetrical utility straps, compact black backpack with a cyan-lit core, charcoal cargo pants, black-and-white high-top sneakers, holding a cyan lantern';
-const STRIPES = 'repeating-linear-gradient(135deg,rgba(244,247,252,0.06) 0 10px,rgba(244,247,252,0.02) 10px 20px)';
+const STRIPES = 'repeating-linear-gradient(135deg,rgba(28,40,48,0.06) 0 10px,rgba(28,40,48,0.02) 10px 20px)';
 const idb = { db: null,
   open() { return this.db || (this.db = new Promise((res, rej) => { const r = indexedDB.open('ds_frames', 1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); })); },
   async put(k, v) { const d = await this.open(); return new Promise((res) => { const t = d.transaction('f', 'readwrite'); t.objectStore('f').put(v, k); t.oncomplete = res; t.onerror = res; }); },
@@ -415,7 +414,7 @@ class Component extends DCLogic {
     try {
       const v = await (await fetch('production/ep01/history/' + name, { cache: 'no-store' })).json(); if (!Array.isArray(v.scenes)) throw 0;
       if (!confirm('Load the version from ' + new Date(+name.match(/\d+/)[0]).toLocaleString() + '? The current version is kept in History.')) return;
-      await this.snapshot(); this.base = JSON.parse(JSON.stringify(v)); this.setState({ ep: v }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_version(' + JSON.stringify({ name }) + ')');
+      await this.snapshot(); this.setState({ ep: v }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_version(' + JSON.stringify({ name }) + ')');
     } catch (e) { this.flash('Could not load that version.'); }
   }
   async storeImage(k, url) {
@@ -435,17 +434,13 @@ class Component extends DCLogic {
 
   async load(ignoreDraft) {
     try {
-      const [res, vj] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('templates/voices.json').then(r => r.json()).catch(() => ({ voices: [] }))]);
-      const text = await res.text(), file = JSON.parse(text);
+      const [file, vj] = await Promise.all([fetch('production/ep01/episode.json').then(r => r.json()), fetch('templates/voices.json').then(r => r.json()).catch(() => ({ voices: [] }))]);
       let bridge = false; try { bridge = (await fetch('api/ping', { cache: 'no-store' })).ok; } catch (e) {}
-      this.setState({ bridge, live: bridge }); this.lastText = text; this.base = JSON.parse(text); this.etag = res.headers.get('ETag'); this.conflicts = 0;
+      this.setState({ bridge, live: bridge }); this.lastText = JSON.stringify(file, null, 2) + '\n';
       let draft = null, over = null;
       try { if (!ignoreDraft && !bridge) draft = JSON.parse(localStorage.getItem(DRAFT) || 'null'); over = JSON.parse(localStorage.getItem('ds_ep01_voice') || 'null'); } catch (e) {}
       const ep = draft || file;
-      // Live mode: disk is the source of truth. A voice picked in Audio Lab is applied once and saved, never kept as a standing override.
-      let handoff = null;
-      if (bridge) { if (over && over.id && (over.id !== ep.voice.id || (over.rate && over.rate !== ep.voice.rate))) handoff = { id: over.id, ...(over.rate ? { rate: over.rate } : {}) }; try { localStorage.removeItem('ds_ep01_voice'); } catch (e) {} }
-      else if (over && over.id) ep.voice = { ...ep.voice, ...over };
+      if (over && over.id) ep.voice = { ...ep.voice, ...over };
       if (/[?&]t=shorts/.test(location.search)) ep.template = 'shorts';
       let tplId = 'roblox-horror'; try { tplId = localStorage.getItem('rhm_template') || tplId; } catch (e) {}
       const niches = await fetch('templates/niches.json').then(r => r.json()).catch(() => null);
@@ -453,7 +448,6 @@ class Component extends DCLogic {
       const clean = (fr) => fr && fr.status === 'loading' ? undefined : fr;
       ep.scenes = ep.scenes.map(s => ({ ...s, frame: clean(s.frame) })); ep.shorts.scenes = ep.shorts.scenes.map(s => ({ ...s, frame: clean(s.frame) }));
       this.setState({ ep, voices: vj.voices || [], hasDraft: !!draft, sel: 0, niches, tplId, engine, geminiKey });
-      if (handoff) this.setVoice(handoff);
       let sess = null, restoreAt = ''; try { sess = JSON.parse(localStorage.getItem(SESS) || 'null'); } catch (e) {}
       if (bridge) {
         try { const r = await fetch('production/ep01/session.json', { cache: 'no-store' }); if (r.ok) { const j = await r.json(); if (j.studio) sess = j.studio; this.setState({ agentReview: j.agentReview || null }); } } catch (e) {}
@@ -474,21 +468,13 @@ class Component extends DCLogic {
     if (this.state.live) { try { localStorage.setItem(BACKUP, JSON.stringify({ at: new Date().toISOString(), synced: false, ep: this.state.ep })); } catch (e) {} clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500); return; }
     try { localStorage.setItem(DRAFT, JSON.stringify(this.state.ep)); } catch (e) {} if (!this.state.hasDraft) this.setState({ hasDraft: true });
   }
-  // PUT with If-Match: if the agent saved since our last sync, the server answers 409; we pull its version, merge, and try again.
   async save() {
-    this.saveT = null;
     const text = JSON.stringify(this.state.ep, null, 2) + '\n';
     if (text === this.lastText) return;
-    if (this.saving) { this.saveAgain = true; return; }
-    this.saving = true;
-    try {
-      const r = await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(this.etag ? { 'If-Match': this.etag } : {}) }, body: text, keepalive: text.length < 60000 });
-      if (r.status === 409 && (this.conflicts = (this.conflicts || 0) + 1) <= 3) { await this.poll(true); this.saveAgain = true; }
-      else if (r.ok) { this.conflicts = 0; this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag'); try { localStorage.setItem(BACKUP, JSON.stringify({ at: new Date().toISOString(), synced: true })); } catch (e) {} }
-      else this.flash('Could not save to disk (' + r.status + '). Reload the page to get the latest episode.json.');
-    } catch (e) { this.flash('Could not save to disk. Your work is kept in this browser until the Studio server is back.'); }
-    this.saving = false;
-    if (this.saveAgain) { this.saveAgain = false; this.save(); }
+    this.lastText = text;
+    this.saveT = null;
+    try { const r = await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: text, keepalive: text.length < 60000 }); if (!r.ok) throw new Error('HTTP ' + r.status); try { localStorage.setItem(BACKUP, JSON.stringify({ at: new Date().toISOString(), synced: true })); } catch (e) {} }
+    catch (e) { this.lastText = ''; this.flash('Could not save to disk. Your work is kept in this browser until the Studio server is back.'); }
   }
   changedIds(a, b) {
     const ids = [], all = (e) => [...e.scenes, ...e.shorts.scenes], A = {};
@@ -496,41 +482,19 @@ class Component extends DCLogic {
     all(b).forEach(s => { if (A[s.id] !== JSON.stringify(s)) ids.push(s.id); });
     return ids;
   }
-  // Three-way merge: start from the disk version and re-apply whatever this tab changed since base (per scene, per note, per top-level field).
-  merge(base, local, remote) {
-    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-    const fields = (L, B, R, skip) => { const o = { ...R }; Object.keys(L).forEach(k => { if (!skip.includes(k) && !same(L[k], B[k])) o[k] = L[k]; }); return o; };
-    const scenes = (L, B, R) => {
-      if (!same(L.map(s => s.id), B.map(s => s.id))) return L;
-      const b = {}, l = {}; B.forEach(s => { b[s.id] = s; }); L.forEach(s => { l[s.id] = s; });
-      return R.map(s => (l[s.id] && !same(l[s.id], b[s.id]) ? l[s.id] : s));
-    };
-    const out = fields(local, base, remote, ['scenes', 'shorts', 'notes', 'frames']);
-    out.scenes = scenes(local.scenes, base.scenes, remote.scenes);
-    out.shorts = { ...fields(local.shorts, base.shorts, remote.shorts, ['scenes']), scenes: scenes(local.shorts.scenes, base.shorts.scenes, remote.shorts.scenes) };
-    if (local.frames || remote.frames) out.frames = fields(local.frames || {}, base.frames || {}, remote.frames || {}, []);
-    if (local.notes || remote.notes) {
-      const bn = {}, notes = [...(remote.notes || [])]; (base.notes || []).forEach(n => { bn[n.id] = n; });
-      (local.notes || []).forEach(n => { if (same(n, bn[n.id])) return; const i = notes.findIndex(x => x.id === n.id); if (i >= 0) notes[i] = n; else notes.push(n); });
-      out.notes = notes;
-    }
-    return out;
-  }
-  async poll(force) {
-    if (!this.state.live || !this.state.ep || (this.saving && !force)) return;
+  async poll() {
+    if (!this.state.live || !this.state.ep) return;
     try {
       fetch('production/ep01/session.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { const ar = (j && j.agentReview) || null; if (JSON.stringify(ar) !== JSON.stringify(this.state.agentReview)) this.setState({ agentReview: ar }); }).catch(() => {});
       if (Date.now() - (this.vT || 0) > 30000) { this.vT = Date.now(); this.loadVersions(); }
       const [r, a] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('production/ep01/activity.json', { cache: 'no-store' }).catch(() => null)]);
       const text = await r.text();
-      if ((this.saving || this.saveT) && !force) return;
-      if (r.ok && text !== this.lastText) {
-        const remote = JSON.parse(text), ids = this.changedIds(this.base, remote), now = Date.now();
-        const ep = this.merge(this.base, this.state.ep, remote);
-        this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag');
+      if (text !== this.lastText && !this.saveT) {
+        const remote = JSON.parse(text), ids = this.changedIds(this.state.ep, remote), now = Date.now();
+        this.lastText = text;
         const fl = { ...this.state.flashIds }; ids.forEach(id => { fl[id] = now; });
-        const patch = { ep, flashIds: fl };
-        if (this.state.follow && ids.length) { const L = ep.template === 'shorts' ? ep.shorts.scenes : ep.scenes; const i = L.findIndex(s => s.id === ids[ids.length - 1]); if (i >= 0) patch.sel = i; }
+        const patch = { ep: remote, flashIds: fl };
+        if (this.state.follow && ids.length) { const L = remote.template === 'shorts' ? remote.shorts.scenes : remote.scenes; const i = L.findIndex(s => s.id === ids[ids.length - 1]); if (i >= 0) patch.sel = i; }
         this.setState(patch);
       }
       if (a && a.ok) { const log = await a.json(); if (Array.isArray(log)) { const last = log.length ? Date.parse(log[log.length - 1].at) : 0; this.setState({ activity: log.slice(-25).reverse(), lastAgentAt: last }); } }
@@ -553,19 +517,15 @@ class Component extends DCLogic {
   push(by, call) { this.setState(p => ({ log: [{ by, call }, ...p.log].slice(0, 14) })); }
 
   update(id, fields, by = 'you') {
-    // A new line makes its synthesized voice file stale, same as the MCP update_scene.
-    const fix = (arr) => arr.map(s => { if (s.id !== id) return s; const n = { ...s, ...fields }; if (fields.narration !== undefined) { n.narrationIsDirection = false; delete n.voiceFile; delete n.voiceSec; } return n; });
+    const fix = (arr) => arr.map(s => s.id === id ? { ...s, ...fields, ...(fields.narration !== undefined ? { narrationIsDirection: false } : {}) } : s);
     this.setState(p => ({ ep: { ...p.ep, scenes: fix(p.ep.scenes), shorts: { ...p.ep.shorts, scenes: fix(p.ep.shorts.scenes) } } }), () => this.persist());
     this.push(by, `update_scene(${JSON.stringify({ id, ...fields })})`);
   }
   setEp(fields, call, by = 'you') { this.setState(p => ({ ep: { ...p.ep, ...fields } }), () => this.persist()); this.push(by, call); }
   setVoice(v, by = 'you') {
-    const ep = this.state.ep, voice = { ...ep.voice, ...v };
-    if (!this.state.live) { try { localStorage.setItem('ds_ep01_voice', JSON.stringify(voice)); } catch (e) {} }
-    // Like the MCP set_voice: a different voice or rate makes every synthesized file stale.
-    const changed = voice.id !== ep.voice.id || voice.rate !== ep.voice.rate;
-    const clear = (arr) => (changed ? arr.map(({ voiceFile, voiceSec, ...s }) => s) : arr);
-    this.setEp({ voice, scenes: clear(ep.scenes), shorts: { ...ep.shorts, scenes: clear(ep.shorts.scenes) } }, `set_voice(${JSON.stringify(v)})`, by);
+    const voice = { ...this.state.ep.voice, ...v };
+    try { localStorage.setItem('ds_ep01_voice', JSON.stringify(voice)); } catch (e) {}
+    this.setEp({ voice }, `set_voice(${JSON.stringify(v)})`, by);
   }
 
   speak(text, onEnd) {
@@ -645,7 +605,7 @@ class Component extends DCLogic {
       'Avoid: ' + ep.negative + '.'].join('\n');
     return { isGen: true, isGameplay: false, genPrompt: prompt, genRef: g.promptRef || '', chainLabel: g.chain ? 'Chained to previous' : 'Hard cut',
       toggleChain: () => this.update(s.id, { gen: { ...g, chain: !g.chain } }),
-      subjects: Object.entries(ep.subjectRules).map(([k, v]) => ({ label: v.label, bg: g.subject === k ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: g.subject === k ? '#0A0C12' : '#F4F7FC', onClick: () => this.update(s.id, { gen: { ...g, subject: k } }) })),
+      subjects: Object.entries(ep.subjectRules).map(([k, v]) => ({ label: v.label, bg: g.subject === k ? '#1C2830' : 'rgba(28,40,48,0.08)', fg: g.subject === k ? '#FFFBF0' : '#1C2830', onClick: () => this.update(s.id, { gen: { ...g, subject: k } }) })),
       ingr: g.ingredients.map(k => ({ name: k, file: ep.ingredients[k].file, status: ep.ingredients[k].status, color: ep.ingredients[k].status === 'missing' ? WARN : OK })),
       copyPrompt: () => { navigator.clipboard.writeText(prompt); this.push('you', 'copy_prompt({id:"' + s.id + '", target:"Flow / Veo 3.1"})'); } };
   }
@@ -736,9 +696,9 @@ class Component extends DCLogic {
   }
   frameView(k, fr) {
     const url = this.frameUrl(k, fr), stt = fr ? fr.status : 'none';
-    const T = { none: ['No image yet', 'rgba(232,237,245,0.55)'], loading: ['Generating…', '#8DEBFF'], queued: ['Queued · waiting for agent', '#8DEBFF'], working: ['Agent: ' + ((fr && fr.agentNote) || 'working…'), '#8DEBFF'], awaiting: ['Paste in Gemini, then Upload', '#8DEBFF'], review: ['Keep this image?', '#8DEBFF'], approved: ['✓ Using this image', OK], rejected: ['Rejected', WARN], error: [(fr && fr.error) || 'Failed', WARN] }[stt] || ['', ''];
+    const T = { none: ['No image yet', 'rgba(28,40,48,0.72)'], loading: ['Generating…', '#2A6A98'], queued: ['Queued · waiting for agent', '#2A6A98'], working: ['Agent: ' + ((fr && fr.agentNote) || 'working…'), '#2A6A98'], awaiting: ['Paste in Gemini, then Upload', '#2A6A98'], review: ['Keep this image?', '#2A6A98'], approved: ['✓ Using this image', OK], rejected: ['Rejected', WARN], error: [(fr && fr.error) || 'Failed', WARN] }[stt] || ['', ''];
     return { bg: url ? 'url("' + url + '")' : STRIPES, empty: !url && ['loading', 'queued', 'working', 'awaiting'].indexOf(stt) < 0, loading: ['loading', 'queued', 'working'].indexOf(stt) >= 0, canUpload: this.state.engine === 'app' || stt === 'awaiting', upload: (e) => this.uploadFrame(k, e), canJudge: !!url && stt !== 'loading', stText: T[0], stColor: T[1],
-      border: stt === 'approved' ? 'rgba(120,220,160,0.55)' : stt === 'review' ? 'rgba(141,235,255,0.4)' : 'rgba(244,247,252,0.08)',
+      border: stt === 'approved' ? 'rgba(120,220,160,0.55)' : stt === 'review' ? 'rgba(42,106,152,0.4)' : 'rgba(28,40,48,0.08)',
       gen: () => this.genFrame(k, true), redo: () => this.genFrame(k, true), use: () => this.setFrame(k, { ...fr, status: 'approved' }) };
   }
   tpl() { const n = this.state.niches; return n ? (n.templates.find(t => t.id === this.state.tplId) || n.templates[0]) : null; }
@@ -788,7 +748,7 @@ class Component extends DCLogic {
     const imgScenes = L.filter(s => s.frame && s.frame.status === 'approved').length;
     const q = st.queue;
     return {
-      engines: [['pollinations', 'Free · no key'], ['app', 'Gemini app · free'], ['gemini', 'Gemini API'], ['agent', 'Agent · MCP']].map(([id, label]) => ({ label, bg: st.engine === id ? '#F4F7FC' : 'transparent', fg: st.engine === id ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
+      engines: [['pollinations', 'Free · no key'], ['app', 'Gemini app · free'], ['gemini', 'Gemini API'], ['agent', 'Agent · MCP']].map(([id, label]) => ({ label, bg: st.engine === id ? '#1C2830' : 'transparent', fg: st.engine === id ? '#FFFBF0' : 'rgba(28,40,48,0.86)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
       needsKey: st.engine === 'gemini', key: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
       genAll: () => this.genAll(), genAllLabel: q ? '■ Stop (' + q.done + '/' + q.total + ')' : '✦ Generate all images',
       imgStatus: 'Approved ' + imgScenes + '/' + L.length + ' scenes',
@@ -800,12 +760,12 @@ class Component extends DCLogic {
       facts: [{ k: 'Hook', v: c && c.hook ? c.hook : (L[0] ? L[0].narration : '') }, { k: 'Audience', v: c && c.audience ? c.audience : (t ? t.audience : '') }, { k: 'Why it works', v: c && c.whyItWorks ? c.whyItWorks : (t ? t.concept : '') }],
       checks, review: [st.review, this.agentReviewText()].filter(Boolean).join('\n\n'),
       cards: L.map((s, i) => { const gen = !!(s.gen && s.gen.source === 'generated');
-        return { ...this.frameView(s.id, s.frame), ar: shorts ? '9/16' : '16/9', onVisual: (e) => this.update(s.id, { visual: e.target.value }), n: String(i + 1).padStart(2, '0'), time: s.time, beat: s.beat, visual: s.visual, onScreen: s.onScreen, narration: s.narration, sfx: s.sfx === 'none' ? '' : s.sfx, isDir: !!s.narrationIsDirection, isGen: gen, src: gen ? 'AI SHOT' : 'RECORD · AI PREVIEW', srcBg: gen ? '#8DEBFF' : 'oklch(0.83 0.14 80)',
+        return { ...this.frameView(s.id, s.frame), ar: shorts ? '9/16' : '16/9', onVisual: (e) => this.update(s.id, { visual: e.target.value }), n: String(i + 1).padStart(2, '0'), time: s.time, beat: s.beat, visual: s.visual, onScreen: s.onScreen, narration: s.narration, sfx: s.sfx === 'none' ? '' : s.sfx, isDir: !!s.narrationIsDirection, isGen: gen, src: gen ? 'AI SHOT' : 'RECORD · AI PREVIEW', srcBg: gen ? '#2A6A98' : 'oklch(0.6 0.14 70)',
           onNarr: (e) => this.update(s.id, { narration: e.target.value }), hear: () => this.speak(s.narration),
           rewrite: () => this.runAgent('Rewrite scene ' + s.id + ' (' + s.beat + ') so it hooks harder and flows from the scene before it. Update narration and onScreen only.'),
           note: () => { this.setState({ sel: i }); setTimeout(() => this.noteEl && this.noteEl.focus(), 50); },
           notes: (ep.notes || []).filter(n => n.scene === s.id).map(n => ({ text: n.text, reply: n.reply || '', color: n.status === 'fixed' ? OK : WARN })),
-          ...(Date.now() - (st.flashIds[s.id] || 0) < 5000 ? { border: '#8DEBFF' } : {}) }; })
+          ...(Date.now() - (st.flashIds[s.id] || 0) < 5000 ? { border: '#2A6A98' } : {}) }; })
     };
   }
   flash(msg) { this.setState({ note: msg }); clearTimeout(this.nt); this.nt = setTimeout(() => this.setState({ note: '' }), 2600); }
@@ -821,15 +781,15 @@ class Component extends DCLogic {
     const doneArr = [true, lines === L.length && imgN === L.length, visN === L.length, true, false];
     const LABELS = ['Idea', 'Storyboard', 'Visuals', 'Voice & sound', 'Export'];
     const steps = LABELS.map((label, i) => { const k = i + 1, on = k === n, done = k < n && doneArr[i], warn = k < n && !doneArr[i];
-      return { label, notLast: k < 5, weight: on ? 800 : 600, bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.07)', fg: on ? '#0A0C12' : 'rgba(232,237,245,0.8)',
-        mark: done ? '✓' : String(k), dotBg: on ? '#0A0C12' : done ? '#8DEBFF' : warn ? WARN : 'rgba(244,247,252,0.14)', dotFg: on ? '#F4F7FC' : (done || warn) ? '#0A0C12' : '#F4F7FC', onClick: () => go(k) }; });
+      return { label, notLast: k < 5, weight: on ? 800 : 600, bg: on ? '#1C2830' : 'rgba(28,40,48,0.07)', fg: on ? '#FFFBF0' : 'rgba(28,40,48,0.86)',
+        mark: done ? '✓' : String(k), dotBg: on ? '#FFFBF0' : done ? '#2A6A98' : warn ? WARN : 'rgba(28,40,48,0.14)', dotFg: on ? '#1C2830' : (done || warn) ? '#FFFBF0' : '#1C2830', onClick: () => go(k) }; });
     const vis = (arr, d) => arr.includes(n) ? d : 'none';
     const show = { c0: vis([3, 4], 'flex'), c1: vis([4], 'flex'), c2: vis([3, 4], 'flex'), c3: vis([3], 'flex'), c4: vis([3], 'flex'), agent: vis([2, 3, 4, 5], 'flex'),
       blk2: 'none', flex2: 'none', blk3: vis([3], 'block'), blk4: vis([4], 'block'), flex4: vis([4], 'flex') };
-    const btn = (label, fn, primary) => ({ label, onClick: fn, bg: primary ? '#F4F7FC' : 'rgba(244,247,252,0.12)', fg: primary ? '#0A0C12' : '#F4F7FC' });
+    const btn = (label, fn, primary) => ({ label, onClick: fn, bg: primary ? '#1C2830' : 'rgba(28,40,48,0.12)', fg: primary ? '#FFFBF0' : '#1C2830' });
     const jump = (pred) => { const i = L.findIndex((x, j) => j > st.sel && pred(x)); const k = i >= 0 ? i : L.findIndex(pred); if (k >= 0) { this.stop(); this.setState({ sel: k }); } else this.flash('Every scene is done.'); };
     const setCut = (id) => { if (ep.template !== id) { this.stop(); this.setState({ sel: 0 }); this.setEp({ template: id }, 'set_template("' + id + '")'); } };
-    const choice = (title, sub, on, fn) => ({ title, sub, onClick: fn, bg: on ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC', ring: on ? '0 0 0 3px rgba(141,235,255,0.6)' : 'none' });
+    const choice = (title, sub, on, fn) => ({ title, sub, onClick: fn, bg: on ? '#1C2830' : 'rgba(28,40,48,0.08)', fg: on ? '#FFFBF0' : '#1C2830', ring: on ? '0 0 0 3px rgba(42,106,152,0.6)' : 'none' });
     const agentPrompt = 'Use the dreamscript MCP tools on episode ep01, cut "' + ep.template + '". 1) validate_episode and list the issues. 2) synthesize_voice for the whole cut. 3) Tell me which lines are too long for their scene and suggest shorter versions. Do not set verdicts.';
     const G = {
       1: { title: 'Start with the idea', text: 'Type one sentence on the left and pick the format. AI writes the whole storyboard in one go. Nothing is recorded or generated yet.',
@@ -850,9 +810,9 @@ class Component extends DCLogic {
     const g = G[n];
     return { steps, show, note: st.note, isIdea: n === 1, isBoard: n === 2, isPlayer: n >= 3,
       board: n === 2 ? this.boardVals(ep, L, shorts) : { facts: [], checks: [], cards: [] },
-      idea: { text: st.idea, onText: (e) => this.setState({ idea: e.target.value, genErr: '' }), game: st.game, onGame: (e) => this.setState({ game: e.target.value }), geminiKey: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
+      idea: { text: st.idea, onText: (e) => this.setState({ idea: e.target.value, genErr: '' }), game: st.game, onGame: (e) => this.setState({ game: e.target.value }),
         placeholder: this.tpl() ? 'e.g. ' + this.tpl().hook.patterns[0].replace(/\{(\w+)\}/g, (m, k) => ({ claim: 'hiding makes you safe', game: 'this game', n: 'ten', character: 'Milo', Character: 'Milo', thing: 'the moon key', Thing: 'The moon key', does: 'gets lost', Topic: 'The new rule' })[k] || 'this') : 'One sentence about the video',
-        templates: st.niches ? st.niches.templates.map(x => ({ label: x.label, bg: x.id === st.tplId ? '#F4F7FC' : 'rgba(244,247,252,0.08)', fg: x.id === st.tplId ? '#0A0C12' : '#F4F7FC', onClick: () => { try { localStorage.setItem('rhm_template', x.id); } catch (e) {} this.setState({ tplId: x.id }); } })) : [],
+        templates: st.niches ? st.niches.templates.map(x => ({ label: x.label, bg: x.id === st.tplId ? '#1C2830' : 'rgba(28,40,48,0.08)', fg: x.id === st.tplId ? '#FFFBF0' : '#1C2830', onClick: () => { try { localStorage.setItem('rhm_template', x.id); } catch (e) {} this.setState({ tplId: x.id }); } })) : [],
         generate: () => this.generateBoard(), genLabel: st.genBusy ? 'Writing the storyboard…' : '✦ Generate storyboard', useExisting: () => go(2), err: st.genErr }, hasPrev: n > 1, hasNext: n < 5, prevStep: () => go(n - 1), nextStep: () => go(n + 1), nextLabel: 'Next: ' + (LABELS[n] || '') + ' ›',
       guide: { n, title: g.title, text: g.text, hasStatus: !!g.status, statusLabel: g.status ? g.status[0] : '', statusPct: g.status ? Math.round(g.status[1] * 100) + '%' : '0%', statusColor: g.status ? g.status[2] : OK,
         hasChoices: !!g.choices && !g.hideChoices, choices: g.choices || [], hasChecks: !!g.checks, checks: g.checks || [], actions: g.actions } };
@@ -863,7 +823,7 @@ class Component extends DCLogic {
     if (!ep) return { subjects: [], ingr: [], title: 'Loading storyboard…', kicker: '', templates: [], strip: [], pills: [], cur: {}, frame: { w: '100%', ar: '16/9', maxH: '60vh', vTop: '0%', isLong: true, pad: '0', radius: '22px' }, onField: {}, sfxChips: [], verdicts: [], quick: [], log: [], progress: '0%', voiceOpts: [], rateOpts: [], clock: '', live: { label: '…' }, notes: { items: [] }, steps: [], show: {}, isIdea: false, isBoard: false, isPlayer: true, board: { facts: [], checks: [], cards: [] }, idea: { templates: [] }, guide: { actions: [], choices: [], checks: [] } };
     const s = this.scene();
     const shorts = ep.template === 'shorts';
-    const sel = (on) => ({ bg: on ? '#F4F7FC' : 'transparent', fg: on ? '#0A0C12' : 'rgba(232,237,245,0.8)' });
+    const sel = (on) => ({ bg: on ? '#1C2830' : 'transparent', fg: on ? '#FFFBF0' : 'rgba(28,40,48,0.86)' });
     const vsrc = this.src(s);
     const L = this.list();
     const myths = L.filter(x => x.kind === 'myth');
@@ -884,29 +844,29 @@ class Component extends DCLogic {
       pills: [
         { label: `Footage ${foot}/${L.length}`, color: foot === L.length ? OK : foot ? WARN : BAD },
         { label: `Lines ${lines}/${L.length}`, color: lines === L.length ? OK : WARN },
-        ...(myths.length ? [{ label: `Verdicts ${verd}/${myths.length}`, color: verd ? WARN : 'rgba(244,247,252,0.3)' }] : [])
+        ...(myths.length ? [{ label: `Verdicts ${verd}/${myths.length}`, color: verd ? WARN : 'rgba(28,40,48,0.3)' }] : [])
       ],
       ...this.genVals(s, L),
       templates: Object.entries(ep.templates).map(([id, t]) => ({ label: id === 'shorts' ? 'Shorts 9:16' : 'Long 16:9', ...sel(ep.template === id), onClick: () => { this.stop(); this.setState({ sel: 0 }); this.setEp({ template: id }, `set_template("${id}")`); } })),
-      toggleBgm: () => this.toggleBgm(), bgmBg: st.bgm ? '#8DEBFF' : 'rgba(244,247,252,0.1)', bgmFg: st.bgm ? '#0A0C12' : '#F4F7FC',
-      toggleSubs: () => this.setState({ subs: !st.subs }), subsBg: st.subs ? '#F4F7FC' : 'rgba(244,247,252,0.1)', subsFg: st.subs ? '#0A0C12' : '#F4F7FC',
+      toggleBgm: () => this.toggleBgm(), bgmBg: st.bgm ? '#2A6A98' : 'rgba(28,40,48,0.1)', bgmFg: st.bgm ? '#FFFBF0' : '#1C2830',
+      toggleSubs: () => this.setState({ subs: !st.subs }), subsBg: st.subs ? '#1C2830' : 'rgba(28,40,48,0.1)', subsFg: st.subs ? '#FFFBF0' : '#1C2830',
       playAll: () => (st.all ? this.stop() : this.play(0, true)), playAllLabel: st.all ? '■ Stop' : '▶ Play all',
       playCur: () => (st.playing ? this.stop() : this.play(st.sel, false)), playIcon: st.playing ? '■' : '▶',
       copyJson: () => { navigator.clipboard.writeText(JSON.stringify(ep, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }); },
       copyLabel: st.copied ? 'Copied' : 'Copy episode.json',
       hasDraft: st.hasDraft && !st.live, draftText: st.live ? 'Live: saved to episode.json on disk, with history.' : st.hasDraft ? 'Edits saved in this browser.' : 'Showing episode.json from disk.',
       restore: { show: !!st.restoreAt, text: st.restoreAt ? 'Unsaved work from ' + new Date(st.restoreAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ' is still in this browser. The file on disk is older.' : '',
-        yes: async () => { const b = this.backup; this.backup = null; if (!b) return; await this.snapshot(); this.base = JSON.parse(JSON.stringify(b.ep)); this.setState({ restoreAt: '', ep: b.ep }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_backup()'); },
+        yes: async () => { const b = this.backup; this.backup = null; if (!b) return; await this.snapshot(); this.setState({ restoreAt: '', ep: b.ep }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_backup()'); },
         no: () => { this.backup = null; try { localStorage.removeItem(BACKUP); } catch (e) {} this.setState({ restoreAt: '' }); } },
       hasVersions: st.live && st.versions.length > 0, onVersion: (e) => this.restoreVersion(e.target.value),
       versions: st.versions.map(v => ({ value: v.name, label: new Date(v.at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) })),
-      resetDraft: () => { try { localStorage.removeItem(DRAFT); localStorage.removeItem('ds_ep01_voice'); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
+      resetDraft: () => { try { localStorage.removeItem(DRAFT); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
       frame: shorts
         ? { pad: '16px', radius: '10px', w: 'auto', h: '64vh', ar: '9/16', maxH: '64vh', vTop: '30%', isShorts: true, isLong: false, bandH: '21%', capSize: 'clamp(16px,2.6vh,30px)', subBottom: '25%', subSize: 'clamp(11px,1.6vh,18px)' }
         : { pad: '0', radius: '22px', w: '100%', h: 'auto', ar: '16/9', maxH: '62vh', vTop: '0%', isShorts: false, isLong: true, capSize: 'clamp(11px,1.4vw,20px)', subBottom: '6%', subSize: 'clamp(12px,1.5vw,22px)' },
-      cur: { ...s, hasVideo: !!vsrc, noVideo: !vsrc, videoSrc: vsrc, isDirection: !!s.narrationIsDirection, isMyth: s.kind === 'myth', words: wordsOf(s.onScreen), wordColor: wordsOf(s.onScreen) > 6 ? BAD : 'rgba(232,237,245,0.5)',
+      cur: { ...s, hasVideo: !!vsrc, noVideo: !vsrc, videoSrc: vsrc, isDirection: !!s.narrationIsDirection, isMyth: s.kind === 'myth', words: wordsOf(s.onScreen), wordColor: wordsOf(s.onScreen) > 6 ? BAD : 'rgba(28,40,48,0.7)',
         ...(() => { const fu = this.frameUrl(s.id, s.frame), has = !!fu && !vsrc; const isGen = !!(s.gen && s.gen.source === 'generated');
-          return { hasFrame: has, frameBg: fu ? 'url("' + fu + '")' : 'none', slotBg: has ? 'transparent' : 'repeating-linear-gradient(135deg,rgba(244,247,252,0.05) 0 14px,rgba(244,247,252,0.015) 14px 28px)', slotAlign: has ? 'flex-end' : 'center', slotJustify: has ? 'flex-end' : 'center',
+          return { hasFrame: has, frameBg: fu ? 'url("' + fu + '")' : 'none', slotBg: has ? 'transparent' : 'repeating-linear-gradient(135deg,rgba(28,40,48,0.05) 0 14px,rgba(28,40,48,0.015) 14px 28px)', slotAlign: has ? 'flex-end' : 'center', slotJustify: has ? 'flex-end' : 'center',
             slotLabel: has ? (isGen ? 'AI IMAGE · load a Flow/Veo clip to animate' : 'AI PREVIEW · record this in Roblox') : ((isGen ? 'GENERATED INSERT · ' : 'ROBLOX GAMEPLAY · ') + s.footage) }; })(),
         verdictChip: s.kind === 'myth' ? (s.verdict || 'pending').toUpperCase() : '', verdictBg: s.verdict && s.verdict !== 'pending' ? VCOL[s.verdict] : WARN },
       zoom: st.playing ? 1.12 : 1, zoomDur: st.playing ? this.dur(s) + 's' : '0s',
@@ -914,16 +874,16 @@ class Component extends DCLogic {
       progress: st.playing ? Math.min(100, (el / this.dur(s)) * 100) + '%' : '0%',
       onClip: (e) => { const f = e.target.files && e.target.files[0]; if (f) { this.setState(p => ({ clips: { ...p.clips, [s.id]: URL.createObjectURL(f) } })); this.push('you', `attach_footage({id:"${s.id}"}) · preview only, save the file at ${s.footage}`); } },
       strip: L.map((x, i) => { const on = i === st.sel, v = this.src(x), gen = !!(x.gen && x.gen.source === 'generated'); const fu = this.frameUrl(x.id, x.frame); return { beat: x.beat, hasVideo: !!v, videoSrc: v, hasFrame: !!fu && !v, frameBg: fu ? 'url("' + fu + '")' : 'none', src: gen ? 'GEN' : 'PLAY',
-        ring: on ? '0 0 0 3px #0A0C12, 0 0 0 5px #F4F7FC' : (Date.now() - (st.flashIds[x.id] || 0) < 5000 ? '0 0 0 3px #0A0C12, 0 0 0 5px #8DEBFF, 0 0 24px rgba(141,235,255,0.6)' : '0 6px 16px rgba(0,0,0,0.3)'), weight: on ? 700 : 500, color: on ? '#F4F7FC' : 'rgba(232,237,245,0.6)',
-        dotF: v ? OK : 'rgba(244,247,252,0.25)', dotL: x.narrationIsDirection ? WARN : OK, dotV: x.kind === 'myth' ? VCOL[x.verdict || 'pending'] : 'transparent', onClick: () => { this.stop(); this.setState({ sel: i }); } }; }),
+        ring: on ? '0 0 0 3px #FFFBF0, 0 0 0 5px #1C2830' : (Date.now() - (st.flashIds[x.id] || 0) < 5000 ? '0 0 0 3px #FFFBF0, 0 0 0 5px #2A6A98, 0 0 24px rgba(42,106,152,0.6)' : '0 6px 16px rgba(40,60,80,0.14)'), weight: on ? 700 : 500, color: on ? '#1C2830' : 'rgba(28,40,48,0.75)',
+        dotF: v ? OK : 'rgba(28,40,48,0.25)', dotL: x.narrationIsDirection ? WARN : OK, dotV: x.kind === 'myth' ? VCOL[x.verdict || 'pending'] : 'transparent', onClick: () => { this.stop(); this.setState({ sel: i }); } }; }),
       onField: { visual: field('visual'), narration: field('narration'), onScreen: field('onScreen'), edit: field('edit') },
       voiceId: ep.voice.id,
       voiceOpts: st.voices.map(v => ({ id: v.id, label: `${v.name} · ${v.gender === 'male' ? 'M' : 'F'}${v.age === 'child' ? ' child' : ''} · ${v.tone}` })),
       onVoice: (e) => this.setVoice({ id: e.target.value }),
       rateOpts: RATES.map(r => ({ label: r, ...sel(ep.voice.rate === r), onClick: () => this.setVoice({ rate: r }) })),
       speakCur: () => this.speak(s.narration),
-      sfxChips: SFX.map(n => ({ name: n, bg: s.sfx === n ? '#8DEBFF' : 'rgba(244,247,252,0.08)', fg: s.sfx === n ? '#0A0C12' : '#F4F7FC', onClick: () => { this.sfx(n); if (s.sfx !== n) this.update(s.id, { sfx: n }); } })),
-      verdicts: ['pending', 'confirmed', 'busted', 'inconclusive'].map(v => { const on = (s.verdict || 'pending') === v, dis = v !== 'pending' && !canVerdict; return { label: v, disabled: dis, cursor: dis ? 'not-allowed' : 'pointer', opacity: dis ? 0.35 : 1, bg: on ? (v === 'pending' ? '#F4F7FC' : VCOL[v]) : 'rgba(244,247,252,0.08)', fg: on ? '#0A0C12' : '#F4F7FC', onClick: () => this.update(s.id, { verdict: v }) }; }),
+      sfxChips: SFX.map(n => ({ name: n, bg: s.sfx === n ? '#2A6A98' : 'rgba(28,40,48,0.08)', fg: s.sfx === n ? '#FFFBF0' : '#1C2830', onClick: () => { this.sfx(n); if (s.sfx !== n) this.update(s.id, { sfx: n }); } })),
+      verdicts: ['pending', 'confirmed', 'busted', 'inconclusive'].map(v => { const on = (s.verdict || 'pending') === v, dis = v !== 'pending' && !canVerdict; return { label: v, disabled: dis, cursor: dis ? 'not-allowed' : 'pointer', opacity: dis ? 0.35 : 1, bg: on ? (v === 'pending' ? '#1C2830' : VCOL[v]) : 'rgba(28,40,48,0.08)', fg: on ? '#FFFBF0' : '#1C2830', onClick: () => this.update(s.id, { verdict: v }) }; }),
       verdictNote: canVerdict ? 'Set only after reviewing the uncut footage.' : 'Locked until this scene has gameplay footage.',
       quick: [
         { label: 'Write this scene\u2019s line', onClick: () => this.runAgent(`Scene ${s.id}: write the final spoken line from the visual direction and the edit note.`) },
@@ -933,13 +893,13 @@ class Component extends DCLogic {
       ],
       ask: st.ask, onAsk: (e) => this.setState({ ask: e.target.value }), onAskKey: (e) => { if (e.key === 'Enter') this.runAgent(st.ask); },
       sendAsk: () => this.runAgent(st.ask), askLabel: st.busy ? '…' : 'Ask', agentReply: st.reply,
-      log: (st.live && st.activity.length ? st.activity.map(a => ({ by: a.by + ' ' + new Date(a.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }), call: a.tool + (a.detail ? ' · ' + a.detail : '') + (a.error ? ' · failed' : ''), kind: a.kind })) : st.log).map(l => ({ ...l, color: l.kind === 'read' ? 'rgba(232,237,245,0.5)' : (String(l.by).indexOf('agent') === 0 ? '#8DEBFF' : WARN) })),
+      log: (st.live && st.activity.length ? st.activity.map(a => ({ by: a.by + ' ' + new Date(a.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }), call: a.tool + (a.detail ? ' · ' + a.detail : '') + (a.error ? ' · failed' : ''), kind: a.kind })) : st.log).map(l => ({ ...l, color: l.kind === 'read' ? 'rgba(28,40,48,0.7)' : (String(l.by).indexOf('agent') === 0 ? '#2A6A98' : WARN) })),
       live: (() => { const busy = st.live && Date.now() - st.lastAgentAt < 12000;
-        if (!st.bridge) return { label: 'Connect agent', title: 'Run: cd mcp && npm run studio, then open http://localhost:4747', bg: 'rgba(244,247,252,0.1)', fg: '#F4F7FC', dot: 'rgba(244,247,252,0.35)', glow: 'none', onClick: () => this.flash('For live mode run: cd mcp && npm run studio, then open http://localhost:4747/Home.dc.html') };
-        return { label: busy ? 'LIVE · agent working' : (st.follow ? 'LIVE · following agent' : 'LIVE'), title: 'Click to turn Follow agent on or off', bg: busy ? 'rgba(141,235,255,0.2)' : 'rgba(244,247,252,0.1)', fg: busy ? '#8DEBFF' : '#F4F7FC', dot: busy ? '#8DEBFF' : OK, glow: busy ? '0 0 10px #8DEBFF' : 'none', onClick: () => this.setState({ follow: !st.follow }) }; })(),
+        if (!st.bridge) return { label: 'Connect agent', title: 'Run: cd mcp && npm run studio, then open http://localhost:4747', bg: 'rgba(28,40,48,0.1)', fg: '#1C2830', dot: 'rgba(28,40,48,0.35)', glow: 'none', onClick: () => this.flash('For live mode run: cd mcp && npm run studio, then open http://localhost:4747/Home.dc.html') };
+        return { label: busy ? 'LIVE · agent working' : (st.follow ? 'LIVE · following agent' : 'LIVE'), title: 'Click to turn Follow agent on or off', bg: busy ? 'rgba(42,106,152,0.2)' : 'rgba(28,40,48,0.1)', fg: busy ? '#2A6A98' : '#1C2830', dot: busy ? '#2A6A98' : OK, glow: busy ? '0 0 10px #2A6A98' : 'none', onClick: () => this.setState({ follow: !st.follow }) }; })(),
       notes: (() => { const all = ep.notes || [], open = all.filter(n => n.status === 'open'), nameOf = (id) => { const sc = [...ep.scenes, ...ep.shorts.scenes].find(x => x.id === id); return sc ? sc.beat : id; };
         const prompt = 'Use the dreamscript MCP tools on episode ep01: call list_notes, fix each open note with update_scene (stay inside the template rules), then resolve_note with a one-sentence reply. Do not set verdicts.';
-        return { count: open.length ? open.length + ' open note' + (open.length > 1 ? 's' : '') : 'No open notes', countColor: open.length ? WARN : 'rgba(232,237,245,0.5)',
+        return { count: open.length ? open.length + ' open note' + (open.length > 1 ? 's' : '') : 'No open notes', countColor: open.length ? WARN : 'rgba(28,40,48,0.7)',
           draft: st.noteDraft, onDraft: (e) => this.setState({ noteDraft: e.target.value }), onKey: (e) => { if (e.key === 'Enter') this.addNote(s.id, st.noteDraft); }, add: () => this.addNote(s.id, st.noteDraft), ref: (el) => { this.noteEl = el; },
           items: all.slice(-6).reverse().map(n => ({ where: nameOf(n.scene), text: n.text, reply: n.reply || '', color: n.status === 'fixed' ? OK : WARN, onClick: () => { const i = L.findIndex(x => x.id === n.scene); if (i >= 0) this.setState({ sel: i }); } })),
           fixLabel: st.busy ? 'Fixing…' : '✦ Fix notes now', fix: () => open.length ? this.runAgent('Call list_notes, then fix every open note by editing its scene with update_scene, then call resolve_note for each with a one-sentence reply.') : this.flash('No open notes.'),

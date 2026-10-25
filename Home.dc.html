@@ -7,17 +7,17 @@
 </head>
 <body>
 <x-dc>
-<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}button{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
-<div data-screen-label="Home" style="position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:#0A0C12">
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button{font-family:inherit}::-webkit-scrollbar{display:none}</style></helmet>
+<div data-screen-label="Home" style="position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:transparent">
   <sc-for list="{{ walls }}" as="w" hint-placeholder-count="0"><div style="position:absolute;inset:0;background-image:{{ w.bgi }};background-size:cover;background-position:center;opacity:{{ w.op }};transform:scale({{ w.scale }});transition:opacity 0.9s ease,transform 9s cubic-bezier(.2,.7,.2,1)"></div></sc-for>
-  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,12,18,0.94) 0%,rgba(10,12,18,0.62) 40%,rgba(10,12,18,0.08) 78%)"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.75) 0%,rgba(10,12,18,0) 24%,rgba(10,12,18,0) 50%,rgba(10,12,18,0.97) 86%)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,251,240,0.94) 0%,rgba(255,251,240,0.62) 40%,rgba(255,251,240,0.08) 78%)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,251,240,0.75) 0%,rgba(255,251,240,0) 24%,rgba(255,251,240,0) 50%,rgba(255,251,240,0.97) 86%)"></div>
 
   <div style="position:relative;display:flex;align-items:center;gap:36px;padding:26px 56px 0">
     <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2"><button onClick="{{ tb.onClick }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:22px;font-weight:{{ tb.weight }};color:{{ tb.color }};letter-spacing:-0.01em">{{ tb.label }}</button></sc-for>
     <div style="margin-left:auto;display:flex;align-items:center;gap:18px">
-      <button onClick="{{ toggleSound }}" title="Navigation sounds" style="height:40px;padding:0 14px;border-radius:20px;border:none;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:600;cursor:pointer;opacity:{{ soundOpacity }}">♪ Sounds</button>
-      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1677FF,#8DEBFF);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#0A0C12">RH</div>
+      <button onClick="{{ toggleSound }}" title="Navigation sounds" style="height:40px;padding:0 14px;border-radius:20px;border:none;background:rgba(28,40,48,0.1);color:#1C2830;font-size:13px;font-weight:600;cursor:pointer;opacity:{{ soundOpacity }}">♪ Sounds</button>
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1677FF,#2A6A98);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#FFFBF0">RH</div>
       <span style="font-size:20px;font-weight:400;font-variant-numeric:tabular-nums">{{ clock }}</span>
     </div>
   </div>
@@ -29,7 +29,7 @@
           <div style="position:absolute;inset:0;background-image:{{ t.bgi }};background-size:cover;background-position:{{ t.pos }}"></div>
           <div style="position:absolute;inset:0;background:{{ t.tint }}"></div>
           <span style="position:absolute;left:11px;bottom:9px;font-size:12px;font-weight:800;letter-spacing:0.06em;color:#fff">{{ t.mono }}</span>
-          <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:8px;right:8px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:{{ t.badgeBg }};color:#0A0C12;font-size:11px;font-weight:800;line-height:20px;text-align:center">{{ t.badge }}</span></sc-if>
+          <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:8px;right:8px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:{{ t.badgeBg }};color:#FFFBF0;font-size:11px;font-weight:800;line-height:20px;text-align:center">{{ t.badge }}</span></sc-if>
         </div>
         <sc-if value="{{ t.focused }}" hint-placeholder-val="{{ false }}"><span style="font-size:20px;font-weight:600;white-space:nowrap;padding-right:12px">{{ t.label }}</span></sc-if>
       </div>
@@ -37,40 +37,41 @@
   </div>
 
   <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;padding:16px 56px 0;max-width:860px;min-height:250px">
-    <span style="font-size:15px;font-weight:600;color:#8DEBFF">{{ cur.meta }}</span>
+    <span style="font-size:15px;font-weight:600;color:#2A6A98">{{ cur.meta }}</span>
     <h1 style="margin:0;font-size:68px;line-height:1;font-weight:300;letter-spacing:-0.03em;text-wrap:balance">{{ cur.title }}</h1>
-    <p style="margin:0;font-size:18px;line-height:1.5;color:rgba(232,237,245,0.82);max-width:600px;text-wrap:pretty">{{ cur.desc }}</p>
+    <p style="margin:0;font-size:18px;line-height:1.5;color:rgba(28,40,48,0.87);max-width:600px;text-wrap:pretty">{{ cur.desc }}</p>
     <div style="display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap">
-      <button onClick="{{ primary }}" style="height:56px;min-width:200px;padding:0 34px;border-radius:14px;border:none;background:#F4F7FC;color:#0A0C12;font-size:17px;font-weight:700;cursor:pointer;transition:transform 0.15s" style-hover="transform:scale(1.03)">{{ cur.primary }}</button>
-      <sc-if value="{{ cur.secondary }}" hint-placeholder-val="{{ false }}"><button onClick="{{ secondary }}" style="height:56px;padding:0 26px;border-radius:14px;border:none;background:rgba(244,247,252,0.14);color:#F4F7FC;font-size:16px;font-weight:600;cursor:pointer;backdrop-filter:blur(10px)" style-hover="background:rgba(244,247,252,0.24)">{{ cur.secondary }}</button></sc-if>
-      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;font-weight:600;color:#8DEBFF;padding-left:6px">{{ toast }}</span></sc-if>
+      <button onClick="{{ primary }}" style="height:56px;min-width:200px;padding:0 34px;border-radius:14px;border:none;background:#1C2830;color:#FFFBF0;font-size:17px;font-weight:700;cursor:pointer;transition:transform 0.15s" style-hover="transform:scale(1.03)">{{ cur.primary }}</button>
+      <sc-if value="{{ cur.secondary }}" hint-placeholder-val="{{ false }}"><button onClick="{{ secondary }}" style="height:56px;padding:0 26px;border-radius:14px;border:none;background:rgba(28,40,48,0.14);color:#1C2830;font-size:16px;font-weight:600;cursor:pointer;backdrop-filter:blur(10px)" style-hover="background:rgba(28,40,48,0.24)">{{ cur.secondary }}</button></sc-if>
+      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;font-weight:600;color:#2A6A98;padding-left:6px">{{ toast }}</span></sc-if>
     </div>
   </div>
 
   <div style="position:relative;display:flex;flex-direction:column;gap:12px;padding:36px 56px 0">
-    <span style="font-size:16px;font-weight:600;color:rgba(232,237,245,0.75)">{{ cur.cardsLabel }}</span>
+    <span style="font-size:16px;font-weight:600;color:rgba(28,40,48,0.83)">{{ cur.cardsLabel }}</span>
     <div style="display:flex;gap:16px;overflow-x:auto;padding:6px 6px 10px;margin:0 -6px;scrollbar-width:none">
       <sc-for list="{{ cards }}" as="c" hint-placeholder-count="0">
         <div onClick="{{ c.onClick }}" style="position:relative;flex:none;width:300px;height:168px;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:{{ c.ring }};transition:box-shadow 0.2s,transform 0.2s" style-hover="transform:translateY(-3px)">
           <div style="position:absolute;inset:0;background-image:{{ c.bgi }};background-size:cover;background-position:{{ c.pos }}"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,12,18,0.96) 32%,rgba(10,12,18,0.4))"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(255,251,240,0.96) 32%,rgba(255,251,240,0.4))"></div>
           <span style="position:absolute;top:14px;right:16px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:{{ c.color }}">{{ c.right }}</span>
           <div style="position:absolute;left:18px;right:18px;bottom:16px;display:flex;flex-direction:column;gap:5px">
-            <span style="font-size:13px;font-weight:600;color:rgba(232,237,245,0.7)">{{ c.kicker }}</span>
+            <span style="font-size:13px;font-weight:600;color:rgba(28,40,48,0.8)">{{ c.kicker }}</span>
             <span style="font-size:18px;font-weight:700;line-height:1.2">{{ c.title }}</span>
-            <sc-if value="{{ c.hasBar }}" hint-placeholder-val="{{ false }}"><div style="height:4px;border-radius:2px;background:rgba(244,247,252,0.18);margin-top:5px"><div style="height:100%;border-radius:2px;width:{{ c.pct }};background:{{ c.color }}"></div></div></sc-if>
+            <sc-if value="{{ c.hasBar }}" hint-placeholder-val="{{ false }}"><div style="height:4px;border-radius:2px;background:rgba(28,40,48,0.18);margin-top:5px"><div style="height:100%;border-radius:2px;width:{{ c.pct }};background:{{ c.color }}"></div></div></sc-if>
           </div>
         </div>
       </sc-for>
     </div>
   </div>
 
-  <div style="position:relative;display:flex;gap:28px;padding:18px 56px 22px;font-size:13px;color:rgba(232,237,245,0.45)"><span>← → Move</span><span>↓ ↑ Cards</span><span>Enter Open</span><span style="margin-left:auto">en-US · YouTube first</span></div>
+  <div style="position:relative;display:flex;gap:28px;padding:18px 56px 22px;font-size:13px;color:rgba(28,40,48,0.67)"><span>← → Move</span><span>↓ ↑ Cards</span><span>Enter Open</span><span style="margin-left:auto">en-US · YouTube first</span></div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)', ICE = '#8DEBFF', MUTE = 'rgba(232,237,245,0.5)';
-const W = { dream: 'assets/wall_dreamscript.jpg', city: 'assets/wall_megacity.jpg', star: 'assets/wall_starfall.jpg', aur: 'assets/wall_aurora.jpg', cit: 'assets/wall_citadel.jpg' };
+const OK = 'oklch(0.5 0.13 150)', WARN = 'oklch(0.6 0.14 70)', BAD = 'oklch(0.55 0.19 25)', ICE = '#2A6A98', MUTE = 'rgba(28,40,48,0.7)';
+const W = { city: 'aegis/05_floating_sky_citadel_4k.jpg', star: 'aegis/09_autumn_dragon_valley_4k.jpg', aur: 'aegis/09_autumn_dragon_valley_4k.jpg', cit: 'aegis/05_floating_sky_citadel_4k.jpg' };
+const REALM_BG = 'aegis/05_floating_sky_citadel_4k.jpg';
 const WALLS = Object.values(W);
 const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); return m ? (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]) : 0; };
 const fmt = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + String(n % 60).padStart(2, '0') + 's' : n + 's';
@@ -167,10 +168,20 @@ class Component extends DCLogic {
         title: 'Ambient music videos', desc: 'Pick or generate a wallpaper, add live motion, generate original music or upload your own, then record a seamless loop.',
         primary: 'Open Loop Studio', primaryFn: () => this.go('Loop Studio.dc.html'), cardsLabel: 'Inside',
         cards: [
-          c('Wallpaper', 'Stock, upload or AI', '', null, ICE, W.aur, '30% 50%', () => this.go('Loop Studio.dc.html')),
+          c('Realm Builder', 'Lock elements · music prompt', '', null, ICE, W.aur, '30% 50%', () => this.go('Realm Builder.dc.html')),
           c('Motion', 'Zoom, rain, snow, fireflies', '', null, ICE, W.star, '60% 40%', () => this.go('Loop Studio.dc.html')),
           c('Music', 'Generated in the browser · no claims', '', null, ICE, W.cit, '40% 60%', () => this.go('Loop Studio.dc.html')),
           c('Export', 'WebM loop → 1 h with FFmpeg', '', null, ICE, W.city, '50% 50%', () => this.go('Loop Studio.dc.html'))
+        ] },
+      { id: 'realm', mono: 'REALM', label: 'Realm Builder', wall: REALM_BG, pos: '50% 50%', hue: 45,
+        meta: 'Element lock · motion · music',
+        title: 'Build a realm', desc: 'Drag a box for every element, generate with any engine, check what came back and fix only what is missing. Then animate it in Loop Studio and score it.',
+        primary: 'Open Realm Builder', primaryFn: () => this.go('Realm Builder.dc.html'), cardsLabel: 'Inside',
+        cards: [
+          c('Elements', 'Boxes · depth · motion', '', null, ICE, REALM_BG, '30% 50%', () => this.go('Realm Builder.dc.html')),
+          c('Check & fix', 'Only the missing boxes', '', null, ICE, REALM_BG, '70% 40%', () => this.go('Realm Builder.dc.html')),
+          c('History', 'Every version kept', '', null, ICE, REALM_BG, '50% 70%', () => this.go('Realm Builder.dc.html')),
+          c('Music', 'YuE · ambient · lo-fi', '', null, ICE, REALM_BG, '20% 30%', () => this.go('Realm Builder.dc.html'))
         ] },
       { id: 'channel', mono: 'YT', label: 'Channel', wall: W.cit, pos: '30% 40%', hue: 25,
         meta: 'Grow · Stats · Learn',
@@ -287,7 +298,7 @@ class Component extends DCLogic {
     const cur = items[Math.min(s.focus, items.length - 1)] || { title: 'Loading…', meta: '', desc: '', primary: '…', cards: [], wall: W.city };
     return {
       walls: WALLS.map(src => ({ src, bgi: "url('" + src + "')", op: src === cur.wall ? 0.7 : 0, scale: src === cur.wall ? 1.08 : 1.0 })),
-      tabs: [['create', 'Create'], ['library', 'Library']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#F4F7FC' : 'rgba(232,237,245,0.5)', onClick: () => { this.beep('blip'); this.setState({ tab: id, focus: 0, row: 0, card: 0 }); } })),
+      tabs: [['create', 'Create'], ['library', 'Library']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#1C2830' : 'rgba(28,40,48,0.7)', onClick: () => { this.beep('blip'); this.setState({ tab: id, focus: 0, row: 0, card: 0 }); } })),
       toggleSound: () => { const v = !s.sound; try { localStorage.setItem('ds_sound', v ? 'on' : 'off'); } catch (e) {} this.setState({ sound: v }); },
       soundOpacity: s.sound ? 1 : 0.45,
       clock: s.now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
@@ -295,14 +306,14 @@ class Component extends DCLogic {
         const f = i === s.focus;
         return { mono: t.mono, label: t.label, wall: t.wall, bgi: "url('" + t.wall + "')", pos: t.pos, badge: t.badge || '', badgeBg: t.badgeBg || WARN, focused: f,
           size: f ? '124px' : '92px',
-          tint: `linear-gradient(160deg, oklch(0.45 0.12 ${t.hue} / ${f ? 0.25 : 0.55}), oklch(0.15 0.04 ${t.hue} / 0.75))`,
-          ring: f && s.row === 0 ? '0 0 0 3px #0A0C12, 0 0 0 6px #F4F7FC, 0 18px 40px rgba(0,0,0,0.5)' : (f ? '0 0 0 3px #0A0C12, 0 0 0 5px rgba(244,247,252,0.35)' : '0 6px 16px rgba(0,0,0,0.35)'),
+          tint: `linear-gradient(160deg, oklch(0.45 0.12 ${t.hue} / ${f ? 0.25 : 0.55}), oklch(0.3 0.06 ${t.hue} / 0.72))`,
+          ring: f && s.row === 0 ? '0 0 0 3px #FFFBF0, 0 0 0 6px #1C2830, 0 18px 40px rgba(40,60,80,0.23)' : (f ? '0 0 0 3px #FFFBF0, 0 0 0 5px rgba(28,40,48,0.35)' : '0 6px 16px rgba(40,60,80,0.16)'),
           onClick: () => (f ? this.run(t.primaryFn) : this.move(i)) };
       }),
       cur,
       primary: () => this.run(cur.primaryFn), secondary: () => this.run(cur.secondaryFn),
       cards: (cur.cards || []).map((c, i) => ({ ...c, bgi: "url('" + c.img + "')", hasBar: c.ratio !== null && c.ratio !== undefined, pct: Math.round((c.ratio || 0) * 100) + '%',
-        ring: s.row === 1 && s.card === i ? '0 0 0 3px #0A0C12, 0 0 0 6px #F4F7FC' : '0 10px 30px rgba(0,0,0,0.35)',
+        ring: s.row === 1 && s.card === i ? '0 0 0 3px #FFFBF0, 0 0 0 6px #1C2830' : '0 10px 30px rgba(40,60,80,0.16)',
         onClick: () => { this.setState({ row: 1, card: i }); this.run(c.fn); } })),
       toast: s.toast
     };

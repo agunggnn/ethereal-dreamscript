@@ -7,13 +7,13 @@
 </head>
 <body>
 <x-dc>
-<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}button,input{font-family:inherit}</style></helmet>
-<div data-screen-label="Audio Lab" style="position:relative;min-height:100vh;background:#0A0C12;overflow:hidden">
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button,input{font-family:inherit}</style></helmet>
+<div data-screen-label="Audio Lab" style="position:relative;min-height:100vh;background:transparent;overflow:hidden">
   <img src="assets/wall_aurora.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4">
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.7),rgba(10,12,18,0.94) 45%,#0A0C12)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,251,240,0.7),rgba(255,251,240,0.94) 45%,#FFFBF0)"></div>
 
   <div style="position:relative;display:flex;align-items:center;gap:22px;padding:24px 56px 0;flex-wrap:wrap">
-    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(28,40,48,0.1);color:#1C2830;display:flex;align-items:center;justify-content:center;font-size:22px" style-hover="background:rgba(28,40,48,0.2)">‹</a>
     <span style="font-size:22px;font-weight:700">Audio Lab</span>
     <div style="display:flex;gap:28px;margin-left:18px">
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3"><button onClick="{{ tb.onClick }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:20px;font-weight:{{ tb.weight }};color:{{ tb.color }}">{{ tb.label }}</button></sc-for>
@@ -25,32 +25,32 @@
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:24px">
       <div style="display:flex;flex-direction:column;gap:10px;max-width:880px">
         <h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Pick a voice</h1>
-        <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.78)">{{ howText }}</p>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.85)">{{ howText }}</p>
       </div>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <input value="{{ line }}" onChange="{{ onLine }}" style="flex:1;min-width:280px;max-width:760px;height:52px;background:rgba(244,247,252,0.08);border:1px solid rgba(244,247,252,0.12);border-radius:14px;color:#F4F7FC;font-size:16px;padding:0 16px" style-focus="border-color:#8DEBFF;outline:none">
-        <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:14px;padding:4px">
+        <input value="{{ line }}" onChange="{{ onLine }}" style="flex:1;min-width:280px;max-width:760px;height:52px;background:rgba(28,40,48,0.08);border:1px solid rgba(201,164,92,0.55);border-radius:14px;color:#1C2830;font-size:16px;padding:0 16px" style-focus="border-color:#2A6A98;outline:none">
+        <div style="display:flex;gap:4px;background:rgba(28,40,48,0.08);border-radius:14px;padding:4px">
           <sc-for list="{{ rates }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.onClick }}" style="height:44px;padding:0 12px;border:none;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</button></sc-for>
         </div>
-        <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:14px;padding:4px">
+        <div style="display:flex;gap:4px;background:rgba(28,40,48,0.08);border-radius:14px;padding:4px">
           <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4"><button onClick="{{ f.onClick }}" style="height:44px;padding:0 14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button></sc-for>
         </div>
       </div>
       <span style="font-size:13px;color:{{ engineColor }}">{{ engineText }}</span>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px">
         <sc-for list="{{ voices }}" as="v" hint-placeholder-count="12">
-          <div style="position:relative;display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:20px;background:{{ v.bg }};border:1px solid rgba(244,247,252,0.08);box-shadow:{{ v.ring }};backdrop-filter:blur(14px)">
+          <div style="position:relative;display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:20px;background:{{ v.bg }};border:1px solid rgba(201,164,92,0.55);box-shadow:{{ v.ring }};backdrop-filter:blur(14px)">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-              <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:26px;font-weight:600;letter-spacing:-0.01em">{{ v.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(232,237,245,0.5)">{{ v.id }}</span></div>
-              <sc-if value="{{ v.inUse }}" hint-placeholder-val="{{ false }}"><span style="background:#8DEBFF;color:#0A0C12;font-size:11px;font-weight:800;padding:4px 10px;border-radius:12px">IN USE</span></sc-if>
+              <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:26px;font-weight:600;letter-spacing:-0.01em">{{ v.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(28,40,48,0.7)">{{ v.id }}</span></div>
+              <sc-if value="{{ v.inUse }}" hint-placeholder-val="{{ false }}"><span style="background:#2A6A98;color:#FFFBF0;font-size:11px;font-weight:800;padding:4px 10px;border-radius:12px">IN USE</span></sc-if>
             </div>
-            <span style="font-size:14px;line-height:1.45;color:rgba(232,237,245,0.85)">{{ v.meta }}</span>
-            <span style="font-size:13px;line-height:1.4;color:rgba(232,237,245,0.55)">Best for {{ v.best }}</span>
+            <span style="font-size:14px;line-height:1.45;color:rgba(28,40,48,0.89)">{{ v.meta }}</span>
+            <span style="font-size:13px;line-height:1.4;color:rgba(28,40,48,0.72)">Best for {{ v.best }}</span>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto">
-              <button onClick="{{ v.play }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">▶ Preview</button>
-              <sc-if value="{{ v.sample }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.playSample }}" style="height:40px;padding:0 14px;border:none;border-radius:12px;background:rgba(141,235,255,0.18);color:#8DEBFF;font-size:13px;font-weight:700;cursor:pointer">▶ Real sample</button></sc-if>
-              <button onClick="{{ v.use }}" style="height:40px;padding:0 14px;border:none;border-radius:12px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ v.useLabel }}</button>
-              <button onClick="{{ v.copyCmd }}" title="Copy edge-tts command" style="height:40px;padding:0 12px;border:none;border-radius:12px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer">$ cmd</button>
+              <button onClick="{{ v.play }}" style="height:40px;padding:0 16px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">▶ Preview</button>
+              <sc-if value="{{ v.sample }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.playSample }}" style="height:40px;padding:0 14px;border:none;border-radius:12px;background:rgba(42,106,152,0.18);color:#2A6A98;font-size:13px;font-weight:700;cursor:pointer">▶ Real sample</button></sc-if>
+              <button onClick="{{ v.use }}" style="height:40px;padding:0 14px;border:none;border-radius:12px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">{{ v.useLabel }}</button>
+              <button onClick="{{ v.copyCmd }}" title="Copy edge-tts command" style="height:40px;padding:0 12px;border:none;border-radius:12px;background:rgba(28,40,48,0.1);color:#1C2830;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer">$ cmd</button>
             </div>
           </div>
         </sc-for>
@@ -60,13 +60,13 @@
 
   <sc-if value="{{ is.sfx }}" hint-placeholder-val="{{ false }}">
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:24px">
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:880px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Sound effects</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.78)">Generated by media-fabric, so there are no license issues. Set one per scene in the Studio. Myth scenes stay on game audio.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:880px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Sound effects</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.85)">Generated by media-fabric, so there are no license issues. Set one per scene in the Studio. Myth scenes stay on game audio.</p></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px">
         <sc-for list="{{ sfx }}" as="x" hint-placeholder-count="7">
-          <div onClick="{{ x.play }}" style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:20px;background:rgba(22,26,36,0.75);border:1px solid rgba(244,247,252,0.08);cursor:pointer;transition:transform 0.15s" style-hover="transform:translateY(-3px)">
-            <div style="width:52px;height:52px;border-radius:50%;background:#F4F7FC;color:#0A0C12;display:flex;align-items:center;justify-content:center;font-size:18px">▶</div>
+          <div onClick="{{ x.play }}" style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:20px;background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);cursor:pointer;transition:transform 0.15s" style-hover="transform:translateY(-3px)">
+            <div style="width:52px;height:52px;border-radius:50%;background:#1C2830;color:#FFFBF0;display:flex;align-items:center;justify-content:center;font-size:18px">▶</div>
             <span style="font-size:20px;font-weight:600">{{ x.name }}</span>
-            <span style="font-size:13px;color:rgba(232,237,245,0.55)">{{ x.used }}</span>
+            <span style="font-size:13px;color:rgba(28,40,48,0.72)">{{ x.used }}</span>
           </div>
         </sc-for>
       </div>
@@ -75,23 +75,23 @@
 
   <sc-if value="{{ is.music }}" hint-placeholder-val="{{ false }}">
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:24px">
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:880px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Music</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.78)">Use only music you can monetize on YouTube. Viral and phonk tracks often get Content ID claims.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:880px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Music</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.85)">Use only music you can monetize on YouTube. Viral and phonk tracks often get Content ID claims.</p></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;max-width:1100px">
-        <div style="display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;background:rgba(22,26,36,0.75);border:1px solid rgba(244,247,252,0.08)">
-          <span style="font-size:13px;font-weight:700;color:#8DEBFF">IN EPISODE 01</span>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55)">
+          <span style="font-size:13px;font-weight:700;color:#2A6A98">IN EPISODE 01</span>
           <span style="font-size:24px;font-weight:600">Warm pad</span>
-          <span style="font-size:14px;color:rgba(232,237,245,0.7)">sfx/bgm_warm_pad.wav · −22 dB · ducks 8 dB under the voice</span>
-          <button onClick="{{ toggleBgm }}" style="align-self:flex-start;height:44px;padding:0 20px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ bgmLabel }}</button>
+          <span style="font-size:14px;color:rgba(28,40,48,0.8)">sfx/bgm_warm_pad.wav · −22 dB · ducks 8 dB under the voice</span>
+          <button onClick="{{ toggleBgm }}" style="align-self:flex-start;height:44px;padding:0 20px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">{{ bgmLabel }}</button>
         </div>
-        <a href="https://www.youtube.com/audiolibrary" target="_blank" style="display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;background:rgba(22,26,36,0.75);border:1px solid rgba(244,247,252,0.08);color:#F4F7FC">
-          <span style="font-size:13px;font-weight:700;color:#8DEBFF">FREE · MONETIZABLE</span>
+        <a href="https://www.youtube.com/audiolibrary" target="_blank" style="display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);color:#1C2830">
+          <span style="font-size:13px;font-weight:700;color:#2A6A98">FREE · MONETIZABLE</span>
           <span style="font-size:24px;font-weight:600">YouTube Audio Library</span>
-          <span style="font-size:14px;color:rgba(232,237,245,0.7)">Download a track, save it under sfx/, and set the file in episode.json.</span>
+          <span style="font-size:14px;color:rgba(28,40,48,0.8)">Download a track, save it under sfx/, and set the file in episode.json.</span>
         </a>
       </div>
     </div>
   </sc-if>
-  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:700;padding:12px 20px;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.5)">{{ toast }}</div></sc-if>
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:700;padding:12px 20px;border-radius:14px;box-shadow:0 20px 50px rgba(40,60,80,0.23)">{{ toast }}</div></sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -129,25 +129,25 @@ class Component extends DCLogic {
   }
   renderVals() {
     const s = this.state, d = s.data;
-    const sel = (on) => ({ bg: on ? '#F4F7FC' : 'transparent', fg: on ? '#0A0C12' : 'rgba(232,237,245,0.8)' });
+    const sel = (on) => ({ bg: on ? '#1C2830' : 'transparent', fg: on ? '#FFFBF0' : 'rgba(28,40,48,0.86)' });
     const tplName = (id) => { const t = s.niches && s.niches.templates.find(x => x.id === id); return t ? t.label : id; };
     const exactCount = d ? d.voices.filter(v => this.exact(v.id)).length : 0;
     const list = d ? d.voices.filter(v => s.filter === 'all' || (s.filter === 'child' ? v.age === 'child' : v.gender === s.filter && v.age !== 'child')) : [];
     const sfxUse = (n) => { const ep = s.ep; if (!ep) return ''; const c = [...ep.scenes, ...ep.shorts.scenes].filter(x => x.sfx === n).length; return c ? `Used in ${c} scene${c > 1 ? 's' : ''}` : 'Not used yet'; };
     return {
       clock: s.now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-      tabs: [['voices', 'Voices'], ['sfx', 'Sound effects'], ['music', 'Music']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#F4F7FC' : 'rgba(232,237,245,0.5)', onClick: () => this.setState({ tab: id }) })),
+      tabs: [['voices', 'Voices'], ['sfx', 'Sound effects'], ['music', 'Music']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#1C2830' : 'rgba(28,40,48,0.7)', onClick: () => this.setState({ tab: id }) })),
       is: { voices: s.tab === 'voices', sfx: s.tab === 'sfx', music: s.tab === 'music' },
       howText: 'Remotion doesn\u2019t make the voice. edge-tts (free, no key) turns each scene line into an MP3 plus word timings; Remotion plays that MP3 and draws captions from the timings when it renders the MP4.',
       line: s.line, onLine: (e) => this.setState({ line: e.target.value }),
       rates: (d ? d.rates : []).map(r => ({ label: r, ...sel(s.rate === r), onClick: () => this.setState({ rate: r }) })),
       filters: [['all', 'All'], ['male', 'Male'], ['female', 'Female'], ['child', 'Child']].map(([id, label]) => ({ label, ...sel(s.filter === id), onClick: () => this.setState({ filter: id }) })),
       engineText: exactCount ? `Preview uses the real neural voice in this browser (${exactCount} of ${d.voices.length} found).` : 'This browser has no Microsoft neural voices, so Preview plays a stand-in. Open in Microsoft Edge to hear the real voices, or use "Real sample" where available.',
-      engineColor: exactCount ? 'oklch(0.78 0.15 150)' : 'oklch(0.83 0.14 80)',
+      engineColor: exactCount ? 'oklch(0.5 0.13 150)' : 'oklch(0.6 0.14 70)',
       voices: list.map(v => {
         const inUse = s.epVoice && s.epVoice.id === v.id, on = s.playing === v.id;
         return { name: v.name, id: v.id, meta: `${v.gender === 'male' ? 'Male' : 'Female'}${v.age === 'child' ? ' · child' : ''} · ${v.tone}`, best: v.bestFor.map(tplName).join(' · '), inUse, sample: !!v.sample,
-          bg: on ? 'rgba(22,119,255,0.22)' : 'rgba(22,26,36,0.75)', ring: inUse ? '0 0 0 2px #8DEBFF' : 'none',
+          bg: on ? 'rgba(22,119,255,0.22)' : 'rgba(255,251,240,0.92)', ring: inUse ? '0 0 0 2px #2A6A98' : 'none',
           play: () => this.speak(v.id),
           playSample: () => { const a = new Audio(v.sample); a.play().catch(() => {}); },
           useLabel: inUse ? 'In Episode 01' : 'Use in Episode 01',

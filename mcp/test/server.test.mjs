@@ -26,8 +26,8 @@ before(async () => {
 });
 after(async () => { await client?.close(); await rm(root, { recursive: true, force: true }); });
 
-test('lists the 21 tools and guide_episode prompt', async () => {
-  assert.equal((await client.listTools()).tools.length, 21);
+test('lists the 24 tools and guide_episode prompt', async () => {
+  assert.equal((await client.listTools()).tools.length, 24);
   const prompts = await client.listPrompts();
   assert.ok(prompts.prompts.some((p) => p.name === 'guide_episode'));
 });
@@ -110,4 +110,46 @@ test('episode argument cannot leave production/', async () => {
   }
   assert.equal(JSON.parse(await readFile(path.join(root, 'x/episode.json'), 'utf8')).bgm.on, undefined);
   assert.equal(existsSync(path.join(root, 'x/activity.json')), false);
+});
+
+test('realm job lifecycle: list_realm_jobs, update_realm_job, finish_realm_job without get_brief', async () => {
+  const rd = path.join(root, 'production/realms');
+  await mkdir(rd, { recursive: true });
+  await writeFile(path.join(rd, 'sky-citadel.job.json'), JSON.stringify({
+    type: 'generate',
+    status: 'queued',
+    prompt: 'Floating sky citadel',
+    elements: [
+      { id: 'S1', label: 'Citadel', box: [0.2, 0.1, 0.6, 0.5], required: true },
+      { id: 'S2', label: 'Waterfall', box: [0.4, 0.5, 0.2, 0.4], required: true }
+    ]
+  }, null, 2));
+
+  const jobs = JSON.parse((await call('list_realm_jobs')).content[0].text);
+  assert.equal(jobs.length, 1);
+  assert.equal(jobs[0].id, 'sky-citadel');
+
+  const upd = JSON.parse((await call('update_realm_job', { id: 'sky-citadel', note: 'Painting citadel' })).content[0].text);
+  assert.equal(upd.note, 'Painting citadel');
+
+  const pngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+  const badFinish = await call('finish_realm_job', {
+    id: 'sky-citadel',
+    base64: pngBase64,
+    check: { S1: { present: true, box: [0.2, 0.1, 0.6, 0.5] } }
+  });
+  assert.equal(badFinish.isError, true);
+  assert.match(badFinish.content[0].text, /Missing: S2/);
+
+  const okFinish = JSON.parse((await call('finish_realm_job', {
+    id: 'sky-citadel',
+    base64: pngBase64,
+    model: 'gemini-2.5-flash-image',
+    check: {
+      S1: { present: true, box: [0.2, 0.1, 0.6, 0.5], note: 'clear' },
+      S2: { present: true, box: [0.4, 0.5, 0.2, 0.4], note: 'clear' }
+    }
+  })).content[0].text);
+  assert.equal(okFinish.image, 'production/realms/sky-citadel.png');
+  assert.deepEqual(okFinish.absent, []);
 });

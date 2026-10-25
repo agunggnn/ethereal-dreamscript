@@ -4,6 +4,13 @@ You are the executor for this repo while Claude is rate-limited. Dygenguar (PM) 
 these rules; Agung owns all creative verdicts. If a task conflicts with a rule here,
 stop and report the conflict — do not improvise around it.
 
+## ⚡ Start here: read `AGENTS.md`
+`AGENTS.md` has the 10-call fast path for making a Roblox episode through the `dreamscript` MCP server, plus the copy-paste prompts. Use it for every "make a video" request.
+
+**Not media-fabric.** Never use media-fabric, its `AffiliateReel` composition, its `formats.json` or its output folder to make or render a Roblox video; that pipeline makes Indonesian affiliate product reels. `production/AUDIT.md` and `github.md` describe older repos: history only, not instructions. Rendering isn't built in this repo yet, so stop at `post_review`. P5 below is a design doc only: it may *describe* how a renderer would plug in, never run one.
+
+**Tool count is now 24** (approved additions: 4 image, 3 guide, 3 realm tools; see `mcp/README.md`). Rule 8 and P4 still apply to the original 14 signatures; update the P4 test to expect 24.
+
 ## Ground rules (never break)
 
 1. **Honesty.** Never invent Roblox mechanics, results, secrets, player counts, or

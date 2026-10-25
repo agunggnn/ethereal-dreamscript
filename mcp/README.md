@@ -101,4 +101,10 @@ The server tells every MCP client to work in this order (server instructions + t
 - Your step, scene, idea and review come back after a reload.
 - Uploaded and Gemini images are saved to `production/<ep>/frames/`, not only in the browser.
 
-Tool count: 14 original + 4 image + 3 guide = 21. Add `production/*/session.json` and `production/*/history/` to `.gitignore`.
+## Realm jobs (Realm Builder)
+Realm Builder locks a wallpaper as elements: id, label, detail, box [x,y,w,h], depth layer, required flag and motion. Each agent gets the same spec.
+- **Ask agent to generate / fix missing / check** writes `production/realms/<id>.job.json`.
+- The agent calls `list_realm_jobs`, then `update_realm_job` (a note shown live on the canvas), then `finish_realm_job` with the image and a check for every element id. The server refuses a finish without a full check.
+- Realm tools skip the get_brief guard because each job carries its full context.
+
+Tool count: 14 original + 4 image + 3 guide + 3 realm = 24. Add `production/*/session.json` and `production/*/history/` to `.gitignore`.

@@ -159,40 +159,132 @@
         "Name the experience and version"
       ],
       "formats": {
-        "source": "prompts/video-format-prompts.md",
+        "source": "content/roblox-horror-myth-lab-ep01/prompts/video-format-prompts.md",
         "globalLock": {
-          "character": "RHM_INVESTIGATOR_01. Use the approved master character reference image from assets/character-reference.png once it exists. Preserve the exact face, block proportions, messy black swept hair with three front tufts, silver-blue three-prong crown, black premium techwear jacket with white zipper/drawstrings and blue piping, utility straps, black backpack with cyan core, charcoal cargo pants, black-and-white high-top sneakers, and cyan lantern. Never redesign these details between shots.",
-          "style": "premium collectible Roblox-inspired avatar, cinematic game lighting, crisp silhouettes, cool blue/cyan accents, deep graphite shadows, occasional amber practical lights and restrained red danger lighting. Keep layouts readable on mobile. Do not render text inside generated images; add typography in editing.",
+          "character": "RHM_INVESTIGATOR_01. Use the approved master reference assets/character-reference.png once it exists. Preserve face, block proportions, messy black swept hair with three front tufts, silver-blue three-prong crown, black techwear jacket with white zipper/drawstrings and blue piping, utility straps, black backpack with cyan core, charcoal cargo pants, black-and-white high-tops, cyan lantern. The SVG is a guide, not a reference image.",
+          "style": "Premium collectible Roblox-inspired avatar, cinematic game lighting, crisp silhouettes, cool blue/cyan accents, graphite shadows, occasional amber practicals and restrained red danger light. Mobile-readable. No text inside generated images.",
           "accuracy": [
-            "Never invent Roblox mechanics, updates, player counts, secrets, reactions, outcomes, quotes, or footage.",
-            "Treat every challenge claim as a hypothesis until supported by recorded gameplay.",
-            "Identify the exact experience and relevant version/update when available.",
-            "Distinguish actual gameplay from AI-generated illustrative inserts. Illustrations must never be presented as proof.",
-            "If evidence is missing, label it as a placeholder or mark the result INCONCLUSIVE; do not fabricate a result.",
-            "No false promise in title, thumbnail, narration, or CTA.",
-            "Never guarantee virality, retention, or that viewers will watch to the end."
+            "Never invent mechanics, updates, player counts, secrets, reactions, outcomes, quotes or footage",
+            "Every challenge claim is a hypothesis until recorded gameplay supports it",
+            "Name the exact experience and version/update",
+            "Gameplay vs AI illustration always distinguished; illustrations are never proof",
+            "Missing evidence → placeholder or INCONCLUSIVE",
+            "No false promise in title, thumbnail, narration or CTA",
+            "Never guarantee virality or retention"
           ],
-          "retention": "open with a genuine high-stakes moment or a compelling question; establish the promise quickly; remove greetings and filler; every 20–40 seconds deliver a real change in evidence, location, obstacle, decision, or payoff; build to a satisfying ending; include no fake cliffhangers. Use sound effects to support the story, not drown out gameplay.",
+          "retention": "Open on a real high-stakes moment or question; promise fast; no greeting or filler; a real change every 20–40s; satisfying ending; no fake cliffhangers; SFX support, never drown gameplay.",
           "output": [
-            "premise and audience promise",
-            "evidence/research checklist",
+            "premise + audience promise",
+            "evidence checklist",
             "title options",
             "hook",
-            "beat-by-beat timecoded storyboard",
+            "timecoded storyboard",
             "narration draft",
             "gameplay capture list",
-            "generated-image prompts for illustrative shots",
-            "thumbnail A/B/C concepts",
+            "illustration image prompts",
+            "thumbnail A/B/C",
             "sound/edit notes",
             "accuracy risks",
             "final QC checklist"
           ]
         },
+        "list": [
+          {
+            "id": "01",
+            "name": "Myth Lab",
+            "prompt": "Test [NUMBER] claims in [EXPERIENCE], version [VERSION], [LENGTH]. Per claim: hypothesis, controlled test, fixed variables, attempts, confirm/contradict criteria, capture list, timecoded segment, narration that does not pre-announce the verdict, replay plan, verdict CONFIRMED / BUSTED / INCONCLUSIVE kept pending until footage review. Output storyboard, experiment register, narration, thumbnails, missing evidence."
+          },
+          {
+            "id": "02",
+            "name": "Secret & Easter Egg Hunt",
+            "prompt": "Investigate [SECRET / CLUE] in [EXPERIENCE], [VERSION] as a chain of verifiable clues: real clue → known vs speculation → inspect locations → test each lead → decisive interaction or failure → what footage proves. If unverified, the honest outcome is the story; no \"SECRET FOUND\" thumbnail."
+          },
+          {
+            "id": "03",
+            "name": "One-Life Challenge",
+            "prompt": "[EXPERIENCE]: objective [OBJECTIVE], tools [TOOLS], fail condition [FAIL], attempts [ATTEMPTS]. Rules fixed before recording. Hook → setup → attempts → setbacks → rule reminders → climax → result. Rules card, recording checklist, storyboard, narration beats, thumbnail A/B/C. Outcome open until recorded."
+          },
+          {
+            "id": "04",
+            "name": "Survival Guide",
+            "prompt": "Guide for [EXPERIENCE] and [PROBLEM / PUZZLE / MONSTER], each step verified. Obstacle → what you learn → prerequisites → each step → common failures → shortest reliable recap. Callouts, capture list, chapters, version/date caveat. No guaranteed routes without evidence."
+          },
+          {
+            "id": "05",
+            "name": "Legend Investigation",
+            "prompt": "Investigate [LEGEND] tied to [EXPERIENCE]. Separate confirmed events, community claims, speculation. Strongest clue → sourced origin → evidence → in-game reproduction → alternative explanations → conclusion with confidence. Atmosphere over fake jump scares; AI scenes labeled."
+          },
+          {
+            "id": "06",
+            "name": "Update Breakdown",
+            "prompt": "Explain [UPDATE / DATE] for [EXPERIENCE] from patch notes, footage or cited sources. Biggest confirmed change → overview → each change → who it affects → before/after only with comparable footage → takeaways. Source list and date. Never invent patch notes."
+          },
+          {
+            "id": "07",
+            "name": "Tier List",
+            "prompt": "Rank [SUBJECTS] in [EXPERIENCE] by stated [CRITERIA] and scoring method. Open on one surprising but defensible placement, gameplay per item, close calls, summary. Not \"objectively definitive\"."
+          },
+          {
+            "id": "08",
+            "name": "Old vs New",
+            "prompt": "Compare [OLD] vs [NEW] in [EXPERIENCE], versions confirmed, matched camera and conditions. A/B synced shots, measurable criteria, caveats, comparison table, capture checklist. No causation claims when variables differ."
+          },
+          {
+            "id": "09",
+            "name": "Viewer Challenge",
+            "prompt": "Turn [CHALLENGE TEXT] into a fair episode: validate safe, possible, compatible. Rules before recording, no private info. Challenge + stakes → rules → honest attempt → setbacks → result. Never invent a submission."
+          },
+          {
+            "id": "10",
+            "name": "Speedrun / Route Test",
+            "prompt": "Fastest or safest route for [OBJECTIVE] in [EXPERIENCE], [VERSION]. Define start/end, timing, shortcuts, resets; multiple attempts. Baseline → hypothesis → splits → comparison → best supported route. PB ≠ world record."
+          },
+          {
+            "id": "11",
+            "name": "Randomizer / Wheel",
+            "prompt": "Wheel [OPTIONS], objective [OBJECTIVE]. Document options and real result before the run. Rules → spin → adapt → escalation → result. No faked or secret rerolls; explain any reroll on screen."
+          },
+          {
+            "id": "12",
+            "name": "Solo vs Co-op",
+            "prompt": "Solo vs [TEAM SIZE] for [TASK] in [EXPERIENCE], matched settings; note what can't be matched. Setup + criteria → matched attempts → trade-offs → outcomes → fair conclusion labeled as observations."
+          },
+          {
+            "id": "13",
+            "name": "No-HUD / Limited Tools",
+            "prompt": "[OBJECTIVE] with [HUD ELEMENTS] off or [TOOLS] restricted; confirm support and exceptions first. Baseline → constraint → attempt → decision points → result. Keep failures and the restriction visible."
+          },
+          {
+            "id": "14",
+            "name": "Can You Survive? Countdown",
+            "prompt": "Timed survival in [EXPERIENCE]: timer, win/loss, resources, actions, verified from footage. Visible clock, real phase changes and obstacles, clear ending. If it ends early, keep that outcome."
+          },
+          {
+            "id": "15",
+            "name": "Shorts: Mini Mystery",
+            "prompt": "9:16, [DURATION]s, one verified moment or question. First second shows it; no intro. Hook → minimum context → evidence → result or honest open question. Large captions, keep game audio, must stand alone."
+          },
+          {
+            "id": "16",
+            "name": "Shorts: Best Moment",
+            "prompt": "From [SOURCE VIDEO / TIMECODE], 15–35s vertical: setup → moment → payoff. No fabricated reactions or removed context. Point to the full episode only after it resolves."
+          },
+          {
+            "id": "17",
+            "name": "What Happens If…?",
+            "prompt": "Test [ACTION] in [EXPERIENCE]. State possibilities without asserting one; baseline, repeat, full outcome, confounders. Question → setup → test → replay → observed vs unknown."
+          },
+          {
+            "id": "18",
+            "name": "Skin Showcase",
+            "prompt": "Showcase [ITEM SET / THEME]. Verify real catalog items vs concept art; capture source and date for prices. Front/side/back, accessory close-ups, materials, movement, final reveal. Keep channel character unless it's a skin-ranking episode."
+          }
+        ],
         "handoff": [
           "Format ID",
           "Working title",
           "Roblox experience and official link",
-          "Version/update/date (if relevant)",
+          "Version/update/date",
           "Objective or question",
           "Target length / platform",
           "Available gameplay footage",
@@ -202,99 +294,7 @@
           "Assets already generated",
           "Output folder"
         ],
-        "handoffRule": "If required facts or footage are missing, produce a research and capture plan first—not a fake finished script.",
-        "list": [
-          {
-            "id": "01",
-            "name": "Myth Lab",
-            "prompt": "Create a Roblox Myth Lab episode testing [NUMBER] specific claims in [EXPERIENCE NAME], version/update [VERSION]. Target length [LENGTH]. The viewer promise is to test each claim fairly and show evidence.\n\nFor each claim provide: exact hypothesis; controlled test design; variables to hold steady; number of attempts; what counts as confirming or contradicting it; capture list; timecoded segment; narration that does not pre-announce the verdict; replay/annotation plan; and verdict criteria CONFIRMED / BUSTED / INCONCLUSIVE. Keep all verdicts pending until footage review.\n\nOutput a timecoded storyboard, experiment register, narration, thumbnail concepts, and list of missing evidence. Do not invent results."
-          },
-          {
-            "id": "02",
-            "name": "Secret & Easter Egg Hunt",
-            "prompt": "Investigate [SPECIFIC SECRET / CLUE] in [EXPERIENCE NAME], version/update [VERSION]. Build the episode around a chain of verifiable clues, not a predetermined claim that a secret exists.\n\nStoryboard: intriguing real clue → explain what is known vs speculation → inspect possible locations → test each lead → show the decisive interaction or failure → conclude with what the footage proves. Provide exact capture shots and evidence references. If the secret cannot be verified, make the honest outcome the story and do not use “SECRET FOUND” in the thumbnail."
-          },
-          {
-            "id": "03",
-            "name": "One-Life Challenge",
-            "prompt": "Plan a challenge in [EXPERIENCE NAME]: objective [OBJECTIVE], allowed tools [TOOLS], failure condition [FAIL CONDITION], and number of attempts [ATTEMPTS]. Define rules before recording and do not change them mid-run to manufacture a win.\n\nCreate a hook that shows a genuine near-failure or states the challenge clearly, then setup, attempt progression, setbacks, fair rule reminders, climax, and result. Include a rules card, recording checklist, timecoded storyboard, narration beats, and thumbnail A/B/C. The outcome must remain open until recording."
-          },
-          {
-            "id": "04",
-            "name": "Horror Game Guide / Survival Guide",
-            "prompt": "Create a practical guide for [EXPERIENCE NAME] and [SPECIFIC PROBLEM / PUZZLE / MONSTER]. Verify each step against supplied gameplay or reliable source material. Distinguish version-specific behavior from general advice.\n\nStructure: show the obstacle → state what the viewer will learn → explain prerequisites → demonstrate each step clearly → show common failure points → recap the shortest reliable method. Include on-screen callouts, clean capture list, chapter markers, and a concise version/date caveat. Do not invent steps or claim a route is guaranteed unless the evidence supports it."
-          },
-          {
-            "id": "05",
-            "name": "Scary Story / Legend Investigation",
-            "prompt": "Investigate the story [LEGEND / RUMOR] associated with [EXPERIENCE NAME]. Separate confirmed in-game events, community claims, and speculation. Do not invent quotes or attribute claims to real users without sources.\n\nStructure: strongest verified clue → origin of the rumor if sourced → inspect evidence → attempt reproduction in-game → explain alternative explanations → conclusion with confidence level. Use atmosphere and pacing rather than fake jump scares. AI-generated scenes are labeled as illustrations, never presented as captured events."
-          },
-          {
-            "id": "06",
-            "name": "Update Breakdown",
-            "prompt": "Explain the [UPDATE NAME / DATE] for [EXPERIENCE NAME]. Use supplied patch notes, in-game footage, or other cited source material. Identify confirmed changes, uncertain details, and what remains unchanged.\n\nStructure: most consequential confirmed change → short overview → demonstrate each major change → explain who it affects → compare before/after only with comparable footage → end with practical takeaways. Include source list and date. Never invent patch notes, release dates, or availability."
-          },
-          {
-            "id": "07",
-            "name": "Tier List / Ranking",
-            "prompt": "Rank [MONSTERS / MAPS / ITEMS / CHALLENGES] in [EXPERIENCE NAME] using explicit criteria: [CRITERIA]. State the scoring method before rankings. Distinguish personal evaluation from measurable facts and give each placement a short evidence-backed reason.\n\nBuild an opening with one surprising but defensible placement, then move quickly through the list, show gameplay for each item, explain close calls, and finish with a summary. Do not call the list objectively definitive. Create thumbnail concepts with a small number of recognizable subjects."
-          },
-          {
-            "id": "08",
-            "name": "Old vs New / Comparison",
-            "prompt": "Compare [OLD VERSION / ITEM / MAP] against [NEW VERSION / ITEM / MAP] in [EXPERIENCE NAME]. Confirm versions/dates and keep camera, settings, and conditions as similar as practical.\n\nCreate an A/B storyboard with synchronized comparison shots, measurable criteria, visible differences, and caveats. Do not imply a change is caused by an update if other variables differ. Include a comparison table, capture checklist, narration, and thumbnail concepts."
-          },
-          {
-            "id": "09",
-            "name": "Viewer Challenge",
-            "prompt": "Turn this submitted challenge into a fair episode: [CHALLENGE TEXT]. Validate that it is safe, possible, and compatible with the selected experience. Set the rules and failure conditions before recording; preserve the original intent without exposing private user information.\n\nOpen with the challenge and stakes, explain the rules, attempt it honestly, show setbacks, and reveal the result. If impossible or ambiguous, explain why. Do not invent a viewer submission or claim a viewer said something unless the submission exists."
-          },
-          {
-            "id": "10",
-            "name": "Speedrun / Route Test",
-            "prompt": "Test the fastest or safest route for [OBJECTIVE] in [EXPERIENCE NAME], version [VERSION]. Define start/end points, timing method, allowed shortcuts, and reset rules. Record multiple attempts where feasible.\n\nShow baseline route → route hypothesis → attempt and split times → comparison → best supported route. Clearly distinguish a personal best from a verified world record. Do not invent timings or claim a route is fastest without sufficient comparison."
-          },
-          {
-            "id": "11",
-            "name": "Randomizer / Wheel Challenge",
-            "prompt": "Create a randomizer challenge using [WHEEL OPTIONS] and objective [OBJECTIVE]. Document the wheel options and the actual result before the run. Ensure each option is fair and possible in the selected experience.\n\nStructure: reveal rules → spin and show result → adapt strategy → escalating complications → finish/result. Do not fake the wheel result or reroll secretly to improve the story. If a reroll is needed due to an impossible option, explain it on screen."
-          },
-          {
-            "id": "12",
-            "name": "Solo vs Co-op Comparison",
-            "prompt": "Compare solo play with [TEAM SIZE] players in [EXPERIENCE NAME] for [TASK]. Keep task, difficulty, route, and settings as consistent as possible. Record where conditions cannot be matched.\n\nShow setup and criteria, matched attempts, teamwork trade-offs, time/failure outcomes, and a fair conclusion. Avoid broad claims from a single run; label results as observations from the tested attempts."
-          },
-          {
-            "id": "13",
-            "name": "No-HUD / Limited-Tools Challenge",
-            "prompt": "Test [OBJECTIVE] while disabling [HUD ELEMENTS] or restricting [TOOLS]. Confirm that the game supports the restriction and define exceptions before recording.\n\nShow the normal baseline if useful, reveal the constraint, attempt the task, highlight genuine decision points, and report the result. Do not edit out failures in a way that misrepresents difficulty. Keep the restriction visible and understandable."
-          },
-          {
-            "id": "14",
-            "name": "“Can You Survive?” Countdown Challenge",
-            "prompt": "Create a timed survival challenge in [EXPERIENCE NAME]. Specify timer duration, win condition, loss condition, starting resources, and permitted actions. Verify timer and result from footage.\n\nUse a visible progress clock, meaningful phase changes, escalating but real obstacles, and a clear ending. Do not fake countdowns, threats, or a win. If the attempt ends early, preserve the outcome and explain it."
-          },
-          {
-            "id": "15",
-            "name": "Shorts / Mini Mystery",
-            "prompt": "Create a vertical 9:16 Short, [DURATION] seconds, built around one verified moment or one question. First second must show the relevant moment or a concrete question; no intro or logo animation.\n\nUse: hook → minimum context → visible evidence/action → result or honest unresolved question. Keep captions large and readable, preserve gameplay audio, and use only claims supported by the clip. If cut from long-form, ensure the Short still makes sense alone and does not imply a result that the full video contradicts."
-          },
-          {
-            "id": "16",
-            "name": "Shorts Highlight / Best Moment",
-            "prompt": "Select a genuinely compelling moment from [SOURCE VIDEO / TIMECODE]. Do not fabricate reactions or change the meaning by removing context. Create a 15–35 second vertical cut with a fast setup, moment, and payoff. Add captions and only necessary context; point to the full episode only after the mini-story resolves."
-          },
-          {
-            "id": "17",
-            "name": "Mystery Challenge / “What Happens If…?”",
-            "prompt": "Test [SPECIFIC ACTION] in [EXPERIENCE NAME]. Define the expected possibilities without asserting one is true. Record baseline conditions, repeat the action if feasible, capture the complete outcome, and note confounding variables.\n\nUse the question as the hook, show the setup, run the test, replay the evidence, and explain what was observed versus what remains unknown. No fabricated secrets or fake outcomes."
-          },
-          {
-            "id": "18",
-            "name": "Character / Skin Showcase",
-            "prompt": "Create a showcase of [AVATAR ITEM SET / OUTFIT THEME]. Verify which items are real catalog items and distinguish actual catalog assets from custom concept art. If prices or availability are mentioned, capture the current source and date.\n\nShow full-body front/side/back, close-ups of accessories, color/material details, in-game movement if available, and a final outfit reveal. Keep the channel character identity consistent unless this is explicitly a separate skin-ranking episode. Do not claim items are expensive, limited, or rare without evidence."
-          }
-        ]
+        "handoffRule": "If required facts or footage are missing, produce a research and capture plan first, not a fake finished script."
       }
     },
     {

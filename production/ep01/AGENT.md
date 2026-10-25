@@ -26,5 +26,6 @@
 The in-studio agent runs these tools directly. It can't set verdicts. Every edit, whether by you or the agent, is logged as the matching tool call.
 
 ## Not done yet (needs the repo pipeline)
+- Saving edits back to disk. Today you use **Copy episode.json** and paste it over the file. An MCP server would write the file directly.
 - Final render: TTS per scene → mix → MP4 per template. See `production/AUDIT.md` §7, item 4 (`/render-episode`).
 - Gameplay footage: none exists yet. Record it per the storyboard's experiment register.

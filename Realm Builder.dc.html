@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#CFE9F2;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button,input,textarea,select{font-family:inherit}</style></helmet>
+<div data-screen-label="Realm Builder" style="min-height:100vh;background:linear-gradient(180deg,rgba(150,205,240,0.05) 0%,rgba(240,226,190,0) 40%,rgba(231,214,174,0.6) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,linear-gradient(180deg,#9FD3F0 0%,#CFE9F2 28%,#EEF1E2 60%,#E7D6AE 100%);display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:16px;margin:18px 32px 16px;padding:12px 16px;flex-wrap:wrap;border-radius:16px;background:rgba(255,251,240,0.8);border:1px solid #C9A45C;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 10px 30px rgba(40,60,80,0.2);backdrop-filter:blur(8px)">
+    <a href="Home.dc.html" title="Home" style="width:44px;height:44px;border-radius:50%;background:rgba(255,253,247,0.8);color:#1C2830;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none;box-shadow:0 4px 14px rgba(40,70,90,0.15)" style-hover="background:#FFFDF7">‹</a>
+    <div style="display:flex;flex-direction:column;gap:2px;flex:1 1 260px;min-width:220px">
+      <span style="font-size:13px;font-weight:700;color:#2F6B45">Lock every element · animate · score it</span>
+      <span style="font-size:24px;font-weight:700;letter-spacing:-0.01em">Realm Builder</span>
+    </div>
+    <div style="display:flex;gap:4px;background:rgba(255,253,247,0.7);border-radius:14px;padding:4px;box-shadow:0 4px 14px rgba(40,70,90,0.1)">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2"><button onClick="{{ tb.onClick }}" style="height:36px;padding:0 16px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }}">{{ tb.label }}</button></sc-for>
+    </div>
+    <button onClick="{{ sendLoop }}" style="height:44px;padding:0 20px;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;background:#1C2830;color:#FFFDF7">Animate in Loop Studio ›</button>
+  </div>
+
+  <div style="display:flex;gap:10px;padding:0 32px 18px;overflow-x:auto">
+    <sc-for list="{{ realmCards }}" as="rc" hint-placeholder-count="3"><button onClick="{{ rc.onClick }}" style="flex:none;width:168px;display:flex;flex-direction:column;gap:6px;padding:6px;border-radius:16px;border:none;background:{{ rc.bg }};box-shadow:{{ rc.ring }};cursor:pointer;text-align:left"><div style="aspect-ratio:16/9;border-radius:11px;background:{{ rc.thumb }};background-size:cover;background-position:center"></div><span style="padding:0 6px 4px;font-size:13px;font-weight:700;color:#1C2830;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rc.name }}</span></button></sc-for>
+    <div style="flex:none;display:flex;flex-direction:column;gap:6px;justify-content:center">
+      <button onClick="{{ newRealm }}" style="height:38px;padding:0 14px;border:none;border-radius:11px;background:#2F6B45;color:#FFFFFF;font-size:13px;font-weight:800;cursor:pointer">＋ New realm</button>
+      <button onClick="{{ dupRealm }}" style="height:38px;padding:0 14px;border:none;border-radius:11px;background:rgba(255,253,247,0.8);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">Duplicate</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,400px);gap:24px;padding:0 32px 36px;flex:1">
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div style="display:flex;justify-content:center;background:linear-gradient(180deg,rgba(255,251,240,0.9),rgba(246,236,212,0.88));border:1px solid #C9A45C;border-radius:16px;padding:14px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 18px 44px rgba(40,60,80,0.28)">
+        <div ref="{{ stageRef }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerDown="{{ onStageDown }}" style="position:relative;width:{{ stageW }};height:{{ stageH }};max-width:100%;max-height:62vh;aspect-ratio:{{ ar }};border-radius:12px;overflow:hidden;touch-action:none;user-select:none;background:repeating-linear-gradient(135deg,rgba(110,86,44,0.06) 0 12px,transparent 12px 24px),#F5EFDD">
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ imageSrc }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ imgOpacity }};pointer-events:none"></sc-if>
+          <sc-for list="{{ boxes }}" as="b" hint-placeholder-count="5">
+            <div onPointerDown="{{ b.down }}" style="position:absolute;left:{{ b.l }};top:{{ b.t }};width:{{ b.w }};height:{{ b.h }};border:2px {{ b.dash }} {{ b.color }};background:{{ b.fill }};border-radius:8px;cursor:move;z-index:{{ b.z }}">
+              <span style="position:absolute;left:6px;top:6px;display:flex;gap:6px;align-items:center;padding:3px 8px;border-radius:7px;background:rgba(255,253,247,0.94);font-size:12px;font-weight:700;color:{{ b.color }};white-space:nowrap;max-width:calc(100% - 12px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 6px rgba(0,0,0,0.12)"><span style="font-family:'JetBrains Mono',monospace">{{ b.id }}</span><span style="color:#1C2830">{{ b.label }}</span><span>{{ b.mark }}</span></span>
+              <div onPointerDown="{{ b.resize }}" style="position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;border-radius:5px;background:{{ b.color }};cursor:nwse-resize;border:2px solid #FFFDF7"></div>
+            </div>
+          </sc-for>
+          <sc-for list="{{ found }}" as="f" hint-placeholder-count="0"><div style="position:absolute;left:{{ f.l }};top:{{ f.t }};width:{{ f.w }};height:{{ f.h }};border:2px dotted #1C2830;border-radius:6px;pointer-events:none;z-index:30"></div></sc-for>
+          <sc-if value="{{ jobShow }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12px;bottom:12px;right:12px;z-index:40;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(28,40,48,0.88);color:#FFFDF7;font-size:13.5px;font-weight:600"><span style="width:9px;height:9px;border-radius:50%;background:#8FD39A;flex:none"></span><span style="flex:1">{{ jobText }}</span><button onClick="{{ cancelJob }}" style="height:28px;padding:0 10px;border:none;border-radius:8px;background:rgba(255,253,247,0.16);color:#FFFDF7;font-size:12px;font-weight:700;cursor:pointer">Cancel</button></div></sc-if>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <sc-for list="{{ aspects }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.onClick }}" style="height:34px;padding:0 14px;border-radius:10px;border:none;background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:700;cursor:pointer">{{ a.label }}</button></sc-for>
+        <span style="width:1px;height:22px;background:rgba(28,40,48,0.18)"></span>
+        <sc-for list="{{ quick }}" as="q" hint-placeholder-count="8"><button onClick="{{ q.onClick }}" style="height:34px;padding:0 12px;border-radius:10px;border:1px solid rgba(28,40,48,0.16);background:rgba(255,253,247,0.7);color:#1C2830;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:#FFFDF7">＋ {{ q.label }}</button></sc-for>
+        <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><label style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#4F5D66">Image<input type="range" min="0" max="1" step="0.05" value="{{ imgOpacity }}" onChange="{{ onOpacity }}" style="width:90px;accent-color:#2F6B45"></label></sc-if>
+      </div>
+
+      <sc-if value="{{ hasVersions }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Versions" style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 10px 28px rgba(40,60,80,0.2);overflow-x:auto">
+          <div style="flex:none;display:flex;flex-direction:column;gap:4px;padding:0 4px"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.08em">HISTORY</span><button onClick="{{ undo }}" style="height:30px;padding:0 10px;border:none;border-radius:8px;background:#1C2830;color:#FFFDF7;font-size:12px;font-weight:800;cursor:pointer">↶ Undo</button></div>
+          <sc-for list="{{ versions }}" as="v" hint-placeholder-count="3"><div style="flex:none;position:relative;width:132px;display:flex;flex-direction:column;gap:4px"><button onClick="{{ v.onClick }}" title="{{ v.title }}" style="aspect-ratio:16/9;border:none;border-radius:9px;background:{{ v.thumb }};background-size:cover;background-position:center;box-shadow:{{ v.ring }};cursor:pointer;padding:0"></button><span style="font-size:11.5px;font-weight:700;color:#1C2830;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.label }}</span><button onClick="{{ v.remove }}" title="Remove this version" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border:none;border-radius:6px;background:rgba(28,40,48,0.7);color:#FFFDF7;font-size:12px;cursor:pointer">×</button></div></sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ is.el }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:17px;font-weight:800;flex:1">Prompt</span>
+            <sc-for list="{{ pTabs }}" as="pt" hint-placeholder-count="3"><button onClick="{{ pt.onClick }}" style="height:32px;padding:0 12px;border:none;border-radius:9px;background:{{ pt.bg }};color:{{ pt.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ pt.label }}</button></sc-for>
+          </div>
+          <span style="font-size:13px;line-height:1.5;color:#4F5D66;text-wrap:pretty">{{ pNote }}</span>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:12px;font-weight:700;color:#4F5D66">Image engine</span><sc-for list="{{ engines }}" as="en" hint-placeholder-count="4"><button onClick="{{ en.onClick }}" style="height:30px;padding:0 12px;border-radius:15px;border:none;background:{{ en.bg }};color:{{ en.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ en.label }}</button></sc-for>
+            <sc-if value="{{ needKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ geminiKey }}" onChange="{{ onKey }}" placeholder="Paste Gemini API key" style="flex:1;min-width:180px;height:32px;padding:0 10px;border-radius:9px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:12.5px"></sc-if></div>
+          <span style="font-size:12.5px;line-height:1.45;color:#4F5D66;text-wrap:pretty">{{ engineNote }}</span>
+          <pre style="margin:0;max-height:240px;overflow:auto;white-space:pre-wrap;font:500 12.5px/1.6 'JetBrains Mono',monospace;color:#1C2830;background:#F4EEDC;border-radius:12px;padding:14px">{{ pText }}</pre>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button onClick="{{ copyP }}" style="height:40px;padding:0 16px;border:none;border-radius:11px;background:#1C2830;color:#FFFDF7;font-size:13px;font-weight:800;cursor:pointer">{{ copyLabel }}</button>
+            <button onClick="{{ generate }}" style="height:40px;padding:0 16px;border:none;border-radius:11px;background:#2A6A98;color:#FFFFFF;font-size:13px;font-weight:800;cursor:pointer">{{ genLabel }}</button>
+            <button onClick="{{ toggleSeed }}" title="Reuse the seed of the selected version so a retry stays close to it" style="height:40px;padding:0 14px;border:none;border-radius:11px;background:{{ seedBg }};color:{{ seedFg }};font-size:13px;font-weight:700;cursor:pointer">{{ seedLabel }}</button>
+            <label style="height:40px;padding:0 16px;border-radius:11px;background:rgba(28,40,48,0.08);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ onUpload }}" style="display:none"></label>
+            <input value="{{ urlIn }}" onChange="{{ onUrlIn }}" onKeyDown="{{ onUrlKey }}" placeholder="or paste image URL + Enter" style="flex:1;min-width:180px;height:40px;padding:0 12px;border-radius:11px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:13px">
+          </div>
+        </div>
+
+        <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Element check" style="display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:17px;font-weight:800">Did the image follow the spec?</span><span style="font-size:13px;font-weight:800;color:{{ scoreColor }}">{{ scoreText }}</span>
+              <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ runCheck }}" style="height:38px;padding:0 14px;border:none;border-radius:10px;background:#2F6B45;color:#FFFFFF;font-size:13px;font-weight:800;cursor:pointer">{{ checkLabel }}</button><sc-if value="{{ hasMissing }}" hint-placeholder-val="{{ false }}"><button onClick="{{ patchMissing }}" style="height:38px;padding:0 14px;border:none;border-radius:10px;background:#D9A441;color:#1C2830;font-size:13px;font-weight:800;cursor:pointer">{{ patchLabel }}</button><button onClick="{{ fixAgent }}" style="height:38px;padding:0 14px;border:none;border-radius:10px;background:rgba(28,40,48,0.08);color:#1C2830;font-size:13px;font-weight:700;cursor:pointer">Ask agent to fix</button></sc-if></div></div>
+            <sc-if value="{{ hasMissing }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;line-height:1.45;color:#4F5D66;text-wrap:pretty">Fixing only redraws inside the missing boxes, plus a soft edge. Everything outside them, including elements already marked ✓, stays exactly as it is. The fix is saved as a new version, so you can always go back.</span></sc-if>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+              <sc-for list="{{ checks }}" as="c" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:12px;background:#FFFFFF;border:1px solid rgba(28,40,48,0.08)">
+                <div style="display:flex;gap:8px;align-items:center"><span style="font:600 12px 'JetBrains Mono',monospace;color:{{ c.color }}">{{ c.id }}</span><span style="font-size:13.5px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.label }}</span></div>
+                <div style="display:flex;gap:4px"><sc-for list="{{ c.opts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.onClick }}" style="flex:1;height:28px;border:none;border-radius:8px;background:{{ o.bg }};color:{{ o.fg }};font-size:12px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div>
+                <span style="font-size:12px;line-height:1.4;color:#4F5D66">{{ c.note }}</span>
+              </div></sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ is.mu }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Music prompt" style="display:flex;flex-direction:column;gap:14px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:800;flex:1">Music from this realm</span>
+            <sc-for list="{{ modeOpts }}" as="v" hint-placeholder-count="3"><button onClick="{{ v.onClick }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:{{ v.bg }};color:{{ v.fg }};font-size:13px;font-weight:700;cursor:pointer">{{ v.label }}</button></sc-for></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:12.5px;font-weight:700;color:#4F5D66">Match video loop</span><sc-for list="{{ loopOpts }}" as="v" hint-placeholder-count="3"><button onClick="{{ v.onClick }}" style="height:30px;padding:0 12px;border:none;border-radius:9px;background:{{ v.bg }};color:{{ v.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ v.label }}</button></sc-for></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+            <sc-for list="{{ musicFacts }}" as="mf" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:12px;background:#FFFFFF;border:1px solid rgba(28,40,48,0.08)"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.06em">{{ mf.k }}</span><span style="font-size:14px;font-weight:700">{{ mf.v }}</span></div></sc-for>
+          </div>
+          <span style="font-size:13px;line-height:1.5;color:#4F5D66;text-wrap:pretty">{{ soundMap }}</span>
+          <sc-for list="{{ musicBlocks }}" as="mb" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:600 12px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.06em;flex:1">{{ mb.title }}</span><button onClick="{{ mb.copy }}" style="height:32px;padding:0 12px;border:none;border-radius:9px;background:rgba(28,40,48,0.08);color:#1C2830;font-size:12.5px;font-weight:700;cursor:pointer">Copy</button><button onClick="{{ mb.save }}" style="height:32px;padding:0 12px;border:none;border-radius:9px;background:rgba(28,40,48,0.08);color:#1C2830;font-size:12.5px;font-weight:700;cursor:pointer">⤓ {{ mb.file }}</button></div>
+              <pre style="margin:0;max-height:240px;overflow:auto;white-space:pre-wrap;font:500 12.5px/1.6 'JetBrains Mono',monospace;color:#1C2830;background:#F4EEDC;border-radius:12px;padding:14px">{{ mb.text }}</pre>
+            </div>
+          </sc-for>
+          <sc-if value="{{ isSong }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button onClick="{{ writeLyrics }}" style="height:40px;padding:0 16px;border:none;border-radius:11px;background:#1C2830;color:#FFFDF7;font-size:13px;font-weight:800;cursor:pointer">{{ lyricsLabel }}</button></div></sc-if>
+          <span style="font-size:12.5px;line-height:1.5;color:#4F5D66;text-wrap:pretty">{{ musicNote }}</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div style="display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+        <span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.08em">REALM</span>
+        <input value="{{ spec.name }}" onChange="{{ onName }}" style="height:40px;padding:0 12px;border-radius:11px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:15px;font-weight:700">
+        <textarea value="{{ spec.concept }}" onChange="{{ onConcept }}" rows="2" placeholder="One line: what is this wallpaper?" style="resize:vertical;padding:10px 12px;border-radius:11px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:14px;line-height:1.45"></textarea>
+        <sc-for list="{{ chipGroups }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#4F5D66">{{ g.label }}</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.onClick }}" style="height:30px;padding:0 11px;border-radius:15px;border:none;background:{{ o.bg }};color:{{ o.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div></div></sc-for>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;color:#4F5D66;flex:1">Palette (main first)</span><sc-for list="{{ palette }}" as="c" hint-placeholder-count="3"><input type="color" value="{{ c.value }}" onChange="{{ c.onChange }}" style="width:36px;height:32px;border:none;border-radius:8px;background:none;padding:0;cursor:pointer"></sc-for></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+        <div style="display:flex;align-items:center"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.08em;flex:1">ELEMENTS · {{ elCount }}</span><span style="font-size:12px;color:#4F5D66">drag boxes on the canvas</span></div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid {{ r.border }};background:{{ r.bg }};color:#1C2830;cursor:pointer;text-align:left"><span style="width:10px;height:10px;border-radius:3px;background:{{ r.color }};flex:none"></span><span style="font:600 12px 'JetBrains Mono',monospace;color:{{ r.color }}">{{ r.id }}</span><span style="font-size:13.5px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.label }}</span><span style="font-size:11.5px;font-weight:600;color:#4F5D66">{{ r.meta }}</span></button></sc-for>
+      </div>
+
+      <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ true }}">
+        <div data-screen-label="Element editor" style="display:flex;flex-direction:column;gap:10px;background:#FFFDF7;border:2px solid {{ sel.color }};border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(60,90,110,0.12)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font:600 12px 'JetBrains Mono',monospace;color:{{ sel.color }}">{{ sel.id }}</span><input value="{{ sel.label }}" onChange="{{ sel.onLabel }}" style="flex:1;min-width:0;height:36px;padding:0 10px;border-radius:10px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:14px;font-weight:700"></div>
+          <textarea value="{{ sel.detail }}" onChange="{{ sel.onDetail }}" rows="2" placeholder="What the image must show (shape, material, count)" style="resize:vertical;padding:9px 10px;border-radius:10px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:13px;line-height:1.45"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:#4F5D66">Depth layer<select value="{{ sel.layer }}" onChange="{{ sel.onLayer }}" style="height:34px;border-radius:9px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:13px;padding:0 8px"><sc-for list="{{ layerOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:#4F5D66">Motion<select value="{{ sel.motion }}" onChange="{{ sel.onMotion }}" style="height:34px;border-radius:9px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:13px;padding:0 8px"><sc-for list="{{ motionOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select></label>
+          </div>
+          <span style="font-size:12px;line-height:1.45;color:#4F5D66">{{ sel.motionHint }}</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button onClick="{{ sel.toggleMust }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;background:{{ sel.mustBg }};color:{{ sel.mustFg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ sel.mustLabel }}</button>
+            <span style="font-size:12px;color:#4F5D66;flex:1">{{ sel.where }}</span>
+            <button onClick="{{ sel.remove }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;background:rgba(28,40,48,0.06);color:#A3332B;font-size:12.5px;font-weight:700;cursor:pointer">Delete</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(255,251,240,0.95),rgba(246,236,212,0.93));border:1px solid #C9A45C;border-radius:14px;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.55),0 14px 36px rgba(40,60,80,0.22)">
+        <span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.08em">NEVER IN THE IMAGE</span>
+        <input value="{{ spec.avoid }}" onChange="{{ onAvoid }}" style="height:38px;padding:0 12px;border-radius:10px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:13px">
+        <button onClick="{{ delRealm }}" style="align-self:flex-start;height:32px;padding:0 12px;border:none;border-radius:9px;background:transparent;color:#A3332B;font-size:12.5px;font-weight:700;cursor:pointer">Delete this realm</button>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{ hasNote }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;max-width:min(620px,calc(100vw - 32px));padding:12px 18px;border-radius:14px;background:#1C2830;color:#FFFDF7;font-size:14px;line-height:1.4;box-shadow:0 12px 30px rgba(0,0,0,0.25)">{{ note }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const KEY = 'ds_realms', CUR = 'ds_realm_cur';
+const LAYERS = [['sky', 'Sky (back)', '#2A6A98'], ['far', 'Far', '#6A55B8'], ['mid', 'Middle', '#2F7A45'], ['near', 'Near (front)', '#A0661A'], ['fx', 'Effect overlay', '#B23A74']];
+const LC = Object.fromEntries(LAYERS.map(l => [l[0], l[2]])), LN = Object.fromEntries(LAYERS.map(l => [l[0], l[1]])), LO = Object.fromEntries(LAYERS.map((l, i) => [l[0], i]));
+const MOTIONS = [['still', 'Still', 'Stays fixed. Mountains and buildings stay still so the loop feels anchored.'], ['drift', 'Drift', 'Slow sideways movement: clouds, mist, sand haze.'], ['flow', 'Flow', 'Moves along its length: water, rivers, waterfalls, auroras. In Loop Studio it becomes a line; motion runs left to right, redraw it to change direction.'], ['ripple', 'Ripple', 'Surface shimmer in place: lakes, reflections, heat haze.'], ['glow', 'Glow / flicker', 'Light pulses in place: windows, lanterns, fire, crystals, stars.'], ['sway', 'Sway', 'Gentle back-and-forth: trees, grass, banners, hanging lights.'], ['fall', 'Fall', 'Particles fall through the box: snow, rain, petals, sand.'], ['rise', 'Rise', 'Particles rise: embers, fireflies, spores, steam.']];
+const MH = Object.fromEntries(MOTIONS.map(m => [m[0], m[2]]));
+const QUICK = [['Mountain', 'far', 'still', [0.2, 0.2, 0.6, 0.45], 'mountain range with clear peaks'], ['Sky', 'sky', 'drift', [0, 0, 1, 0.42], ''], ['Water', 'near', 'ripple', [0, 0.66, 1, 0.34], 'calm water with reflections'], ['Light', 'mid', 'glow', [0.66, 0.55, 0.08, 0.09], 'warm light source'], ['Tree', 'near', 'sway', [0.04, 0.4, 0.2, 0.5], ''], ['Building', 'mid', 'still', [0.6, 0.4, 0.2, 0.25], ''], ['Mist', 'fx', 'drift', [0.05, 0.5, 0.9, 0.14], 'soft low mist band'], ['Particles', 'fx', 'rise', [0.1, 0.2, 0.8, 0.6], 'small floating glowing particles'], ['Custom', 'mid', 'still', [0.4, 0.4, 0.2, 0.2], '']];
+const STYLES = ['Painterly fantasy', 'Anime background', 'Photoreal', 'Pixel art', 'Watercolor'], TIMES = ['Dawn', 'Midday', 'Golden hour', 'Dusk', 'Night'], MOODS = ['Calm', 'Dreamy', 'Mysterious', 'Epic', 'Cozy', 'Melancholic'];
+const STYLE_TXT = { 'Painterly fantasy': 'painterly fantasy concept art, soft brush texture, rich atmospheric depth', 'Anime background': 'hand-painted anime background art, clean shapes, soft cel lighting', 'Photoreal': 'photorealistic landscape photography, natural light, high detail', 'Pixel art': 'detailed 16-bit pixel art, limited palette, crisp pixels', 'Watercolor': 'loose watercolor illustration, paper texture, soft edges' };
+const MOOD = { Calm: [64, 'D major', 'calm peaceful'], Dreamy: [70, 'F major', 'dreamy ethereal'], Mysterious: [66, 'A minor', 'mysterious dark'], Epic: [84, 'D minor', 'epic cinematic'], Cozy: [74, 'G major', 'warm cozy'], Melancholic: [62, 'E minor', 'melancholic sad'] };
+const SOUNDS = [[/mountain|peak|cliff|rock|canyon/i, 'low cello drone', 'cello'], [/water|lake|river|sea|ocean|wave|waterfall|rain|pond/i, 'flowing piano arpeggios', 'piano'], [/fire|lantern|candle|torch|cabin|window|lamp|light/i, 'warm analog pad', 'synthesizer'], [/snow|ice|crystal|frost/i, 'glass bells', 'bell'], [/star|aurora|galaxy|moon|night/i, 'shimmering high pads', 'pad'], [/tree|forest|grass|leaf|garden|meadow/i, 'soft wooden flute', 'flute'], [/city|neon|street|tower|building|castle|temple|ruin/i, 'distant wordless choir', 'choir'], [/mist|fog|cloud|wind|sand|dune|desert|sky/i, 'airy wind texture', 'ambient'], [/bird|wing|feather/i, 'light plucked harp', 'harp']];
+const uid = () => 'r' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+const pct = (v) => Math.round(v * 100);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const DEFAULT = () => ({ id: uid(), name: 'Mountain Lake Dusk', aspect: '16:9', concept: 'A quiet alpine lake under twin snow peaks at dusk, a small cabin glowing on the far shore.', style: 'Painterly fantasy', time: 'Dusk', mood: 'Calm', palette: ['#2B4C7E', '#F2A65A', '#E8E2D0'], avoid: 'text, letters, logos, watermark, people, animals, borders, split panels', loop: 60, music: { mode: 'ambient', lyrics: '' }, versions: [], vcur: 0,
+  elements: [
+    { id: 'S1', label: 'Dusk sky', detail: 'gradient from deep blue to warm orange, first stars', layer: 'sky', motion: 'drift', box: [0, 0, 1, 0.42], must: true, weight: 1 },
+    { id: 'S2', label: 'Twin snow peaks', detail: 'two snow-capped mountains, the left one taller', layer: 'far', motion: 'still', box: [0.16, 0.14, 0.66, 0.46], must: true, weight: 1 },
+    { id: 'S3', label: 'Alpine lake', detail: 'still water mirroring the peaks', layer: 'near', motion: 'ripple', box: [0, 0.64, 1, 0.36], must: true, weight: 1 },
+    { id: 'S4', label: 'Cabin light', detail: 'small wooden cabin with one warm lit window', layer: 'mid', motion: 'glow', box: [0.68, 0.53, 0.09, 0.1], must: true, weight: 1 },
+    { id: 'S5', label: 'Lake mist', detail: 'thin low mist over the water', layer: 'fx', motion: 'drift', box: [0.04, 0.58, 0.92, 0.12], must: false, weight: 1 }] });
+
+const idb = (() => { let p; const open = () => p || (p = new Promise((res, rej) => { const r = indexedDB.open('ds_realms', 1); r.onupgradeneeded = () => r.result.createObjectStore('img'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }));
+  const tx = async (mode, fn) => { const d = await open(); return new Promise((res, rej) => { const t = d.transaction('img', mode), q = fn(t.objectStore('img')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); };
+  return { get: (k) => tx('readonly', s => s.get(k)), put: (k, v) => tx('readwrite', s => s.put(v, k)), del: (k) => tx('readwrite', s => s.delete(k)) }; })();
+
+function where(b) {
+  const cx = b[0] + b[2] / 2, cy = b[1] + b[3] / 2, a = b[2] * b[3];
+  const h = cx < 0.36 ? 'left' : cx > 0.64 ? 'right' : 'center', v = cy < 0.28 ? 'top' : cy < 0.45 ? 'upper' : cy < 0.6 ? 'middle' : cy < 0.76 ? 'lower' : 'bottom';
+  const size = a > 0.35 ? 'dominant, fills most of the frame' : a > 0.15 ? 'large' : a > 0.04 ? 'medium' : 'small';
+  return { short: (v === 'middle' && h === 'center' ? 'center' : v + ' ' + h), size, span: 'x ' + pct(b[0]) + '–' + pct(b[0] + b[2]) + '%, y ' + pct(b[1]) + '–' + pct(b[1] + b[3]) + '%' };
+}
+function dims(sp) { return sp.aspect === '9:16' ? [1080, 1920] : [1920, 1080]; }
+function ordered(sp) { return sp.elements.slice().sort((a, b) => LO[a.layer] - LO[b.layer]); }
+function fullPrompt(sp, focus) {
+  const [W, H] = dims(sp), L = ordered(sp), out = [];
+  out.push((sp.aspect === '9:16' ? 'Vertical 9:16' : 'Wide 16:9') + ' wallpaper, ' + W + 'x' + H + '. ' + (sp.concept || ''));
+  out.push('Style: ' + (STYLE_TXT[sp.style] || sp.style) + '. Time of day: ' + sp.time.toLowerCase() + '. Mood: ' + sp.mood.toLowerCase() + '. Palette, main color first: ' + sp.palette.join(', ') + '.');
+  out.push('', 'COMPOSITION. Every REQUIRED element below must be clearly visible at its position. Positions are percent of the frame: x 0 is the left edge, y 0 is the top edge.');
+  L.forEach((e, i) => { const w = where(e.box); out.push((i + 1) + '. [' + e.id + '] ' + e.label + (e.detail ? ': ' + e.detail : '') + '. ' + LN[e.layer] + ' layer, ' + w.short + ', ' + w.size + ' (' + w.span + ').' + (e.must ? ' REQUIRED.' : ' Optional.') + (e.weight > 1 || (focus && focus.includes(e.id)) ? ' Make it prominent and unmistakable; it was missing last time.' : '')); });
+  out.push('', 'Depth, back to front: ' + L.map(e => e.label).join(' → ') + '.');
+  const mv = L.filter(e => e.motion !== 'still');
+  if (mv.length) out.push('This image will be animated. ' + mv.map(e => 'Keep ' + e.label.toLowerCase() + ' as one clean, continuous area with soft edges (' + e.motion + ')').join('; ') + '. Do not let other objects overlap those areas.');
+  out.push('One continuous scene from one camera. Do not include: ' + sp.avoid + '.');
+  return out.join('\n');
+}
+function shortPrompt(sp) {
+  const L = sp.elements.filter(e => e.must).sort((a, b) => (b.weight || 1) - (a.weight || 1) || LO[a.layer] - LO[b.layer]);
+  const parts = L.map(e => { const w = where(e.box); return ((e.weight || 1) > 1 ? 'clearly visible ' : '') + e.label.toLowerCase() + (e.detail ? ' (' + e.detail + ')' : '') + ' at ' + w.short; });
+  return (STYLE_TXT[sp.style] || sp.style).split(',')[0] + ' ' + (sp.aspect === '9:16' ? 'vertical' : 'wide') + ' wallpaper: ' + parts.join(', ') + ', ' + sp.time.toLowerCase() + ', ' + sp.mood.toLowerCase() + ' mood, no text, no people';
+}
+function agentJob(sp, type, missing, imagePath) {
+  const [W, H] = dims(sp);
+  return { realm: sp.id, type, width: W, height: H, aspect: sp.aspect, missing: missing || [],
+    image: imagePath || null,
+    instructions: type === 'fix' ? 'Edit the attached image. Keep its composition, palette and every element that is already right. Add or repair only: ' + missing.map(id => { const e = sp.elements.find(x => x.id === id); return e ? '[' + id + '] ' + e.label + ' at ' + where(e.box).span : id; }).join('; ') + '. If you cannot edit images, regenerate from the prompt and make these elements prominent.' : type === 'check' ? 'Look at the image. For each element, report present true/false, its box as [x,y,w,h] fractions, and a short note.' : 'Generate the image from the prompt. Every REQUIRED element must be inside its box (±10%).',
+    prompt: fullPrompt(sp, missing),
+    elements: sp.elements.map(e => ({ id: e.id, label: e.label, detail: e.detail, layer: e.layer, box: e.box.map(v => +v.toFixed(3)), required: !!e.must, motion: e.motion })),
+    report: 'Call finish_realm_job with the image (generate/fix) and a check for every element.' };
+}
+const ENGINES = [['pollinations', 'Free'], ['gemini', 'Gemini API'], ['app', 'Gemini app'], ['agent', 'Agent · MCP']];
+const grow = (b, m) => { const x = clamp(b[0] - b[2] * m, 0, 1), y = clamp(b[1] - b[3] * m, 0, 1); return [x, y, clamp(b[0] + b[2] * (1 + m), 0, 1) - x, clamp(b[1] + b[3] * (1 + m), 0, 1) - y]; };
+const loadImage = (src) => new Promise((res, rej) => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => rej(new Error('Could not load the image.')); i.src = src; });
+// Paste each region of img into base with a soft edge. Pixels outside the regions are never touched.
+function composite(base, regions) {
+  const W = base.width, H = base.height, ctx = base.getContext('2d');
+  for (const { img, box, from } of regions) {
+    const rx = Math.round(box[0] * W), ry = Math.round(box[1] * H), rw = Math.max(2, Math.round(box[2] * W)), rh = Math.max(2, Math.round(box[3] * H)), fe = Math.max(4, Math.round(Math.min(rw, rh) * 0.14));
+    const p = document.createElement('canvas'); p.width = rw; p.height = rh; const pc = p.getContext('2d');
+    if (from) pc.drawImage(img, from[0] * img.naturalWidth, from[1] * img.naturalHeight, from[2] * img.naturalWidth, from[3] * img.naturalHeight, 0, 0, rw, rh); else pc.drawImage(img, 0, 0, rw, rh);
+    const m = document.createElement('canvas'); m.width = rw; m.height = rh; const mc = m.getContext('2d'); mc.filter = 'blur(' + (fe / 2) + 'px)'; mc.fillStyle = '#000'; mc.fillRect(fe, fe, rw - fe * 2, rh - fe * 2);
+    pc.globalCompositeOperation = 'destination-in'; pc.drawImage(m, 0, 0); ctx.drawImage(p, rx, ry);
+  }
+  return base.toDataURL('image/jpeg', 0.93);
+}
+async function baseCanvas(src) { const im = await loadImage(src), c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); return c; }
+function music(sp) {
+  const m = sp.music || {}, mode = m.mode || 'ambient', [base, key, moodTag] = MOOD[sp.mood] || MOOD.Calm, loop = sp.loop || 60;
+  const target = mode === 'lofi' ? 82 : mode === 'song' ? base + 14 : base, bars = Math.max(4, Math.round(target * loop / 240)), bpm = Math.round(bars * 240 / loop * 10) / 10;
+  const hits = []; sp.elements.forEach(e => { const t = e.label + ' ' + (e.detail || ''); const s = SOUNDS.find(x => x[0].test(t)); if (s && !hits.find(h => h[1] === s[1])) hits.push([e.label, s[1], s[2]]); });
+  const lead = hits.slice(0, 4), inst = lead.map(h => h[1]);
+  const tod = { Dawn: 'gentle rising', Midday: 'bright open', 'Golden hour': 'warm glowing', Dusk: 'soft fading', Night: 'deep quiet' }[sp.time] || '';
+  const loopTxt = 'Exactly ' + loop + ' seconds, ' + bars + ' bars of 4/4 at ' + bpm + ' BPM, seamless loop: the last bar leads straight back into the first, no fade-in, no fade-out, no ending.';
+  const instr = (mode === 'lofi' ? 'Lo-fi hip hop instrumental, dusty laid-back drums, vinyl crackle, mellow Rhodes chords, ' : 'Ambient instrumental, no drums, slow evolving texture, ') + inst.join(', ') + '. ' + tod + ' ' + sp.mood.toLowerCase() + ' mood in ' + key + '. Inspired by a ' + sp.style.toLowerCase() + ' scene: ' + (sp.concept || '') + ' No vocals. ' + loopTxt;
+  const gender = /Epic|Mysterious|Melancholic/.test(sp.mood) ? 'male' : 'female';
+  const tags = [mode === 'song' ? (sp.mood === 'Epic' ? 'cinematic' : 'dream pop') : 'ambient', ...new Set(lead.map(h => h[2]))].concat(moodTag.split(' '), [gender, 'airy', 'vocal']).join(' ');
+  const brief = 'Write song lyrics for YuE. Theme: ' + (sp.concept || sp.name) + ' Images to use: ' + sp.elements.map(e => e.label.toLowerCase()).join(', ') + '. Mood: ' + sp.mood.toLowerCase() + ', ' + sp.time.toLowerCase() + '. Structure: [verse] 4 lines, [chorus] 4 lines, [verse] 4 lines, [chorus] 4 lines. Short singable lines, no rhymes forced, no brand names. Output only the lyrics with the section labels, a blank line between sections.';
+  return { mode, bpm, bars, key, loop, lead, instr, tags, brief, gender };
+}
+
+class Component extends DCLogic {
+  state = { engine: 'pollinations', geminiKey: '', keepSeed: false, patching: false, realms: [], cur: null, sel: 'S1', tab: 'el', pTab: 'full', imgSrc: {}, imgOpacity: 0.85, urlIn: '', note: '', copied: false, checking: false, genBusy: false, live: false, job: null, lyricsBusy: false };
+  stageRef = (el) => { this.stage = el; };
+  async componentDidMount() {
+    let realms = [], cur = null; try { realms = JSON.parse(localStorage.getItem(KEY) || '[]'); cur = localStorage.getItem(CUR); } catch (e) {}
+    if (!realms.length) { const d = DEFAULT(); realms = [d]; }
+    realms = realms.map(r => { if (r.versions) return r; const v = r.image ? [{ n: 1, ...r.image, key: r.image.kind === 'idb' ? r.id : undefined, check: r.check || {}, label: 'First' }] : []; const { image, check, ...rest } = r; return { ...rest, versions: v, vcur: v.length ? 1 : 0 }; });
+    let engine = 'pollinations', geminiKey = ''; try { engine = localStorage.getItem('ds_img_engine') || 'pollinations'; geminiKey = localStorage.getItem('ds_gemini_key') || ''; } catch (e) {}
+    if (!ENGINES.find(x => x[0] === engine)) engine = 'pollinations';
+    this.setState({ engine, geminiKey });
+    if (!realms.find(r => r.id === cur)) cur = realms[0].id;
+    let live = false; try { live = (await fetch('api/ping', { cache: 'no-store' })).ok; } catch (e) {}
+    this.setState({ realms, cur, live, sel: (realms.find(r => r.id === cur).elements[0] || {}).id }, () => { this.loadImg(); this.save(); });
+    this.poll = setInterval(() => this.pollJob(), 3000);
+  }
+  componentWillUnmount() { clearInterval(this.poll); clearTimeout(this.st); clearTimeout(this.dt); }
+  flash(m) { this.setState({ note: m }); clearTimeout(this.nt); this.nt = setTimeout(() => this.setState({ note: '' }), 3600); }
+  spec() { return this.state.realms.find(r => r.id === this.state.cur) || this.state.realms[0]; }
+  patch(p, cb) { const id = this.state.cur; this.setState(s => ({ realms: s.realms.map(r => r.id === id ? { ...r, ...(typeof p === 'function' ? p(r) : p), updatedAt: Date.now() } : r) }), () => { this.save(); cb && cb(); }); }
+  patchEl(eid, p) { this.patch(r => ({ elements: r.elements.map(e => e.id === eid ? { ...e, ...p } : e) })); }
+  save() {
+    try { localStorage.setItem(KEY, JSON.stringify(this.state.realms)); localStorage.setItem(CUR, this.state.cur); } catch (e) { this.flash('Browser storage is full. Delete old realms.'); }
+    if (!this.state.live) return; clearTimeout(this.dt); const sp = this.spec();
+    this.dt = setTimeout(() => fetch('api/realm/' + sp.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sp) }).catch(() => {}), 700);
+  }
+  async loadImg() {
+    const want = []; this.state.realms.forEach(r => (r.versions || []).forEach(v => { if (v.kind === 'idb' && v.key && !this.state.imgSrc[v.key] && (r.id === this.state.cur || v.n === r.vcur)) want.push(v.key); }));
+    for (const k of want) { try { const d = await idb.get(k); if (d) this.setState(s => ({ imgSrc: { ...s.imgSrc, [k]: d } })); } catch (e) {} }
+  }
+  curV(sp) { sp = sp || this.spec(); return sp && (sp.versions || []).find(v => v.n === sp.vcur) || null; }
+  vSrc(v) { if (!v) return ''; return v.kind === 'idb' ? (this.state.imgSrc[v.key] || '') : v.url; }
+  srcOf(sp) { return this.vSrc(this.curV(sp)); }
+  setCheck(fn) { this.patch(r => ({ versions: r.versions.map(v => v.n === r.vcur ? { ...v, check: fn(v.check || {}) } : v) })); }
+  // Every new image is a new version; nothing is overwritten. Keeps the last 30.
+  async addVersion(img, data, label, check) {
+    const sp = this.spec(), n = (sp.versions || []).reduce((a, v) => Math.max(a, v.n), 0) + 1, parent = sp.vcur || null;
+    let v = { ...img, n, label: label || 'Generate', parent, check: check || {}, at: Date.now() };
+    if (data) {
+      let saved = false;
+      if (this.state.live) { try { const r = await fetch('api/realmimg/' + sp.id + '-v' + n, { method: 'PUT', headers: { 'Content-Type': 'text/plain' }, body: data }); const j = await r.json(); if (r.ok && j.url) { v = { ...v, kind: 'file', url: j.url + '?v=' + Date.now() }; saved = true; } } catch (e) {} }
+      if (!saved) { const key = sp.id + ':' + n; await idb.put(key, data); v = { ...v, kind: 'idb', key }; this.setState(s => ({ imgSrc: { ...s.imgSrc, [key]: data } })); }
+    }
+    const all = [...(sp.versions || []), v];
+    all.slice(0, Math.max(0, all.length - 30)).forEach(d => d.key && idb.del(d.key).catch(() => {}));
+    this.patch({ versions: all.slice(-30), vcur: n });
+  }
+  storeData(data, label, check) { return this.addVersion({ engine: 'upload' }, data, label || 'Upload', check); }
+  async shrink(src, max) {
+    const im = await new Promise((res, rej) => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => rej(new Error('Could not load the image.')); i.src = src; });
+    const k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+    c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', 0.86);
+  }
+  async queue(type, missing) {
+    const sp = this.spec();
+    const cv = this.curV(sp), job = { ...agentJob(sp, type, missing || [], cv && cv.kind !== 'idb' ? cv.url.split('?')[0] : null), baseVersion: cv ? cv.n : null, status: 'queued', queuedAt: new Date().toISOString() };
+    if (!this.state.live) { try { await navigator.clipboard.writeText(JSON.stringify(job, null, 2)); } catch (e) {} this.flash('Studio server is off, so the job was copied instead. Paste it to any agent, or run cd mcp && npm run studio.'); return; }
+    try { const r = await fetch('api/realmjob/' + sp.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(job) }); if (!r.ok) throw 0; this.setState({ job }); this.flash('Queued. Tell your agent: "do my queued realm jobs".'); }
+    catch (e) { this.flash('Could not queue the job. Is npm run studio running?'); }
+  }
+  async pollJob() {
+    if (!this.state.live) return; const sp = this.spec(); if (!sp) return;
+    try {
+      const r = await fetch('production/realms/' + sp.id + '.job.json', { cache: 'no-store' }); if (!r.ok) { if (this.state.job) this.setState({ job: null }); return; }
+      const j = await r.json(); if (JSON.stringify(j) !== JSON.stringify(this.state.job)) this.setState({ job: j });
+      if (j.status === 'done' && j.doneAt && j.doneAt !== sp.jobDoneAt) {
+        this.patch({ jobDoneAt: j.doneAt });
+        const res = j.result || {}, ck = res.check ? Object.fromEntries(Object.entries(res.check).map(([k, v]) => [k, { v: v.present === true ? 'yes' : v.present === false ? 'no' : 'unsure', note: 'Agent: ' + (v.note || ''), box: Array.isArray(v.box) ? v.box : null }])) : null;
+        if (res.image) {
+          const url = res.image + '?v=' + Date.now(), base = (sp.versions || []).find(v => v.n === j.baseVersion);
+          if (j.type === 'fix' && base && (j.missing || []).length) {
+            try { const [bc, im] = await Promise.all([baseCanvas(this.vSrc(base)), loadImage(url)]), regions = j.missing.map(id => sp.elements.find(e => e.id === id)).filter(Boolean).map(e => { const g = grow(e.box, 0.1); return { img: im, box: g, from: g }; });
+              const keepCk = { ...(base.check || {}) }; j.missing.forEach(id => { keepCk[id] = (ck && ck[id]) || {}; });
+              await this.addVersion({ engine: 'agent', model: res.model || '' }, composite(bc, regions), 'Agent fix ' + j.missing.join(' '), keepCk); }
+            catch (e) { await this.addVersion({ kind: 'file', url, engine: 'agent', model: res.model || '' }, null, 'Agent fix (full)', ck || {}); }
+          } else await this.addVersion({ kind: 'file', url, engine: 'agent', model: res.model || '' }, null, 'Agent ' + j.type, ck || {});
+        } else if (ck) this.setCheck(() => ck);
+        this.flash(res.note ? 'Agent: ' + res.note : 'Agent finished the ' + j.type + ' job.');
+      }
+    } catch (e) {}
+  }
+  async runCheck() {
+    const sp = this.spec(), src = this.srcOf(sp); if (!src) return;
+    if (!(window.claude && window.claude.complete)) { if (this.state.live) return this.queue('check'); this.flash('No AI here. Tick each element yourself, or start npm run studio to ask the agent.'); return; }
+    this.setState({ checking: true });
+    try {
+      const data = await this.shrink(src, 1024);
+      const els = sp.elements.map(e => e.id + ': ' + e.label + (e.detail ? ' (' + e.detail + ')' : '') + ', planned box ' + JSON.stringify(e.box.map(v => +v.toFixed(2)))).join('\n');
+      const out = await window.claude.complete({ max_tokens: 900, system: 'You audit AI wallpaper images against a spec. Be strict: present means a viewer would clearly recognise it. Return ONLY JSON: {"S1":{"present":true,"box":[x,y,w,h],"note":"max 12 words"}}. Boxes are fractions of the frame. Use null box if absent.', messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: data.split(',')[1] } }, { type: 'text', text: 'Elements:\n' + els }] }] });
+      const j = JSON.parse(out.slice(out.indexOf('{'), out.lastIndexOf('}') + 1)), check = {};
+      sp.elements.forEach(e => { const v = j[e.id] || {}; check[e.id] = { v: v.present === true ? 'yes' : v.present === false ? 'no' : 'unsure', note: String(v.note || '').slice(0, 90), box: Array.isArray(v.box) && v.box.length === 4 ? v.box.map(Number) : null }; });
+      this.setCheck(() => check); this.setState({ checking: false });
+    } catch (e) { this.setState({ checking: false }); this.flash(/load/.test(e.message || '') ? 'This image host blocks reading. Upload the file instead.' : 'Check failed. Tick elements yourself.'); }
+  }
+  polUrl(prompt, w, h, seed) { return 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=' + w + '&height=' + h + '&seed=' + seed + '&model=flux&nologo=true&enhance=false'; }
+  async gemini(parts) {
+    const st = this.state; if (!st.geminiKey) throw new Error('Paste your Gemini API key first.');
+    const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': st.geminiKey }, body: JSON.stringify({ contents: [{ parts }] }) });
+    const j = await r.json(); if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status));
+    const p = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).find(x => x.inlineData || x.inline_data); if (!p) throw new Error('Gemini returned no image. Try again.');
+    const dd = p.inlineData || p.inline_data; return 'data:' + (dd.mimeType || dd.mime_type || 'image/png') + ';base64,' + dd.data;
+  }
+  async generate() {
+    const st = this.state, sp = this.spec(), [W, H] = dims(sp), cv = this.curV(sp), same = st.keepSeed && cv && cv.seed, seed = same ? cv.seed : Math.floor(Math.random() * 1e6);
+    if (st.engine === 'agent') return this.queue('generate');
+    if (st.engine === 'app') { try { await navigator.clipboard.writeText(fullPrompt(sp)); } catch (e) {} window.open('https://gemini.google.com/app', '_blank'); this.flash('Prompt copied. Paste it in Gemini, download the image, then press ⤒ Upload.'); return; }
+    this.setState({ genBusy: true });
+    try {
+      if (st.engine === 'gemini') await this.addVersion({ engine: 'gemini' }, await this.gemini([{ text: fullPrompt(sp) }]), 'Gemini');
+      else { const url = this.polUrl(shortPrompt(sp), W, H, seed); await loadImage(url); await this.addVersion({ kind: 'url', url, engine: 'pollinations', seed }, null, same ? 'Same seed' : 'Generate'); }
+    } catch (e) { this.flash(st.engine === 'gemini' ? String(e.message || e) : 'Pollinations did not answer. Try again or switch engine.'); }
+    this.setState({ genBusy: false });
+  }
+  // Redraw only the missing boxes. Gemini edits with the whole image as context, then only the boxes are pasted back; the free route draws each box on its own.
+  async patchMissing() {
+    const st = this.state, sp = this.spec(), cv = this.curV(sp), ids = this.missing(); if (!cv || !ids.length) return;
+    if (st.engine === 'agent') return this.queue('fix', ids);
+    if (st.engine === 'app') { try { await navigator.clipboard.writeText(agentJob(sp, 'fix', ids, null).instructions); } catch (e) {} window.open('https://gemini.google.com/app', '_blank'); this.flash('Fix instructions copied. In Gemini attach the current image, paste, then ⤒ Upload the result.'); return; }
+    this.setState({ patching: true });
+    try {
+      const base = await baseCanvas(this.vSrc(cv)), els = ids.map(id => sp.elements.find(e => e.id === id)).filter(Boolean), regions = [];
+      if (st.engine === 'gemini') {
+        const jpg = base.toDataURL('image/jpeg', 0.9), txt = 'Edit this image. Keep everything else identical: same framing, composition, palette and style. Only add or repair these elements, each inside its region (percent of the frame, x from left, y from top):\n' + els.map(e => '[' + e.id + '] ' + e.label + (e.detail ? ': ' + e.detail : '') + ' at ' + where(e.box).span).join('\n') + '\nMatch the existing lighting and perspective. Return the full image.';
+        const im = await loadImage(await this.gemini([{ inline_data: { mime_type: 'image/jpeg', data: jpg.split(',')[1] } }, { text: txt }]));
+        els.forEach(e => { const g = grow(e.box, 0.1); regions.push({ img: im, box: g, from: g }); });
+      } else {
+        const ctx = (STYLE_TXT[sp.style] || sp.style).split(',')[0] + ', ' + sp.time.toLowerCase() + ' light, ' + sp.mood.toLowerCase() + ' mood, colors ' + sp.palette.join(' ');
+        for (const e of els) {
+          const g = grow(e.box, 0.1), rw = g[2] * base.width, rh = g[3] * base.height, k = Math.min(1024 / Math.max(rw, rh), 2), w = Math.max(64, Math.round(rw * k / 8) * 8), h = Math.max(64, Math.round(rh * k / 8) * 8);
+          const near = sp.elements.filter(o => o.id !== e.id && o.box[0] < g[0] + g[2] && g[0] < o.box[0] + o.box[2] && o.box[1] < g[1] + g[3] && g[1] < o.box[1] + o.box[3]).map(o => o.label.toLowerCase());
+          regions.push({ img: await loadImage(this.polUrl(e.label + (e.detail ? ', ' + e.detail : '') + ', clearly visible, centered in frame' + (near.length ? ', surrounded by ' + near.join(' and ') : '') + ', ' + ctx + ', no text', w, h, Math.floor(Math.random() * 1e6))), box: g });
+        }
+      }
+      const ck = { ...(cv.check || {}) }; ids.forEach(id => { ck[id] = {}; });
+      await this.addVersion({ engine: st.engine, seed: cv.seed }, composite(base, regions), (st.engine === 'gemini' ? 'Gemini fix ' : 'Patch ') + ids.join(' '), ck);
+      this.flash('Fixed ' + ids.join(', ') + ' in a new version. Check them again.');
+    } catch (e) { this.flash(/load/.test(e.message || '') ? 'This image host blocks pixel reading. Upload the file, then fix.' : String(e.message || e)); }
+    this.setState({ patching: false });
+  }
+  missing() { const c = (this.curV() || {}).check || {}; return this.spec().elements.filter(e => e.must && c[e.id] && c[e.id].v === 'no').map(e => e.id); }
+  toFrac(e) { const rc = this.stage.getBoundingClientRect(); return [(e.clientX - rc.left) / rc.width, (e.clientY - rc.top) / rc.height]; }
+  sendLoop() {
+    const sp = this.spec(), src = this.srcOf(sp);
+    if (!src) { this.flash('Make or upload the image first.'); return; }
+    let n = 0; const marks = sp.elements.filter(e => e.motion !== 'still').map(e => { n++; const [x, y, w, h] = e.box, base = { id: 'M' + n, label: e.label.slice(0, 30), kind: e.motion, spec: e.id, r: +clamp(Math.min(w, h) / 2, 0.02, 0.25).toFixed(3) };
+      return e.motion === 'flow' ? { ...base, type: 'path', r: 0.03, pts: [0.05, 0.35, 0.65, 0.95].map(t => [+(x + w * t).toFixed(3), +(y + h / 2).toFixed(3)]) } : { ...base, x: +(x + w / 2).toFixed(3), y: +(y + h / 2).toFixed(3) }; });
+    try { localStorage.setItem('ds_realm_handoff', JSON.stringify({ realm: sp.id, key: (this.curV(sp) || {}).key, name: sp.name, src: /^data:/.test(src) ? null : src, idb: /^data:/.test(src), tall: sp.aspect === '9:16', loop: sp.loop, prompt: fullPrompt(sp), marks, at: Date.now() })); } catch (e) { this.flash('Could not hand off: storage full.'); return; }
+    location.href = 'Loop Studio.dc.html';
+  }
+  async writeLyrics() {
+    const sp = this.spec(), mu = music(sp);
+    if (!(window.claude && window.claude.complete)) { try { await navigator.clipboard.writeText(mu.brief); } catch (e) {} this.flash('Lyrics brief copied. Paste it to any agent, then paste the lyrics back here.'); return; }
+    this.setState({ lyricsBusy: true });
+    try { const out = await window.claude.complete({ max_tokens: 600, messages: [{ role: 'user', content: mu.brief }] }); this.patch(r => ({ music: { ...r.music, lyrics: out.trim() } })); } catch (e) { this.flash('Could not write lyrics.'); }
+    this.setState({ lyricsBusy: false });
+  }
+  download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
+
+  renderVals() {
+    const st = this.state, sp = this.spec();
+    if (!sp) return { tabs: [], realmCards: [], boxes: [], rows: [], is: { el: true }, spec: {} };
+    const tall = sp.aspect === '9:16', src = this.srcOf(sp), cv = this.curV(sp), chk = (cv && cv.check) || {}, on = (v) => v ? { bg: '#2F6B45', fg: '#FFFFFF' } : { bg: 'rgba(28,40,48,0.06)', fg: '#1C2830' };
+    const selE = sp.elements.find(e => e.id === st.sel), miss = this.missing(), mu = music(sp), job = st.job;
+    const checked = sp.elements.filter(e => chk[e.id] && chk[e.id].v !== 'unsure'), yes = sp.elements.filter(e => chk[e.id] && chk[e.id].v === 'yes').length;
+    const req = sp.elements.filter(e => e.must), reqOk = req.filter(e => chk[e.id] && chk[e.id].v === 'yes').length;
+    const startDrag = (e, el, mode) => { e.stopPropagation(); e.preventDefault(); try { this.stage.setPointerCapture(e.pointerId); } catch (er) {} this.drag = { id: el.id, mode, start: this.toFrac(e), orig: el.box.slice() }; if (st.sel !== el.id) this.setState({ sel: el.id }); };
+    const ptext = st.pTab === 'short' ? shortPrompt(sp) : st.pTab === 'agent' ? JSON.stringify(agentJob(sp, 'generate', [], null), null, 2) : fullPrompt(sp);
+    const blocks = mu.mode === 'song'
+      ? [{ title: 'YUE GENRE TAGS · genre.txt', file: 'genre.txt', text: mu.tags }, sp.music && sp.music.lyrics ? { title: 'YUE LYRICS · lyrics.txt', file: 'lyrics.txt', text: sp.music.lyrics } : { title: 'LYRICS BRIEF · paste to any agent', file: 'lyrics-brief.txt', text: mu.brief }]
+      : [{ title: (mu.mode === 'lofi' ? 'LO-FI' : 'AMBIENT') + ' PROMPT · MusicGen / Stable Audio Open / ACE-Step', file: 'music-prompt.txt', text: mu.instr }];
+    return {
+      spec: sp, is: { el: st.tab === 'el', mu: st.tab === 'mu' },
+      tabs: [['el', 'Elements'], ['mu', 'Music']].map(([k, label]) => ({ label, ...(st.tab === k ? { bg: '#1C2830', fg: '#FFFDF7' } : { bg: 'transparent', fg: '#1C2830' }), onClick: () => this.setState({ tab: k }) })),
+      realmCards: st.realms.map(r => { const s2 = this.srcOf(r); return { name: r.name || 'Untitled', thumb: s2 ? 'url("' + s2 + '")' : 'repeating-linear-gradient(135deg,rgba(110,86,44,0.08) 0 8px,transparent 8px 16px),#F5EFDD', bg: r.id === sp.id ? '#FFFDF7' : 'rgba(255,253,247,0.55)', ring: r.id === sp.id ? '0 0 0 2px #2F6B45, 0 6px 18px rgba(40,70,90,0.18)' : 'none', onClick: () => this.setState({ cur: r.id, sel: (r.elements[0] || {}).id, job: null }, () => { this.loadImg(); this.save(); }) }; }),
+      newRealm: () => { const d = { ...DEFAULT(), name: 'New realm', concept: '', elements: [] }; this.setState(s => ({ realms: [...s.realms, d], cur: d.id, sel: null, job: null }), () => this.save()); },
+      dupRealm: () => { const d = { ...JSON.parse(JSON.stringify(sp)), id: uid(), name: sp.name + ' copy', versions: [], vcur: 0, jobDoneAt: null }; this.setState(s => ({ realms: [...s.realms, d], cur: d.id, job: null }), () => this.save()); },
+      delRealm: () => { if (!confirm('Delete "' + sp.name + '"?')) return; (sp.versions || []).forEach(v => v.key && idb.del(v.key).catch(() => {})); const rest = st.realms.filter(r => r.id !== sp.id); const list = rest.length ? rest : [DEFAULT()]; this.setState({ realms: list, cur: list[0].id, sel: (list[0].elements[0] || {}).id, job: null }, () => { this.loadImg(); this.save(); }); },
+      sendLoop: () => this.sendLoop(),
+      stageW: tall ? 'auto' : '100%', stageH: tall ? '62vh' : 'auto', ar: tall ? '9/16' : '16/9',
+      hasImage: !!src, imageSrc: src, imgOpacity: st.imgOpacity, onOpacity: (e) => this.setState({ imgOpacity: +e.target.value }),
+      boxes: sp.elements.map(e => { const c = LC[e.layer], s = e.id === st.sel, ck = chk[e.id]; return { id: e.id, label: e.label, color: c, l: pct(e.box[0]) + '%', t: pct(e.box[1]) + '%', w: (e.box[2] * 100).toFixed(1) + '%', h: (e.box[3] * 100).toFixed(1) + '%', dash: e.must ? 'solid' : 'dashed', fill: s ? 'rgba(255,253,247,0.22)' : 'rgba(255,253,247,0.06)', z: s ? 20 : 10 - LO[e.layer], mark: ck ? (ck.v === 'yes' ? '✓' : ck.v === 'no' ? '✗' : '?') : '', down: (ev) => startDrag(ev, e, 'move'), resize: (ev) => startDrag(ev, e, 'size') }; }),
+      found: sp.elements.filter(e => chk[e.id] && chk[e.id].box).map(e => { const b = chk[e.id].box; return { l: pct(b[0]) + '%', t: pct(b[1]) + '%', w: pct(b[2]) + '%', h: pct(b[3]) + '%' }; }),
+      onStageDown: () => this.setState({ sel: null }),
+      onMove: (e) => { const d = this.drag; if (!d) return; const p = this.toFrac(e), dx = p[0] - d.start[0], dy = p[1] - d.start[1], o = d.orig; const box = d.mode === 'move' ? [clamp(o[0] + dx, 0, 1 - o[2]), clamp(o[1] + dy, 0, 1 - o[3]), o[2], o[3]] : [o[0], o[1], clamp(o[2] + dx, 0.03, 1 - o[0]), clamp(o[3] + dy, 0.03, 1 - o[1])]; this.patchEl(d.id, { box: box.map(v => +v.toFixed(3)) }); },
+      onUp: () => { this.drag = null; },
+      aspects: ['16:9', '9:16'].map(a => ({ label: a === '16:9' ? '16:9 wide' : '9:16 vertical', ...on(sp.aspect === a), onClick: () => this.patch({ aspect: a }) })),
+      quick: QUICK.map(([label, layer, motion, box, detail]) => ({ label, onClick: () => { const n = sp.elements.reduce((a, e) => Math.max(a, +e.id.slice(1) || 0), 0) + 1, id = 'S' + n; this.patch(r => ({ elements: [...r.elements, { id, label: label === 'Custom' ? 'New element' : label, detail, layer, motion, box: box.slice(), must: true, weight: 1 }] })); this.setState({ sel: id }); } })),
+      pTabs: [['full', 'Full'], ['short', 'Short'], ['agent', 'Agent JSON']].map(([k, label]) => ({ label, ...(st.pTab === k ? { bg: '#1C2830', fg: '#FFFDF7' } : { bg: 'rgba(28,40,48,0.06)', fg: '#1C2830' }), onClick: () => this.setState({ pTab: k }) })),
+      pNote: st.pTab === 'short' ? 'For Pollinations and other models that drop long prompts: required elements first, most important first.' : st.pTab === 'agent' ? 'For MCP agents (Claude Code, Codex, Gemini CLI). Every agent gets the same element list, boxes and acceptance rule, so they can\'t drift from the idea.' : 'For Gemini and other models that read long prompts. Every element has an id, a position and a depth layer.',
+      pText: ptext, copyLabel: st.copied ? 'Copied' : 'Copy prompt',
+      copyP: async () => { try { await navigator.clipboard.writeText(ptext); } catch (e) {} this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1400); },
+      generate: () => this.generate(), genLabel: st.genBusy ? 'Generating…' : st.engine === 'agent' ? 'Ask agent to generate' : st.engine === 'app' ? 'Copy prompt & open Gemini' : '✦ Generate',
+      engines: ENGINES.map(([k, label]) => ({ label, ...on(st.engine === k), onClick: () => { try { localStorage.setItem('ds_img_engine', k); } catch (e) {} this.setState({ engine: k }); } })),
+      needKey: st.engine === 'gemini' && !st.geminiKey, geminiKey: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
+      engineNote: st.engine === 'pollinations' ? 'Free Flux model, no key. Detail is soft, especially at full width. For sharper images use Gemini, or upscale the version you pick with Real-ESRGAN on your PC (fits in 8 GB).' : st.engine === 'gemini' ? 'Sharper, and it follows positions better. When fixing it edits the image instead of redrawing it. Your key is shared with Storyboard Studio.' : st.engine === 'app' ? 'Free with no key: copies the prompt and opens Gemini. Download the image there, then press ⤒ Upload.' : 'Your connected agent makes the image with its own image tool and reports which elements it got.',
+      toggleSeed: () => this.setState({ keepSeed: !st.keepSeed }), seedLabel: st.keepSeed ? '🔒 Same seed' : 'New seed', seedBg: st.keepSeed ? '#1C2830' : 'rgba(28,40,48,0.08)', seedFg: st.keepSeed ? '#FFFDF7' : '#1C2830',
+      hasVersions: (sp.versions || []).length > 0,
+      versions: (sp.versions || []).slice().reverse().map(v => { const s2 = this.vSrc(v), ok = sp.elements.filter(e => e.must && v.check && v.check[e.id] && v.check[e.id].v === 'yes').length; return { label: 'v' + v.n + ' · ' + v.label, title: (v.engine || '') + (v.seed ? ' · seed ' + v.seed : '') + (v.check && Object.keys(v.check).length ? ' · ' + ok + ' required found' : ''), thumb: s2 ? 'url("' + s2 + '")' : '#E9E1CC', ring: v.n === sp.vcur ? '0 0 0 3px #2F6B45' : '0 0 0 1px rgba(28,40,48,0.12)',
+        onClick: () => this.patch({ vcur: v.n }, () => this.loadImg()),
+        remove: () => { if (v.key) idb.del(v.key).catch(() => {}); this.patch(r => { const rest = r.versions.filter(x => x.n !== v.n); return { versions: rest, vcur: r.vcur === v.n ? (rest.length ? (rest.find(x => x.n === v.parent) || rest[rest.length - 1]).n : 0) : r.vcur }; }); } }; }),
+      undo: () => { const vs = sp.versions || [], i = vs.findIndex(v => v.n === sp.vcur), prev = (cv && cv.parent && vs.find(v => v.n === cv.parent)) || vs[i - 1]; if (prev) this.patch({ vcur: prev.n }, () => this.loadImg()); else this.flash('This is the first version.'); },
+      patchMissing: () => this.patchMissing(), patchLabel: st.patching ? 'Fixing…' : st.engine === 'gemini' ? 'Fix missing · Gemini edit' : st.engine === 'agent' ? 'Fix missing · agent' : st.engine === 'app' ? 'Fix missing · Gemini app' : 'Fix missing · free patch',
+      onUpload: async (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const raw = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(f); }); try { await this.storeData(await this.shrink(raw, 1920)); } catch (er) { this.flash('Could not read that image.'); } },
+      urlIn: st.urlIn, onUrlIn: (e) => this.setState({ urlIn: e.target.value }), onUrlKey: (e) => { if (e.key === 'Enter' && /^https?:\/\//.test(st.urlIn.trim())) { this.addVersion({ kind: 'url', url: st.urlIn.trim(), engine: 'link' }, null, 'Link'); this.setState({ urlIn: '' }); } },
+      jobShow: !!job && (job.status === 'queued' || job.status === 'working'), jobText: job ? (job.status === 'queued' ? 'Waiting for agent · ' + job.type + ' job queued' : 'Agent: ' + (job.note || 'working on ' + job.type)) : '',
+      cancelJob: () => { fetch('api/realmjob/' + sp.id, { method: 'DELETE' }).catch(() => {}); this.setState({ job: null }); },
+      scoreText: checked.length ? reqOk + ' of ' + req.length + ' required elements found' : 'Not checked yet', scoreColor: !checked.length ? '#4F5D66' : reqOk === req.length ? '#2F6B45' : '#A3332B',
+      checkLabel: st.checking ? 'Checking…' : (window.claude && window.claude.complete) ? 'Check with AI' : st.live ? 'Ask agent to check' : 'Check with AI',
+      hasMissing: miss.length > 0, fixAgent: () => this.queue('fix', miss),
+      runCheck: () => this.runCheck(),
+      checks: sp.elements.map(e => { const ck = chk[e.id] || {}; return { id: e.id, label: e.label, color: LC[e.layer], note: ck.note || (e.must ? 'Required' : 'Optional'),
+        opts: [['yes', '✓ There'], ['no', '✗ Missing'], ['unsure', '?']].map(([v, label]) => ({ label, ...(ck.v === v ? (v === 'yes' ? { bg: '#2F6B45', fg: '#FFFFFF' } : v === 'no' ? { bg: '#A3332B', fg: '#FFFFFF' } : { bg: '#1C2830', fg: '#FFFDF7' }) : { bg: 'rgba(28,40,48,0.06)', fg: '#1C2830' }), onClick: () => this.setCheck(c => ({ ...c, [e.id]: { ...c[e.id], v } })) })) }; }),
+      elCount: sp.elements.length,
+      rows: ordered(sp).map(e => ({ id: e.id, label: e.label, color: LC[e.layer], meta: LN[e.layer].split(' ')[0] + ' · ' + e.motion + (e.must ? '' : ' · opt'), bg: e.id === st.sel ? '#FFFFFF' : 'transparent', border: e.id === st.sel ? LC[e.layer] : 'rgba(28,40,48,0.08)', onClick: () => this.setState({ sel: e.id }) })),
+      hasSel: !!selE, layerOpts: LAYERS.map(l => ({ v: l[0], label: l[1] })), motionOpts: MOTIONS.map(m => ({ v: m[0], label: m[1] })),
+      sel: selE ? { id: selE.id, label: selE.label, detail: selE.detail, layer: selE.layer, motion: selE.motion, color: LC[selE.layer], motionHint: MH[selE.motion], where: (() => { const w = where(selE.box); return w.short + ' · ' + w.size; })(),
+        onLabel: (e) => this.patchEl(selE.id, { label: e.target.value }), onDetail: (e) => this.patchEl(selE.id, { detail: e.target.value }), onLayer: (e) => this.patchEl(selE.id, { layer: e.target.value }), onMotion: (e) => this.patchEl(selE.id, { motion: e.target.value }),
+        toggleMust: () => this.patchEl(selE.id, { must: !selE.must }), mustLabel: selE.must ? 'Required' : 'Optional', mustBg: selE.must ? '#2F6B45' : 'rgba(28,40,48,0.08)', mustFg: selE.must ? '#FFFFFF' : '#1C2830',
+        remove: () => { this.patch(r => ({ elements: r.elements.filter(e => e.id !== selE.id) })); this.setState({ sel: null }); } } : { color: '#2F6B45' },
+      onName: (e) => this.patch({ name: e.target.value }), onConcept: (e) => this.patch({ concept: e.target.value }), onAvoid: (e) => this.patch({ avoid: e.target.value }),
+      chipGroups: [['Style', 'style', STYLES], ['Time', 'time', TIMES], ['Mood', 'mood', MOODS]].map(([label, k, opts]) => ({ label, opts: opts.map(o => ({ label: o, ...on(sp[k] === o), onClick: () => this.patch({ [k]: o }) })) })),
+      palette: sp.palette.map((c, i) => ({ value: c, onChange: (e) => this.patch(r => ({ palette: r.palette.map((x, j) => j === i ? e.target.value : x) })) })),
+      modeOpts: [['ambient', 'Ambient'], ['lofi', 'Lo-fi'], ['song', 'Song (YuE)']].map(([k, label]) => ({ label, ...on(mu.mode === k), onClick: () => this.patch(r => ({ music: { ...(r.music || {}), mode: k } })) })),
+      loopOpts: [30, 60, 120].map(n => ({ label: n + 's', ...on(mu.loop === n), onClick: () => this.patch({ loop: n }) })),
+      musicFacts: [{ k: 'TEMPO', v: mu.bpm + ' BPM' }, { k: 'LOOP', v: mu.bars + ' bars · ' + mu.loop + 's' }, { k: 'KEY', v: mu.key }, { k: 'MODEL', v: mu.mode === 'song' ? 'YuE2 Studio' : 'Lighter model' }],
+      soundMap: mu.lead.length ? 'Sound comes from the elements: ' + mu.lead.map(h => h[0] + ' → ' + h[1]).join(' · ') + '. Rename an element to change its sound.' : 'Add elements to get instruments matched to the picture.',
+      musicBlocks: blocks.map(b => ({ ...b, copy: () => { navigator.clipboard.writeText(b.text).catch(() => {}); this.flash('Copied.'); }, save: () => this.download(b.file, b.text) })),
+      isSong: mu.mode === 'song', lyricsLabel: st.lyricsBusy ? 'Writing…' : (sp.music && sp.music.lyrics) ? 'Rewrite lyrics' : (window.claude && window.claude.complete) ? '✦ Write lyrics' : 'Copy lyrics brief',
+      musicNote: mu.mode === 'song' ? 'In YuE2 Studio, put the tags in the genre field and the lyrics in the lyrics field. On an 8 GB GPU, keep it to 2 sections and expect a long render. YuE does not loop by itself: trim the result to ' + mu.loop + 's on a bar line (every ' + (240 / mu.bpm).toFixed(2) + 's).' : 'For ambient and lo-fi, use a lighter local model than YuE; MusicGen small or Stable Audio Open fit in 8 GB. The tempo is set so ' + mu.bars + ' bars fill exactly ' + mu.loop + 's, so the track loops with the video.',
+      hasNote: !!st.note, note: st.note
+    };
+  }
+}
+</script>
+</body>
+</html>

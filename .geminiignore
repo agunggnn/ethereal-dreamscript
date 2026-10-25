@@ -1,0 +1,10 @@
+# Keep Gemini on this project's sources. media-fabric makes affiliate product reels, not Roblox episodes.
+media-fabric/
+**/media-fabric/**
+**/AffiliateReel*
+**/formats.json
+production/AUDIT.md
+docs/legacy/
+export/
+node_modules/
+aegis/*.mp4

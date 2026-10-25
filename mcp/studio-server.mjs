@@ -2,7 +2,8 @@
 // Local Studio server: serves the project folder and lets the Studio save to disk.
 // Run with the MCP server so the agent and the browser share the same files:
 //   cd mcp && npm run studio   →   http://localhost:4747/Home.dc.html
-// Writes: production/<ep>/episode.json (+ history/ snapshots), session.json (UI state the agent reads), frames/<key>.<ext>
+// Writes: production/realms/<id>.json, <id>.job.json, <id>.<ext> (Realm Builder);
+// production/<ep>/episode.json (+ history/ snapshots), session.json (UI state the agent reads), frames/<key>.<ext>
 import http from 'node:http';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, stat, realpath, mkdir, readdir, unlink } from 'node:fs/promises';
@@ -55,6 +56,22 @@ http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://localhost');
     const p = decodeURIComponent(url.pathname);
     if (p === '/api/ping') return json(res, 200, { ok: true, root: ROOT });
+    const rm = /^\/api\/(realm|realmimg|realmjob)\/([a-z0-9][a-z0-9-]*)$/.exec(p);
+    if (rm) {
+      const [, kind, id] = rm, dir = path.join(ROOT, 'production', 'realms');
+      await mkdir(dir, { recursive: true });
+      if (kind === 'realm' && req.method === 'PUT') { const d = JSON.parse(await body(req)); if (!Array.isArray(d.elements)) return json(res, 400, { error: 'not a realm' }); await writeFile(path.join(dir, id + '.json'), JSON.stringify(d, null, 2) + '\n', 'utf8'); return json(res, 200, { saved: true }); }
+      if (kind === 'realmjob' && req.method === 'PUT') { const d = JSON.parse(await body(req)); await writeFile(path.join(dir, id + '.job.json'), JSON.stringify({ ...d, status: 'queued' }, null, 2) + '\n', 'utf8'); return json(res, 200, { queued: true }); }
+      if (kind === 'realmjob' && req.method === 'DELETE') { await unlink(path.join(dir, id + '.job.json')).catch(() => {}); return json(res, 200, { deleted: true }); }
+      if (kind === 'realmimg' && req.method === 'PUT') {
+        const d = /^data:(image\/(png|jpeg|webp));base64,(.+)$/s.exec(await body(req));
+        if (!d) return json(res, 400, { error: 'send a PNG, JPEG or WEBP data URL' });
+        const name = id + ({ png: '.png', jpeg: '.jpg', webp: '.webp' }[d[2]]);
+        await writeFile(path.join(dir, name), Buffer.from(d[3], 'base64'));
+        return json(res, 200, { url: `production/realms/${name}` });
+      }
+      return json(res, 405, { error: 'method not allowed' });
+    }
     const m = /^\/api\/(episode|session|history|snapshot|frame)\/([a-z0-9][a-z0-9-]*)(?:\/([\w-]+))?$/.exec(p);
     if (m) {
       const [, kind, ep, key] = m;

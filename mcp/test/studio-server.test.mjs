@@ -121,3 +121,26 @@ test('PUT /api/frame/ep01/char saves PNG frame and serves it back', async () => 
   const getFrame = await request('/production/ep01/frames/char.png');
   assert.equal(getFrame.status, 200);
 });
+
+test('PUT /api/realm, /api/realmjob, /api/realmimg save and delete realm artifacts', async () => {
+  const putRealm = await request('/api/realm/citadel', {
+    method: 'PUT',
+    body: JSON.stringify({ id: 'citadel', elements: [{ id: 'S1' }] })
+  });
+  assert.equal(putRealm.status, 200);
+
+  const putJob = await request('/api/realmjob/citadel', {
+    method: 'PUT',
+    body: JSON.stringify({ type: 'generate', elements: [{ id: 'S1' }] })
+  });
+  assert.equal(putJob.status, 200);
+  assert.equal(JSON.parse(putJob.body).queued, true);
+
+  const dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+  const putImg = await request('/api/realmimg/citadel-v1', { method: 'PUT', body: dataUrl });
+  assert.equal(putImg.status, 200);
+  assert.equal(JSON.parse(putImg.body).url, 'production/realms/citadel-v1.png');
+
+  const delJob = await request('/api/realmjob/citadel', { method: 'DELETE' });
+  assert.equal(delJob.status, 200);
+});

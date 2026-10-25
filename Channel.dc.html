@@ -7,53 +7,53 @@
 </head>
 <body>
 <x-dc>
-<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script src="https://accounts.google.com/gsi/client" async></script><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}button,input{font-family:inherit}</style></helmet>
-<div data-screen-label="Channel" style="position:relative;min-height:100vh;background:#0A0C12;overflow:hidden">
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script src="https://accounts.google.com/gsi/client" async></script><style>*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(180deg,rgba(255,251,240,0.5) 0%,rgba(255,251,240,0.72) 45%,rgba(246,236,212,0.9) 100%),url('aegis/05_floating_sky_citadel_4k.jpg') center/cover fixed,#EADFC4;color:#1C2830;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#2A6A98;text-decoration:none}a:hover{color:#1C2830}button,input{font-family:inherit}</style></helmet>
+<div data-screen-label="Channel" style="position:relative;min-height:100vh;background:transparent;overflow:hidden">
   <div style="position:absolute;inset:0;background-image:url('assets/wall_citadel.jpg');background-size:cover;background-position:center;opacity:0.4"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.65),rgba(10,12,18,0.95) 40%,#0A0C12)"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,251,240,0.65),rgba(255,251,240,0.95) 40%,#FFFBF0)"></div>
 
   <div style="position:relative;display:flex;align-items:center;gap:18px;padding:24px 56px 0;flex-wrap:wrap">
-    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(244,247,252,0.1);color:#F4F7FC;display:flex;align-items:center;justify-content:center;font-size:22px" style-hover="background:rgba(244,247,252,0.2)">‹</a>
+    <a href="Home.dc.html" title="Home (Esc)" style="width:44px;height:44px;border-radius:50%;background:rgba(28,40,48,0.1);color:#1C2830;display:flex;align-items:center;justify-content:center;font-size:22px" style-hover="background:rgba(28,40,48,0.2)">‹</a>
     <span style="font-size:22px;font-weight:700">Channel</span>
     <div style="display:flex;gap:28px;margin-left:18px">
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3"><button onClick="{{ tb.onClick }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:20px;font-weight:{{ tb.weight }};color:{{ tb.color }}">{{ tb.label }}</button></sc-for>
     </div>
-    <span style="margin-left:auto;height:36px;padding:0 14px;border-radius:18px;background:rgba(244,247,252,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:{{ connDot }}"></span>{{ connText }}</span>
+    <span style="margin-left:auto;height:36px;padding:0 14px;border-radius:18px;background:rgba(28,40,48,0.08);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:{{ connDot }}"></span>{{ connText }}</span>
   </div>
 
   <sc-if value="{{ is.grow }}" hint-placeholder-val="{{ true }}">
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:24px;max-width:1240px">
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:820px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Build the channel from zero</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.8)">Five stages. The AI does the heavy lifting at each one, and you approve.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:820px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">Build the channel from zero</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.86)">Five stages. The AI does the heavy lifting at each one, and you approve.</p></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
         <sc-for list="{{ stages }}" as="sg" hint-placeholder-count="5">
-          <div onClick="{{ sg.onClick }}" style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:20px;background:rgba(22,26,36,0.78);border:1px solid {{ sg.border }};cursor:pointer;backdrop-filter:blur(14px);transition:transform 0.15s" style-hover="transform:translateY(-3px)">
-            <span style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:{{ sg.dotBg }};color:#0A0C12">{{ sg.mark }}</span>
+          <div onClick="{{ sg.onClick }}" style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:20px;background:rgba(255,251,240,0.92);border:1px solid {{ sg.border }};cursor:pointer;backdrop-filter:blur(14px);transition:transform 0.15s" style-hover="transform:translateY(-3px)">
+            <span style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:{{ sg.dotBg }};color:#FFFBF0">{{ sg.mark }}</span>
             <span style="font-size:20px;font-weight:600">{{ sg.title }}</span>
-            <span style="font-size:13.5px;line-height:1.5;color:rgba(232,237,245,0.7)">{{ sg.text }}</span>
-            <span style="margin-top:auto;font-size:13px;font-weight:700;color:#8DEBFF">{{ sg.cta }} ›</span>
+            <span style="font-size:13.5px;line-height:1.5;color:rgba(28,40,48,0.8)">{{ sg.text }}</span>
+            <span style="margin-top:auto;font-size:13px;font-weight:700;color:#2A6A98">{{ sg.cta }} ›</span>
           </div>
         </sc-for>
       </div>
       <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px">
-        <div style="background:rgba(22,26,36,0.78);border:1px solid rgba(244,247,252,0.08);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#8DEBFF">BRAND KIT</span><span style="font-size:13px;color:rgba(232,237,245,0.6)">for {{ tplLabel }}</span></div>
-          <button onClick="{{ makeBrand }}" style="align-self:flex-start;height:44px;padding:0 18px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ brandLabel }}</button>
+        <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#2A6A98">BRAND KIT</span><span style="font-size:13px;color:rgba(28,40,48,0.75)">for {{ tplLabel }}</span></div>
+          <button onClick="{{ makeBrand }}" style="align-self:flex-start;height:44px;padding:0 18px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">{{ brandLabel }}</button>
           <sc-if value="{{ brand.has }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flex-direction:column;gap:10px">
-              <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ brand.names }}" as="bn" hint-placeholder-count="0"><span style="height:32px;padding:0 12px;border-radius:10px;background:rgba(244,247,252,0.1);display:flex;align-items:center;font-size:14px;font-weight:700">{{ bn }}</span></sc-for></div>
-              <span style="font-size:14px;line-height:1.5;color:rgba(232,237,245,0.85)">{{ brand.about }}</span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ brand.names }}" as="bn" hint-placeholder-count="0"><span style="height:32px;padding:0 12px;border-radius:10px;background:rgba(28,40,48,0.1);display:flex;align-items:center;font-size:14px;font-weight:700">{{ bn }}</span></sc-for></div>
+              <span style="font-size:14px;line-height:1.5;color:rgba(28,40,48,0.89)">{{ brand.about }}</span>
               <div style="display:grid;grid-template-columns:1fr 3fr;gap:10px">
-                <div style="aspect-ratio:1;border-radius:50%;background:{{ brand.avatarBg }};background-size:cover;background-position:center;border:2px solid rgba(244,247,252,0.2)"></div>
-                <div style="aspect-ratio:16/5;border-radius:14px;background:{{ brand.bannerBg }};background-size:cover;background-position:center;border:1px solid rgba(244,247,252,0.12)"></div>
+                <div style="aspect-ratio:1;border-radius:50%;background:{{ brand.avatarBg }};background-size:cover;background-position:center;border:2px solid rgba(28,40,48,0.2)"></div>
+                <div style="aspect-ratio:16/5;border-radius:14px;background:{{ brand.bannerBg }};background-size:cover;background-position:center;border:1px solid rgba(201,164,92,0.55)"></div>
               </div>
-              <span style="font-size:12px;color:rgba(232,237,245,0.5)">Avatar and banner drawn by the free image AI. Right-click to save, then upload in YouTube Studio → Customization.</span>
+              <span style="font-size:12px;color:rgba(28,40,48,0.7)">Avatar and banner drawn by the free image AI. Right-click to save, then upload in YouTube Studio → Customization.</span>
             </div>
           </sc-if>
         </div>
-        <div style="background:rgba(22,26,36,0.78);border:1px solid rgba(244,247,252,0.08);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
-          <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#8DEBFF">FIRST 10 VIDEOS</span>
-          <button onClick="{{ makePlan }}" style="align-self:flex-start;height:44px;padding:0 18px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ planLabel }}</button>
-          <sc-for list="{{ plan }}" as="pl" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(244,247,252,0.08)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8DEBFF">{{ pl.n }}</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:700">{{ pl.title }}</span><span style="font-size:12.5px;color:rgba(232,237,245,0.6)">{{ pl.why }}</span></div><button onClick="{{ pl.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:12px;font-weight:700;cursor:pointer">Make ›</button></div></sc-for>
+        <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#2A6A98">FIRST 10 VIDEOS</span>
+          <button onClick="{{ makePlan }}" style="align-self:flex-start;height:44px;padding:0 18px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:800;cursor:pointer">{{ planLabel }}</button>
+          <sc-for list="{{ plan }}" as="pl" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(28,40,48,0.08)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#2A6A98">{{ pl.n }}</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:700">{{ pl.title }}</span><span style="font-size:12.5px;color:rgba(28,40,48,0.75)">{{ pl.why }}</span></div><button onClick="{{ pl.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(28,40,48,0.1);color:#1C2830;font-size:12px;font-weight:700;cursor:pointer">Make ›</button></div></sc-for>
         </div>
       </div>
     </div>
@@ -62,23 +62,23 @@
   <sc-if value="{{ is.stats }}" hint-placeholder-val="{{ false }}">
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:22px;max-width:1240px">
       <sc-if value="{{ notConnected }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;flex-direction:column;gap:16px;max-width:760px;background:rgba(22,26,36,0.78);border:1px solid rgba(244,247,252,0.08);border-radius:22px;padding:24px">
+        <div style="display:flex;flex-direction:column;gap:16px;max-width:760px;background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:22px;padding:24px">
           <h2 style="margin:0;font-size:36px;font-weight:300;letter-spacing:-0.02em">Connect your YouTube channel</h2>
-          <span style="font-size:14.5px;line-height:1.6;color:rgba(232,237,245,0.8)">This is read-only: the platform reads your stats and never posts. One-time setup in Google Cloud: create a project, enable <b>YouTube Data API v3</b> and <b>YouTube Analytics API</b>, create an <b>OAuth client ID (Web)</b>, and add <span style="font-family:'JetBrains Mono',monospace">{{ origin }}</span> as an authorized JavaScript origin. Then paste the client ID here.</span>
-          <div style="display:flex;gap:8px;flex-wrap:wrap"><input value="{{ clientId }}" onChange="{{ onClientId }}" placeholder="xxxx.apps.googleusercontent.com" style="flex:1;min-width:260px;height:48px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.14);border-radius:12px;color:#F4F7FC;font-size:14px;padding:0 14px" style-focus="border-color:#8DEBFF;outline:none"><button onClick="{{ connect }}" style="height:48px;padding:0 22px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:15px;font-weight:800;cursor:pointer">Sign in with Google</button></div>
-          <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:oklch(0.83 0.14 80)">{{ err }}</span></sc-if>
+          <span style="font-size:14.5px;line-height:1.6;color:rgba(28,40,48,0.86)">This is read-only: the platform reads your stats and never posts. One-time setup in Google Cloud: create a project, enable <b>YouTube Data API v3</b> and <b>YouTube Analytics API</b>, create an <b>OAuth client ID (Web)</b>, and add <span style="font-family:'JetBrains Mono',monospace">{{ origin }}</span> as an authorized JavaScript origin. Then paste the client ID here.</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><input value="{{ clientId }}" onChange="{{ onClientId }}" placeholder="xxxx.apps.googleusercontent.com" style="flex:1;min-width:260px;height:48px;background:rgba(28,40,48,0.06);border:1px solid rgba(201,164,92,0.55);border-radius:12px;color:#1C2830;font-size:14px;padding:0 14px" style-focus="border-color:#2A6A98;outline:none"><button onClick="{{ connect }}" style="height:48px;padding:0 22px;border:none;border-radius:12px;background:#1C2830;color:#FFFBF0;font-size:15px;font-weight:800;cursor:pointer">Sign in with Google</button></div>
+          <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:oklch(0.6 0.14 70)">{{ err }}</span></sc-if>
         </div>
       </sc-if>
       <sc-if value="{{ connected }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
           <div style="width:72px;height:72px;border-radius:50%;background:{{ ch.thumb }};background-size:cover;background-position:center"></div>
-          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:32px;font-weight:600;letter-spacing:-0.01em">{{ ch.title }}</span><span style="font-size:14px;color:rgba(232,237,245,0.7)">{{ ch.line }}</span></div>
-          <button onClick="{{ refresh }}" style="margin-left:auto;height:44px;padding:0 18px;border:none;border-radius:12px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:14px;font-weight:700;cursor:pointer">↻ Refresh</button>
+          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:32px;font-weight:600;letter-spacing:-0.01em">{{ ch.title }}</span><span style="font-size:14px;color:rgba(28,40,48,0.8)">{{ ch.line }}</span></div>
+          <button onClick="{{ refresh }}" style="margin-left:auto;height:44px;padding:0 18px;border:none;border-radius:12px;background:rgba(28,40,48,0.12);color:#1C2830;font-size:14px;font-weight:700;cursor:pointer">↻ Refresh</button>
         </div>
-        <div style="background:rgba(22,26,36,0.78);border:1px solid rgba(244,247,252,0.08);border-radius:20px;overflow:hidden">
-          <div style="display:grid;grid-template-columns:minmax(0,3fr) repeat(4,minmax(80px,1fr));gap:10px;padding:14px 18px;font-size:12px;font-weight:700;letter-spacing:0.04em;color:rgba(232,237,245,0.55)"><span>VIDEO · LAST 28 DAYS</span><span>VIEWS</span><span>AVG VIEWED</span><span>AVG TIME</span><span>SUBS</span></div>
-          <sc-for list="{{ vids }}" as="v" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:minmax(0,3fr) repeat(4,minmax(80px,1fr));gap:10px;padding:12px 18px;border-top:1px solid rgba(244,247,252,0.06);align-items:center;font-size:14px"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600">{{ v.title }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.views }}</span><span style="font-family:'JetBrains Mono',monospace;color:{{ v.pctColor }}">{{ v.pct }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.avg }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.subs }}</span></div></sc-for>
-          <sc-if value="{{ noVids }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;font-size:14px;color:rgba(232,237,245,0.6)">No views in the last 28 days yet. Publish your first video, then come back.</div></sc-if>
+        <div style="background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);border-radius:20px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:minmax(0,3fr) repeat(4,minmax(80px,1fr));gap:10px;padding:14px 18px;font-size:12px;font-weight:700;letter-spacing:0.04em;color:rgba(28,40,48,0.72)"><span>VIDEO · LAST 28 DAYS</span><span>VIEWS</span><span>AVG VIEWED</span><span>AVG TIME</span><span>SUBS</span></div>
+          <sc-for list="{{ vids }}" as="v" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:minmax(0,3fr) repeat(4,minmax(80px,1fr));gap:10px;padding:12px 18px;border-top:1px solid rgba(28,40,48,0.06);align-items:center;font-size:14px"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600">{{ v.title }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.views }}</span><span style="font-family:'JetBrains Mono',monospace;color:{{ v.pctColor }}">{{ v.pct }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.avg }}</span><span style="font-family:'JetBrains Mono',monospace">{{ v.subs }}</span></div></sc-for>
+          <sc-if value="{{ noVids }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;font-size:14px;color:rgba(28,40,48,0.75)">No views in the last 28 days yet. Publish your first video, then come back.</div></sc-if>
         </div>
       </sc-if>
     </div>
@@ -86,25 +86,25 @@
 
   <sc-if value="{{ is.learn }}" hint-placeholder-val="{{ false }}">
     <div style="position:relative;padding:40px 56px 56px;display:flex;flex-direction:column;gap:22px;max-width:1000px">
-      <div style="display:flex;flex-direction:column;gap:10px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">What the AI learned</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(232,237,245,0.8)">The AI compares your videos' real results, plus the review notes you fixed, and writes rules. Rules that are switched on go into every new storyboard, so each video starts from what worked before.</p></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap"><button onClick="{{ learn }}" style="height:50px;padding:0 24px;border:none;border-radius:14px;background:#F4F7FC;color:#0A0C12;font-size:15px;font-weight:800;cursor:pointer">{{ learnLabel }}</button><span style="align-self:center;font-size:13px;color:rgba(232,237,245,0.6)">{{ learnHint }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><h1 style="margin:0;font-size:52px;font-weight:300;letter-spacing:-0.03em">What the AI learned</h1><p style="margin:0;font-size:16px;line-height:1.55;color:rgba(28,40,48,0.86)">The AI compares your videos' real results, plus the review notes you fixed, and writes rules. Rules that are switched on go into every new storyboard, so each video starts from what worked before.</p></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button onClick="{{ learn }}" style="height:50px;padding:0 24px;border:none;border-radius:14px;background:#1C2830;color:#FFFBF0;font-size:15px;font-weight:800;cursor:pointer">{{ learnLabel }}</button><span style="align-self:center;font-size:13px;color:rgba(28,40,48,0.75)">{{ learnHint }}</span></div>
       <sc-for list="{{ lessons }}" as="l" hint-placeholder-count="0">
-        <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px 18px;border-radius:16px;background:rgba(22,26,36,0.78);border:1px solid rgba(244,247,252,0.08);opacity:{{ l.opacity }}">
-          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:700;line-height:1.35">{{ l.rule }}</span><span style="font-size:13px;color:rgba(232,237,245,0.6)">{{ l.evidence }}</span></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px 18px;border-radius:16px;background:rgba(255,251,240,0.92);border:1px solid rgba(201,164,92,0.55);opacity:{{ l.opacity }}">
+          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:700;line-height:1.35">{{ l.rule }}</span><span style="font-size:13px;color:rgba(28,40,48,0.75)">{{ l.evidence }}</span></div>
           <button onClick="{{ l.toggle }}" style="height:34px;padding:0 14px;border:none;border-radius:17px;font-size:12.5px;font-weight:800;cursor:pointer;background:{{ l.bg }};color:{{ l.fg }}">{{ l.label }}</button>
         </div>
       </sc-for>
-      <sc-if value="{{ noLessons }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:rgba(232,237,245,0.6)">No rules yet. Connect the channel, or fix a few review notes in the Studio first.</span></sc-if>
+      <sc-if value="{{ noLessons }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:rgba(28,40,48,0.75)">No rules yet. Connect the channel, or fix a few review notes in the Studio first.</span></sc-if>
     </div>
   </sc-if>
-  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:700;padding:12px 20px;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.5)">{{ toast }}</div></sc-if>
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1C2830;color:#FFFBF0;font-size:14px;font-weight:700;padding:12px 20px;border-radius:14px;box-shadow:0 20px 50px rgba(40,60,80,0.23)">{{ toast }}</div></sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 // Claude app completion with localhost studio-server and direct Gemini fallback
 const claudeComplete = async (req) => {
   if (window.claude && typeof window.claude.complete === 'function') {
-    return window.claude.complete(req);
+    return claudeComplete(req);
   }
   const key = (typeof localStorage !== 'undefined' && (localStorage.getItem('ds_gemini_key') || localStorage.getItem('ds_ai_key'))) || '';
   try {
@@ -162,7 +162,7 @@ const claudeComplete = async (req) => {
 
   throw new Error('On localhost, enter your Gemini API key in the studio settings, or ask your MCP agent in chat to build the storyboard.');
 };
-const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)';
+const OK = 'oklch(0.5 0.13 150)', WARN = 'oklch(0.6 0.14 70)';
 const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly';
 const POLL = (p, w, h) => 'https://image.pollinations.ai/prompt/' + encodeURIComponent(p) + '?width=' + w + '&height=' + h + '&seed=' + Math.floor(Math.random() * 1e6) + '&model=flux&nologo=true';
 const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
@@ -240,11 +240,11 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state, t = this.tpl(), conn = !!s.ch;
     const has = { tpl: !!s.tplId, brand: !!s.brand, plan: s.plan.length > 0, conn, learn: s.lessons.length > 0 };
-    const stage = (k, title, text, cta, fn, done) => ({ title, text, cta, onClick: fn, mark: done ? '✓' : k, dotBg: done ? '#8DEBFF' : 'rgba(244,247,252,0.85)', border: done ? 'rgba(141,235,255,0.35)' : 'rgba(244,247,252,0.08)' });
+    const stage = (k, title, text, cta, fn, done) => ({ title, text, cta, onClick: fn, mark: done ? '✓' : k, dotBg: done ? '#2A6A98' : 'rgba(28,40,48,0.85)', border: done ? 'rgba(42,106,152,0.35)' : 'rgba(28,40,48,0.08)' });
     return {
-      tabs: [['grow', 'Grow'], ['stats', 'Stats'], ['learn', 'Learn']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#F4F7FC' : 'rgba(232,237,245,0.5)', onClick: () => this.setState({ tab: id }) })),
+      tabs: [['grow', 'Grow'], ['stats', 'Stats'], ['learn', 'Learn']].map(([id, label]) => ({ label, weight: s.tab === id ? 700 : 400, color: s.tab === id ? '#1C2830' : 'rgba(28,40,48,0.7)', onClick: () => this.setState({ tab: id }) })),
       is: { grow: s.tab === 'grow', stats: s.tab === 'stats', learn: s.tab === 'learn' },
-      connDot: conn ? OK : 'rgba(244,247,252,0.35)', connText: conn ? s.ch.title : 'YouTube not connected',
+      connDot: conn ? OK : 'rgba(28,40,48,0.35)', connText: conn ? s.ch.title : 'YouTube not connected',
       stages: [
         stage('1', 'Niche', t ? 'Active: ' + t.label : 'Pick one channel template.', 'Templates', () => { location.href = 'Template Hub.dc.html'; }, has.tpl),
         stage('2', 'Brand kit', 'Names, description, avatar and banner.', 'Make brand kit', () => this.makeBrand(), has.brand),
@@ -258,10 +258,10 @@ class Component extends DCLogic {
       makePlan: () => this.makePlan(), planLabel: s.busy === 'plan' ? 'Planning…' : s.plan.length ? '↻ New plan' : '✦ Plan first 10 videos',
       plan: s.plan.map((p, i) => ({ n: String(i + 1).padStart(2, '0'), title: p.title, why: (p.format === 'short' ? 'Short · ' : 'Long · ') + p.why, use: () => { navigator.clipboard.writeText(p.idea); this.toast('Idea copied · paste it into Studio step 1'); setTimeout(() => { location.href = 'Storyboard Studio.dc.html?step=1'; }, 900); } })),
       notConnected: !conn, connected: conn, origin: location.origin, clientId: s.clientId, onClientId: (e) => this.setState({ clientId: e.target.value }), connect: () => this.connect(), err: s.err,
-      ch: conn ? { title: s.ch.title, thumb: s.ch.thumb ? 'url("' + s.ch.thumb + '")' : 'rgba(244,247,252,0.1)', line: num(s.ch.subs) + ' subscribers · ' + num(s.ch.views) + ' views · ' + s.ch.videos + ' videos' } : { title: '', thumb: 'none', line: '' },
-      refresh: () => this.load(), vids: s.vids.map(v => ({ title: v.title, views: num(v.views), pct: Math.round(v.pct) + '%', pctColor: v.pct >= 50 ? OK : v.pct >= 30 ? '#F4F7FC' : WARN, avg: mmss(v.avgSec), subs: '+' + v.subs })), noVids: conn && !s.vids.length,
+      ch: conn ? { title: s.ch.title, thumb: s.ch.thumb ? 'url("' + s.ch.thumb + '")' : 'rgba(28,40,48,0.1)', line: num(s.ch.subs) + ' subscribers · ' + num(s.ch.views) + ' views · ' + s.ch.videos + ' videos' } : { title: '', thumb: 'none', line: '' },
+      refresh: () => this.load(), vids: s.vids.map(v => ({ title: v.title, views: num(v.views), pct: Math.round(v.pct) + '%', pctColor: v.pct >= 50 ? OK : v.pct >= 30 ? '#1C2830' : WARN, avg: mmss(v.avgSec), subs: '+' + v.subs })), noVids: conn && !s.vids.length,
       learn: () => this.learn(), learnLabel: s.busy === 'learn' ? 'Analyzing…' : '✦ Learn from my results', learnHint: (conn ? s.vids.length + ' videos' : 'Channel not connected') + ' · review notes from the Studio',
-      lessons: s.lessons.map((l, i) => ({ rule: l.rule, evidence: l.evidence, opacity: l.on === false ? 0.5 : 1, label: l.on === false ? 'Off' : 'In use', bg: l.on === false ? 'rgba(244,247,252,0.1)' : '#8DEBFF', fg: l.on === false ? '#F4F7FC' : '#0A0C12',
+      lessons: s.lessons.map((l, i) => ({ rule: l.rule, evidence: l.evidence, opacity: l.on === false ? 0.5 : 1, label: l.on === false ? 'Off' : 'In use', bg: l.on === false ? 'rgba(28,40,48,0.1)' : '#2A6A98', fg: l.on === false ? '#1C2830' : '#FFFBF0',
         toggle: () => { const next = s.lessons.map((x, j) => j === i ? { ...x, on: x.on === false } : x); ls.set('ds_lessons', next); this.setState({ lessons: next }); } })),
       noLessons: !s.lessons.length, toast: s.toast
     };

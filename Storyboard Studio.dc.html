@@ -8,6 +8,7 @@
 <body>
 <x-dc>
 <helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;background:#0A0C12;color:#F4F7FC;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}a{color:#8DEBFF;text-decoration:none}a:hover{color:#fff}textarea,input,select,button{font-family:inherit}::-webkit-scrollbar{height:6px;width:6px}::-webkit-scrollbar-thumb{background:rgba(244,247,252,0.14);border-radius:3px}</style></helmet>
+<sc-if value="{{ restore.show }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:min(680px,calc(100vw - 32px));padding:12px 14px 12px 18px;border-radius:16px;background:rgba(22,26,36,0.96);border:1px solid rgba(141,235,255,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.5);color:#F4F7FC;font-size:14px;line-height:1.4"><span style="flex:1;min-width:200px">{{ restore.text }}</span><button onClick="{{ restore.yes }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">Restore it</button><button onClick="{{ restore.no }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">Keep disk version</button></div></sc-if>
 <div data-screen-label="Storyboard Studio" style="position:relative;min-height:100vh;display:flex;flex-direction:column;background:#0A0C12;overflow:hidden">
   <img src="assets/wall_megacity.jpg" alt="" style="position:absolute;inset:-60px;width:calc(100% + 120px);height:calc(100% + 120px);object-fit:cover;opacity:0.28;filter:blur(40px)">
   <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.5),rgba(10,12,18,0.9) 60%)"></div>
@@ -72,7 +73,7 @@
           <div style="background:rgba(22,26,36,0.75);border:1px solid rgba(141,235,255,0.2);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(14px)">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <span style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#8DEBFF">AI IMAGES</span>
-              <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:12px;padding:3px"><sc-for list="{{ board.engines }}" as="en" hint-placeholder-count="2"><button onClick="{{ en.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
+              <div style="display:flex;gap:4px;background:rgba(244,247,252,0.08);border-radius:12px;padding:3px"><sc-for list="{{ board.engines }}" as="en" hint-placeholder-count="4"><button onClick="{{ en.onClick }}" style="height:34px;padding:0 12px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:{{ en.bg }};color:{{ en.fg }}">{{ en.label }}</button></sc-for></div>
               <sc-if value="{{ board.needsKey }}" hint-placeholder-val="{{ false }}"><input type="password" value="{{ board.key }}" onChange="{{ board.onKey }}" placeholder="Gemini API key · stays in this browser" style="height:40px;min-width:240px;background:rgba(244,247,252,0.06);border:1px solid rgba(244,247,252,0.12);border-radius:10px;color:#F4F7FC;font-size:13px;padding:0 12px"></sc-if>
               <button onClick="{{ board.genAll }}" style="height:40px;padding:0 18px;border:none;border-radius:12px;background:#F4F7FC;color:#0A0C12;font-size:14px;font-weight:800;cursor:pointer">{{ board.genAllLabel }}</button>
               <span style="font-size:13px;font-weight:600;color:rgba(232,237,245,0.75)">{{ board.imgStatus }}</span>
@@ -86,7 +87,7 @@
                     <sc-if value="{{ sx.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate</button></sc-if>
                   </div>
                   <div style="display:flex;align-items:center;gap:6px;padding:10px 12px">
-                    <span style="font-size:12.5px;font-weight:600;flex:1;color:{{ sx.stColor }}">{{ sx.stText }}</span>
+                    <span style="font-size:12.5px;font-weight:600;flex:1;color:{{ sx.stColor }}">{{ sx.stText }}</span><sc-if value="{{ sx.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ sx.upload }}" style="display:none"></label></sc-if>
                     <sc-if value="{{ sx.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sx.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ sx.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
                   </div>
                 </div>
@@ -101,10 +102,10 @@
                   <span style="position:absolute;right:10px;top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#F4F7FC;text-shadow:0 1px 4px rgba(0,0,0,0.9)">{{ bc.n }} · {{ bc.time }}</span>
                   <sc-if value="{{ bc.onScreen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;bottom:10px;background:#F4F7FC;color:#0A0C12;font-size:12px;font-weight:800;padding:4px 8px;border-radius:6px;text-transform:uppercase">{{ bc.onScreen }}</span></sc-if>
                   <sc-if value="{{ bc.empty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.gen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:38px;padding:0 14px;border:none;border-radius:10px;background:#F4F7FC;color:#0A0C12;font-size:13px;font-weight:800;cursor:pointer">✦ Generate image</button></sc-if>
-                  <sc-if value="{{ bc.loading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;background:rgba(10,12,18,0.75);padding:8px 12px;border-radius:10px">Generating…</span></sc-if>
+                  <sc-if value="{{ bc.loading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;background:rgba(10,12,18,0.75);padding:8px 12px;border-radius:10px;max-width:80%;text-align:center">{{ bc.stText }}</span></sc-if>
                 </div>
                 <div style="display:flex;gap:6px;padding:10px 12px 0;align-items:center">
-                  <span style="flex:1;font-size:12.5px;font-weight:600;color:{{ bc.stColor }}">{{ bc.stText }}</span>
+                  <span style="flex:1;font-size:12.5px;font-weight:600;color:{{ bc.stColor }}">{{ bc.stText }}</span><sc-if value="{{ bc.canUpload }}" hint-placeholder-val="{{ false }}"><label style="height:30px;padding:0 10px;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center">⤒ Upload<input type="file" accept="image/*" onChange="{{ bc.upload }}" style="display:none"></label></sc-if>
                   <sc-if value="{{ bc.canJudge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bc.use }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:oklch(0.78 0.15 150);color:#0A0C12;font-size:12px;font-weight:800;cursor:pointer">✓ Use</button><button onClick="{{ bc.redo }}" style="height:30px;padding:0 10px;border:none;border-radius:9px;background:rgba(244,247,252,0.12);color:#F4F7FC;font-size:12px;font-weight:800;cursor:pointer">↻ New</button></sc-if>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 12px 14px">
@@ -187,6 +188,7 @@
 
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:rgba(232,237,245,0.6)">
         <span>{{ draftText }}</span>
+        <sc-if value="{{ hasVersions }}" hint-placeholder-val="{{ false }}"><select value="" onChange="{{ onVersion }}" style="height:34px;background:rgba(244,247,252,0.1);color:#F4F7FC;border:none;border-radius:10px;font-size:13px;font-weight:700;padding:0 10px;cursor:pointer"><option value="">History…</option><sc-for list="{{ versions }}" as="v" hint-placeholder-count="0"><option value="{{ v.value }}">{{ v.label }}</option></sc-for></select></sc-if>
         <button onClick="{{ copyJson }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:rgba(244,247,252,0.1);color:#F4F7FC;font-size:13px;font-weight:700;cursor:pointer">{{ copyLabel }}</button>
         <sc-if value="{{ hasDraft }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetDraft }}" style="height:34px;padding:0 14px;border:none;border-radius:10px;background:none;color:rgba(232,237,245,0.7);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline">Reset to file</button></sc-if>
         <span style="margin-left:auto">← → Scene · Space Play · Esc Home</span>
@@ -353,7 +355,7 @@ const SFX = ['none', 'sub_drop', 'whoosh_cinematic', 'whoosh_fast', 'pop', 'hit'
 const RATES = ['-10%', '-5%', '+0%', '+5%', '+10%'];
 const VCOL = { confirmed: 'oklch(0.78 0.15 150)', busted: 'oklch(0.7 0.19 25)', inconclusive: 'oklch(0.83 0.14 80)', pending: 'rgba(244,247,252,0.2)' };
 const OK = 'oklch(0.78 0.15 150)', WARN = 'oklch(0.83 0.14 80)', BAD = 'oklch(0.7 0.19 25)';
-const DRAFT = 'ds_ep01_draft';
+const DRAFT = 'ds_ep01_draft', BACKUP = 'ds_ep01_backup', SESS = 'ds_ep01_session';
 const GEMINI_MODEL = 'gemini-2.5-flash-image';
 const dataToObj = (u) => { try { const m = /^data:([^;]+);base64,(.*)$/.exec(u); const bin = atob(m[2]), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([a], { type: m[1] })); } catch (e) { return ''; } };
 const POLL = (prompt, w, h, seed) => 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=' + w + '&height=' + h + '&seed=' + seed + '&model=flux&nologo=true';
@@ -368,13 +370,16 @@ const secs = (tc) => { const m = /(\d+):(\d+)\D+(\d+):(\d+)/.exec(tc || ''); ret
 const shortName = (id) => ((id || '').split('-')[2] || '').replace(/Multilingual|Neural/g, '');
 
 class Component extends DCLogic {
-  state = { frameObj: {}, bridge: false, live: false, follow: true, flashIds: {}, activity: [], noteDraft: '', lastAgentAt: 0, engine: 'pollinations', geminiKey: '', frameData: {}, queue: null, step: 1, note: '', idea: '', game: '', tplId: 'roblox-horror', niches: null, genBusy: false, genErr: '', review: '', ep: null, sel: 0, subs: false, bgm: false, playing: false, all: false, t0: 0, now: 0, clips: {}, found: {}, log: [], ask: '', busy: false, reply: '', copied: false, voices: [], hasDraft: false, clock: new Date() };
+  state = { frameObj: {}, bridge: false, live: false, follow: true, flashIds: {}, activity: [], noteDraft: '', lastAgentAt: 0, engine: 'pollinations', geminiKey: '', frameData: {}, queue: null, step: 1, note: '', idea: '', game: '', tplId: 'roblox-horror', niches: null, genBusy: false, genErr: '', review: '', ep: null, sel: 0, subs: false, bgm: false, playing: false, all: false, t0: 0, now: 0, clips: {}, found: {}, log: [], ask: '', busy: false, reply: '', copied: false, voices: [], hasDraft: false, clock: new Date(), restoreAt: '', versions: [], agentReview: null };
   video = null;
   videoRef = (el) => { this.video = el; };
 
   async componentDidMount() {
     const sp = +new URLSearchParams(location.search).get('step'); if (sp >= 1 && sp <= 5) this.setState({ step: sp });
     await this.load();
+    this.onHide = () => { this.flushSess(); if (this.saveT) { clearTimeout(this.saveT); this.save(); } };
+    this.onVis = () => { if (document.visibilityState === 'hidden') this.onHide(); };
+    window.addEventListener('pagehide', this.onHide); document.addEventListener('visibilitychange', this.onVis);
     this.bgmAudio = new Audio('sfx/bgm_warm_pad.wav'); this.bgmAudio.loop = true; this.bgmAudio.volume = 0.12;
     this.tick = setInterval(() => { if (this.state.playing) { this.setState({ now: performance.now() }); this.checkDone(); } }, 120);
     this.pollT = setInterval(() => this.poll(), 2000);
@@ -391,7 +396,42 @@ class Component extends DCLogic {
     window.addEventListener('keydown', this.onKey);
     try { speechSynthesis.onvoiceschanged = () => this.forceUpdate(); } catch (e) {}
   }
-  componentWillUnmount() { clearInterval(this.pollT); clearInterval(this.tick); clearInterval(this.clockT); window.removeEventListener('keydown', this.onKey); this.stop(); this.bgmAudio && this.bgmAudio.pause(); }
+  componentDidUpdate() { this.saveSession(); }
+  sessionData() {
+    const st = this.state; let lessons = [], format = null; try { lessons = JSON.parse(localStorage.getItem('ds_lessons') || '[]').filter(l => l.on !== false).map(l => l.rule); format = localStorage.getItem('ds_format'); } catch (e) {}
+    return { step: st.step, sel: st.sel, idea: st.idea, game: st.game, template: st.tplId, format, cut: st.ep ? st.ep.template : null, engine: st.engine, review: st.review, lessons };
+  }
+  saveSession() {
+    if (!this.state.ep || !this.sessReady) return;
+    const d = this.sessionData(), text = JSON.stringify(d); if (text === this.lastSess) return; this.lastSess = text;
+    try { localStorage.setItem(SESS, text); } catch (e) {}
+    if (this.state.live) { this.sessPending = d; clearTimeout(this.sessT); this.sessT = setTimeout(() => this.flushSess(), 800); }
+  }
+  flushSess() { const d = this.sessPending; if (!d) return; this.sessPending = null; fetch('api/session/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studio: { ...d, at: new Date().toISOString() } }), keepalive: true }).catch(() => {}); }
+  async loadVersions() { try { const r = await fetch('api/history/ep01', { cache: 'no-store' }); if (r.ok) this.setState({ versions: await r.json() }); } catch (e) {} }
+  async snapshot() { try { await fetch('api/snapshot/ep01', { method: 'POST' }); } catch (e) {} }
+  async restoreVersion(name) {
+    if (!name) return;
+    try {
+      const v = await (await fetch('production/ep01/history/' + name, { cache: 'no-store' })).json(); if (!Array.isArray(v.scenes)) throw 0;
+      if (!confirm('Load the version from ' + new Date(+name.match(/\d+/)[0]).toLocaleString() + '? The current version is kept in History.')) return;
+      await this.snapshot(); this.base = JSON.parse(JSON.stringify(v)); this.setState({ ep: v }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_version(' + JSON.stringify({ name }) + ')');
+    } catch (e) { this.flash('Could not load that version.'); }
+  }
+  async storeImage(k, url) {
+    if (this.state.live) { try { const r = await fetch('api/frame/ep01/' + k, { method: 'PUT', headers: { 'Content-Type': 'text/plain' }, body: url }); const j = await r.json(); if (r.ok && j.url) { this.setState(s2 => ({ frameData: { ...s2.frameData, [k]: url } })); return { url: j.url }; } } catch (e) {} }
+    await idb.put(k, url); const ou = dataToObj(url); this.setState(s2 => ({ frameData: { ...s2.frameData, [k]: url }, frameObj: { ...s2.frameObj, [k]: ou } })); return { idb: true };
+  }
+  async charData() {
+    if (this.state.frameData.char) return this.state.frameData.char;
+    const fr = this.frameOf('char'); if (!fr || !fr.url) return null;
+    try { const b = await (await fetch(fr.url)).blob(); return await new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(b); }); } catch (e) { return null; }
+  }
+  agentReviewText() {
+    const r = this.state.agentReview; if (!r) return '';
+    return 'AGENT REVIEW · ' + new Date(r.at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + '\n' + r.summary + (r.items || []).map(i => '\n• ' + (i.scene ? i.scene + ': ' : '') + i.text).join('') + (r.next ? '\nNext: ' + r.next : '');
+  }
+  componentWillUnmount() { window.removeEventListener('pagehide', this.onHide); document.removeEventListener('visibilitychange', this.onVis); clearInterval(this.pollT); clearInterval(this.tick); clearInterval(this.clockT); window.removeEventListener('keydown', this.onKey); this.stop(); this.bgmAudio && this.bgmAudio.pause(); }
 
   async load(ignoreDraft) {
     try {
@@ -414,6 +454,15 @@ class Component extends DCLogic {
       ep.scenes = ep.scenes.map(s => ({ ...s, frame: clean(s.frame) })); ep.shorts.scenes = ep.shorts.scenes.map(s => ({ ...s, frame: clean(s.frame) }));
       this.setState({ ep, voices: vj.voices || [], hasDraft: !!draft, sel: 0, niches, tplId, engine, geminiKey });
       if (handoff) this.setVoice(handoff);
+      let sess = null, restoreAt = ''; try { sess = JSON.parse(localStorage.getItem(SESS) || 'null'); } catch (e) {}
+      if (bridge) {
+        try { const r = await fetch('production/ep01/session.json', { cache: 'no-store' }); if (r.ok) { const j = await r.json(); if (j.studio) sess = j.studio; this.setState({ agentReview: j.agentReview || null }); } } catch (e) {}
+        if (!ignoreDraft) { try { const b = JSON.parse(localStorage.getItem(BACKUP) || 'null'); if (b && !b.synced && b.ep && JSON.stringify(b.ep, null, 2) + '\n' !== this.lastText) { this.backup = b; restoreAt = b.at; } } catch (e) {} }
+        this.loadVersions();
+      }
+      const sp = +new URLSearchParams(location.search).get('step'), Lr = ep.template === 'shorts' ? ep.shorts.scenes : ep.scenes, c0 = (ep.template === 'shorts' ? ep.shorts.concept : ep.concept) || ep.concept || {};
+      await new Promise(done => this.setState({ restoreAt, ...(sess && !ignoreDraft ? { step: sp >= 1 && sp <= 5 ? sp : (sess.step || 1), sel: Math.max(0, Math.min(sess.sel || 0, Lr.length - 1)), game: sess.game || c0.game || '', review: sess.review || '' } : {}), idea: (sess && sess.idea) || c0.idea || '' }, done));
+      this.lastSess = JSON.stringify(this.sessionData()); this.sessReady = true;
       const keys = [...ep.scenes, ...ep.shorts.scenes].filter(s => s.frame && s.frame.idb).map(s => s.id).concat(Object.entries(ep.frames || {}).filter(([k, v]) => v && v.idb).map(([k]) => k));
       if (keys.length) { const fd = {}, fo = {}; for (const k of keys) { try { fd[k] = await idb.get(k); if (fd[k]) fo[k] = dataToObj(fd[k]); } catch (e) {} } this.setState({ frameData: fd, frameObj: fo }); }
       const found = {};
@@ -422,21 +471,22 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ reply: 'Could not load production/ep01/episode.json' }); }
   }
   persist() {
-    if (this.state.live) { clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500); return; }
+    if (this.state.live) { try { localStorage.setItem(BACKUP, JSON.stringify({ at: new Date().toISOString(), synced: false, ep: this.state.ep })); } catch (e) {} clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500); return; }
     try { localStorage.setItem(DRAFT, JSON.stringify(this.state.ep)); } catch (e) {} if (!this.state.hasDraft) this.setState({ hasDraft: true });
   }
   // PUT with If-Match: if the agent saved since our last sync, the server answers 409; we pull its version, merge, and try again.
   async save() {
+    this.saveT = null;
     const text = JSON.stringify(this.state.ep, null, 2) + '\n';
     if (text === this.lastText) return;
     if (this.saving) { this.saveAgain = true; return; }
     this.saving = true;
     try {
-      const r = await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(this.etag ? { 'If-Match': this.etag } : {}) }, body: text });
+      const r = await fetch('api/episode/ep01', { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(this.etag ? { 'If-Match': this.etag } : {}) }, body: text, keepalive: text.length < 60000 });
       if (r.status === 409 && (this.conflicts = (this.conflicts || 0) + 1) <= 3) { await this.poll(true); this.saveAgain = true; }
-      else if (r.ok) { this.conflicts = 0; this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag'); }
+      else if (r.ok) { this.conflicts = 0; this.lastText = text; this.base = JSON.parse(text); this.etag = r.headers.get('ETag'); try { localStorage.setItem(BACKUP, JSON.stringify({ at: new Date().toISOString(), synced: true })); } catch (e) {} }
       else this.flash('Could not save to disk (' + r.status + '). Reload the page to get the latest episode.json.');
-    } catch (e) { this.flash('Could not save to disk. Is npm run studio still running?'); }
+    } catch (e) { this.flash('Could not save to disk. Your work is kept in this browser until the Studio server is back.'); }
     this.saving = false;
     if (this.saveAgain) { this.saveAgain = false; this.save(); }
   }
@@ -455,9 +505,10 @@ class Component extends DCLogic {
       const b = {}, l = {}; B.forEach(s => { b[s.id] = s; }); L.forEach(s => { l[s.id] = s; });
       return R.map(s => (l[s.id] && !same(l[s.id], b[s.id]) ? l[s.id] : s));
     };
-    const out = fields(local, base, remote, ['scenes', 'shorts', 'notes']);
+    const out = fields(local, base, remote, ['scenes', 'shorts', 'notes', 'frames']);
     out.scenes = scenes(local.scenes, base.scenes, remote.scenes);
     out.shorts = { ...fields(local.shorts, base.shorts, remote.shorts, ['scenes']), scenes: scenes(local.shorts.scenes, base.shorts.scenes, remote.shorts.scenes) };
+    if (local.frames || remote.frames) out.frames = fields(local.frames || {}, base.frames || {}, remote.frames || {}, []);
     if (local.notes || remote.notes) {
       const bn = {}, notes = [...(remote.notes || [])]; (base.notes || []).forEach(n => { bn[n.id] = n; });
       (local.notes || []).forEach(n => { if (same(n, bn[n.id])) return; const i = notes.findIndex(x => x.id === n.id); if (i >= 0) notes[i] = n; else notes.push(n); });
@@ -468,9 +519,11 @@ class Component extends DCLogic {
   async poll(force) {
     if (!this.state.live || !this.state.ep || (this.saving && !force)) return;
     try {
+      fetch('production/ep01/session.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { const ar = (j && j.agentReview) || null; if (JSON.stringify(ar) !== JSON.stringify(this.state.agentReview)) this.setState({ agentReview: ar }); }).catch(() => {});
+      if (Date.now() - (this.vT || 0) > 30000) { this.vT = Date.now(); this.loadVersions(); }
       const [r, a] = await Promise.all([fetch('production/ep01/episode.json', { cache: 'no-store' }), fetch('production/ep01/activity.json', { cache: 'no-store' }).catch(() => null)]);
       const text = await r.text();
-      if (this.saving && !force) return;
+      if ((this.saving || this.saveT) && !force) return;
       if (r.ok && text !== this.lastText) {
         const remote = JSON.parse(text), ids = this.changedIds(this.base, remote), now = Date.now();
         const ep = this.merge(this.base, this.state.ep, remote);
@@ -607,7 +660,13 @@ class Component extends DCLogic {
   conceptOf() { const ep = this.state.ep; return (ep.template === 'shorts' ? ep.shorts.concept : ep.concept) || ep.concept || ep.shorts.concept || null; }
   isSpecial(k) { return k === 'char' || k.indexOf('thumb') === 0; }
   frameOf(k) { const ep = this.state.ep; if (this.isSpecial(k)) return (ep.frames || {})[k] || null; const s = [...ep.scenes, ...ep.shorts.scenes].find(x => x.id === k); return s ? s.frame || null : null; }
-  frameUrl(k, fr) { if (!fr) return ''; return fr.engine === 'gemini' ? (this.state.frameObj[k] || '') : (fr.url || ''); }
+  frameUrl(k, fr) { if (!fr) return ''; return fr.idb || (fr.engine === 'gemini' && !fr.url) ? (this.state.frameObj[k] || '') : (fr.url || ''); }
+  async uploadFrame(k, e) {
+    const file = e.target.files && e.target.files[0]; if (!file) return; const prev = this.frameOf(k) || {};
+    const url = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
+    const where = await this.storeImage(k, url);
+    this.setFrame(k, { status: 'review', seed: prev.seed, prompt: prev.prompt || this.promptFor(k), engine: 'upload', ...where });
+  }
   setFrame(k, frame) {
     this.setState(p => { const ep = p.ep; if (this.isSpecial(k)) return { ep: { ...ep, frames: { ...(ep.frames || {}), [k]: frame } } };
       const fix = (arr) => arr.map(s => s.id === k ? { ...s, frame } : s);
@@ -626,11 +685,23 @@ class Component extends DCLogic {
     const st = this.state, ep = st.ep, prev = this.frameOf(k);
     const tall = ep.template === 'shorts' && !this.isSpecial(k), w = tall ? 720 : 1280, h = tall ? 1280 : 720;
     const seed = reseed || !prev ? Math.floor(Math.random() * 1e6) : prev.seed, prompt = this.promptFor(k);
+    if (st.engine === 'agent') {
+      if (!st.live) { this.setFrame(k, { ...(prev || {}), status: 'error', error: 'Agent mode needs the local Studio: cd mcp && npm run studio', seed, prompt, engine: 'agent' }); return; }
+      const ch = this.frameOf('char'), ref = k !== 'char' && ch && ch.status === 'approved' && ch.url && !/^https?:/.test(ch.url) ? (ch.url || '').split('?')[0] : null;
+      this.setFrame(k, { status: 'queued', engine: 'agent', seed, prompt, width: w, height: h, aspect: tall ? '9:16' : '16:9', ...(ref ? { reference: ref } : {}), queuedAt: new Date().toISOString() });
+      this.push('you', 'queue_image(' + JSON.stringify({ key: k }) + ')'); return;
+    }
+    if (st.engine === 'app') {
+      try { await navigator.clipboard.writeText(prompt); } catch (e) {}
+      window.open('https://gemini.google.com/app', '_blank');
+      this.setFrame(k, { ...(prev || {}), status: 'awaiting', seed, prompt, engine: 'app' });
+      this.flash('Prompt copied. Paste it in Gemini, download the image, then press ⤒ Upload on the card.'); return;
+    }
     this.setFrame(k, { ...(prev || {}), status: 'loading', seed, prompt, engine: st.engine });
     try {
       if (st.engine === 'gemini') {
         if (!st.geminiKey) throw new Error('Paste your Gemini API key first.');
-        const ref = k !== 'char' ? st.frameData.char : null;
+        const ref = k !== 'char' ? await this.charData() : null;
         const parts = [{ text: prompt + (ref ? ' Keep the character identical to the attached reference image.' : '') }];
         if (ref) { const m = /^data:([^;]+);base64,(.*)$/.exec(ref); if (m) parts.push({ inline_data: { mime_type: m[1], data: m[2] } }); }
         const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': st.geminiKey },
@@ -639,13 +710,13 @@ class Component extends DCLogic {
         const p = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).find(x => x.inlineData || x.inline_data);
         if (!p) throw new Error('Gemini returned no image. Try again.');
         const d = p.inlineData || p.inline_data, url = 'data:' + (d.mimeType || d.mime_type) + ';base64,' + d.data;
-        await idb.put(k, url); const ou = dataToObj(url); this.setState(s2 => ({ frameData: { ...s2.frameData, [k]: url }, frameObj: { ...s2.frameObj, [k]: ou } }));
-        this.setFrame(k, { status: 'review', seed, prompt, engine: 'gemini', idb: true });
-      } else {
+        const where = await this.storeImage(k, url);
+        this.setFrame(k, { status: 'review', seed, prompt, engine: 'gemini', ...where });
+      } else if (st.engine === 'pollinations') {
         const url = POLL(prompt, w, h, seed);
         await new Promise((res, rej) => { const im = new Image(), to = setTimeout(() => rej(new Error('Timed out. Try again.')), 120000); im.onload = () => { clearTimeout(to); res(); }; im.onerror = () => { clearTimeout(to); rej(new Error('Free service is busy. Wait 15s and press New.')); }; im.src = url; });
         this.setFrame(k, { status: 'review', seed, prompt, engine: 'pollinations', url });
-      }
+      } else throw new Error('Unknown image engine "' + st.engine + '". Pick one above.');
     } catch (e) { this.setFrame(k, { ...(prev || {}), status: 'error', error: String(e.message || e), seed, prompt, engine: st.engine }); }
   }
   async genAll() {
@@ -654,6 +725,7 @@ class Component extends DCLogic {
     const need = (fr) => !fr || fr.status === 'error' || fr.status === 'rejected';
     const keys = [...(need(ch) ? ['char'] : []), ...this.list().filter(s => need(s.frame)).map(s => s.id), ...(need(th) ? ['thumb_' + ep.template] : [])];
     if (!keys.length) { this.flash('Every image is generated. Use ✓ or ↻ on each card.'); return; }
+    if (this.state.engine === 'app') { this.flash('The Gemini app makes one image at a time. Use ✦ Generate on each card.'); return; }
     this.cancelQ = false; this.setState({ queue: { done: 0, total: keys.length } });
     for (let i = 0; i < keys.length && !this.cancelQ; i++) {
       const t0 = Date.now(); await this.genFrame(keys[i], true);
@@ -664,8 +736,8 @@ class Component extends DCLogic {
   }
   frameView(k, fr) {
     const url = this.frameUrl(k, fr), stt = fr ? fr.status : 'none';
-    const T = { none: ['No image yet', 'rgba(232,237,245,0.55)'], loading: ['Generating…', '#8DEBFF'], review: ['Keep this image?', '#8DEBFF'], approved: ['✓ Using this image', OK], rejected: ['Rejected', WARN], error: [(fr && fr.error) || 'Failed', WARN] }[stt] || ['', ''];
-    return { bg: url ? 'url("' + url + '")' : STRIPES, empty: !url && stt !== 'loading', loading: stt === 'loading', canJudge: !!url && stt !== 'loading', stText: T[0], stColor: T[1],
+    const T = { none: ['No image yet', 'rgba(232,237,245,0.55)'], loading: ['Generating…', '#8DEBFF'], queued: ['Queued · waiting for agent', '#8DEBFF'], working: ['Agent: ' + ((fr && fr.agentNote) || 'working…'), '#8DEBFF'], awaiting: ['Paste in Gemini, then Upload', '#8DEBFF'], review: ['Keep this image?', '#8DEBFF'], approved: ['✓ Using this image', OK], rejected: ['Rejected', WARN], error: [(fr && fr.error) || 'Failed', WARN] }[stt] || ['', ''];
+    return { bg: url ? 'url("' + url + '")' : STRIPES, empty: !url && ['loading', 'queued', 'working', 'awaiting'].indexOf(stt) < 0, loading: ['loading', 'queued', 'working'].indexOf(stt) >= 0, canUpload: this.state.engine === 'app' || stt === 'awaiting', upload: (e) => this.uploadFrame(k, e), canJudge: !!url && stt !== 'loading', stText: T[0], stColor: T[1],
       border: stt === 'approved' ? 'rgba(120,220,160,0.55)' : stt === 'review' ? 'rgba(141,235,255,0.4)' : 'rgba(244,247,252,0.08)',
       gen: () => this.genFrame(k, true), redo: () => this.genFrame(k, true), use: () => this.setFrame(k, { ...fr, status: 'approved' }) };
   }
@@ -716,17 +788,17 @@ class Component extends DCLogic {
     const imgScenes = L.filter(s => s.frame && s.frame.status === 'approved').length;
     const q = st.queue;
     return {
-      engines: [['pollinations', 'Free · no key'], ['gemini', 'Gemini · your key']].map(([id, label]) => ({ label, bg: st.engine === id ? '#F4F7FC' : 'transparent', fg: st.engine === id ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
+      engines: [['pollinations', 'Free · no key'], ['app', 'Gemini app · free'], ['gemini', 'Gemini API'], ['agent', 'Agent · MCP']].map(([id, label]) => ({ label, bg: st.engine === id ? '#F4F7FC' : 'transparent', fg: st.engine === id ? '#0A0C12' : 'rgba(232,237,245,0.8)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
       needsKey: st.engine === 'gemini', key: st.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },
       genAll: () => this.genAll(), genAllLabel: q ? '■ Stop (' + q.done + '/' + q.total + ')' : '✦ Generate all images',
       imgStatus: 'Approved ' + imgScenes + '/' + L.length + ' scenes',
-      engineNote: st.engine === 'gemini' ? 'Nano Banana (' + GEMINI_MODEL + ') with your own key from aistudio.google.com. The character sheet is sent as a reference with every scene, so the character stays the same. Free quota depends on your Google account.' : 'Pollinations: free, no key, about one image every 15 seconds and it may add a small watermark. It can’t take reference images, so every prompt repeats the same character description. Order: character sheet, scenes, thumbnail.',
+      engineNote: st.engine === 'agent' ? 'Your MCP agent (Claude Code, Codex, Gemini CLI) makes the images with its own image tool. ✦ Generate queues a job; then tell the agent "generate my queued dreamscript images". Each card shows what the agent is doing and the feed logs every call. Once the character sheet is approved, it is passed as the reference for every scene.' + (st.live ? '' : ' Not connected: run cd mcp && npm run studio and open localhost:4747.') : st.engine === 'app' ? 'Free Gemini app, no key. ✦ Generate copies the prompt and opens gemini.google.com: paste it, download the image, then press ⤒ Upload on the card.' : st.engine === 'gemini' ? 'Nano Banana (' + GEMINI_MODEL + ') with your own key from aistudio.google.com. The character sheet is sent as a reference with every scene, so the character stays the same. Free quota depends on your Google account.' : 'Pollinations: free, no key, about one image every 15 seconds and it may add a small watermark. It can’t take reference images, so every prompt repeats the same character description. Order: character sheet, scenes, thumbnail.',
       specials: [['char', 'Character sheet'], ['thumb_' + ep.template, 'Thumbnail']].map(([k, title]) => ({ title, ...this.frameView(k, this.frameOf(k)) })),
       minCard: shorts ? '210px' : '270px',
       cutLabel: ep.templates[ep.template].label.toUpperCase(),
       logline: c && c.logline ? c.logline : (shorts ? ep.shorts.title : ep.title),
       facts: [{ k: 'Hook', v: c && c.hook ? c.hook : (L[0] ? L[0].narration : '') }, { k: 'Audience', v: c && c.audience ? c.audience : (t ? t.audience : '') }, { k: 'Why it works', v: c && c.whyItWorks ? c.whyItWorks : (t ? t.concept : '') }],
-      checks, review: st.review,
+      checks, review: [st.review, this.agentReviewText()].filter(Boolean).join('\n\n'),
       cards: L.map((s, i) => { const gen = !!(s.gen && s.gen.source === 'generated');
         return { ...this.frameView(s.id, s.frame), ar: shorts ? '9/16' : '16/9', onVisual: (e) => this.update(s.id, { visual: e.target.value }), n: String(i + 1).padStart(2, '0'), time: s.time, beat: s.beat, visual: s.visual, onScreen: s.onScreen, narration: s.narration, sfx: s.sfx === 'none' ? '' : s.sfx, isDir: !!s.narrationIsDirection, isGen: gen, src: gen ? 'AI SHOT' : 'RECORD · AI PREVIEW', srcBg: gen ? '#8DEBFF' : 'oklch(0.83 0.14 80)',
           onNarr: (e) => this.update(s.id, { narration: e.target.value }), hear: () => this.speak(s.narration),
@@ -822,7 +894,12 @@ class Component extends DCLogic {
       playCur: () => (st.playing ? this.stop() : this.play(st.sel, false)), playIcon: st.playing ? '■' : '▶',
       copyJson: () => { navigator.clipboard.writeText(JSON.stringify(ep, null, 2)).then(() => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); }); },
       copyLabel: st.copied ? 'Copied' : 'Copy episode.json',
-      hasDraft: st.hasDraft && !st.live, draftText: st.live ? 'Live: edits save to episode.json on disk.' : st.hasDraft ? 'Edits saved in this browser.' : 'Showing episode.json from disk.',
+      hasDraft: st.hasDraft && !st.live, draftText: st.live ? 'Live: saved to episode.json on disk, with history.' : st.hasDraft ? 'Edits saved in this browser.' : 'Showing episode.json from disk.',
+      restore: { show: !!st.restoreAt, text: st.restoreAt ? 'Unsaved work from ' + new Date(st.restoreAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ' is still in this browser. The file on disk is older.' : '',
+        yes: async () => { const b = this.backup; this.backup = null; if (!b) return; await this.snapshot(); this.base = JSON.parse(JSON.stringify(b.ep)); this.setState({ restoreAt: '', ep: b.ep }, () => { this.persist(); this.loadVersions(); }); this.push('you', 'restore_backup()'); },
+        no: () => { this.backup = null; try { localStorage.removeItem(BACKUP); } catch (e) {} this.setState({ restoreAt: '' }); } },
+      hasVersions: st.live && st.versions.length > 0, onVersion: (e) => this.restoreVersion(e.target.value),
+      versions: st.versions.map(v => ({ value: v.name, label: new Date(v.at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) })),
       resetDraft: () => { try { localStorage.removeItem(DRAFT); localStorage.removeItem('ds_ep01_voice'); } catch (e) {} this.stop(); this.load(true); this.push('you', 'reset_to_file()'); },
       frame: shorts
         ? { pad: '16px', radius: '10px', w: 'auto', h: '64vh', ar: '9/16', maxH: '64vh', vTop: '30%', isShorts: true, isLong: false, bandH: '21%', capSize: 'clamp(16px,2.6vh,30px)', subBottom: '25%', subSize: 'clamp(11px,1.6vh,18px)' }

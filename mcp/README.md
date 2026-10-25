@@ -78,3 +78,27 @@ If you and the agent edit at the same time, the Studio merges scene by scene ins
 
 ## Without live mode
 If you open the pages with a plain static server, the Studio saves edits only in the browser. Use **Copy episode.json** to hand them to an agent.
+
+## Image jobs (Agent · MCP engine)
+In Storyboard Studio pick **AI IMAGES → Agent · MCP**, press ✦ Generate on any card (or Generate all). Each job is saved in `episode.json` with status `queued`. Then tell your agent: "generate my queued dreamscript images".
+
+The agent calls `list_image_jobs` → `start_image_job` (a short note that shows on the card) → makes the image with its own image tool → `submit_image` (file path or base64; saved to `production/<ep>/frames/<key>.png`) or `fail_image_job`. You approve with ✓ Use or redo with ↻ New. The agent can't approve images.
+
+Migration note: adds 4 image tools (see also "Guided agent" below). Existing tool signatures are unchanged. Frame statuses `queued`, `working` and `awaiting` are new values on the existing `frame` object; the `episode.json` structure is unchanged. `episode` arguments now must match `^[a-z0-9][a-z0-9-]*$`.
+
+## Guided agent: brief → check → fix → review
+The server tells every MCP client to work in this order (server instructions + the `guide_episode` prompt):
+1. `get_brief`: the creator's idea, active template, chosen episode format (with the global channel lock and handoff), channel lessons, open notes, image status.
+2. `check_job`: issues per scene against the template rules, each with an owner (`agent` or `creator`), plus the format's accuracy rules.
+3. Fix with the write tools, then `check_job` again.
+4. `post_review`: summary, findings per scene and the next step. Shows on the Studio storyboard as **AGENT REVIEW**.
+
+**Context guard:** every write tool is refused until the agent has called `get_brief`. It is refused again whenever the template, episode format, idea or cut changed since that brief. Template Hub and the Studio write the active template, format and idea to `production/<ep>/session.json`.
+
+**Never lose work:**
+- Every edit is copied to this browser immediately. If the disk save didn't finish, the Studio offers **Restore it** on the next load.
+- `episode.json` is snapshotted to `production/<ep>/history/` at most every 2 minutes, before agent writes too. The last 40 snapshots are kept; restore them from **History…** in the Studio footer.
+- Your step, scene, idea and review come back after a reload.
+- Uploaded and Gemini images are saved to `production/<ep>/frames/`, not only in the browser.
+
+Tool count: 14 original + 4 image + 3 guide = 21. Add `production/*/session.json` and `production/*/history/` to `.gitignore`.

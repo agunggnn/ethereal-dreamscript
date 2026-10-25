@@ -5,7 +5,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { readFile, writeFile, mkdir, access } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, access, copyFile, readdir, unlink } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,21 +56,57 @@ const srtEnd = (srt) => {
   return Math.round(max * 100) / 100;
 };
 
-const server = new McpServer({ name: 'dreamscript', version: '0.2.0' });
+const GUIDE = [
+  'You are working inside the creator\'s Dreamscript Studio. The creator watches every call live.',
+  '1. Call get_brief first. It holds their idea, the active channel template, the chosen episode format with the global channel lock, channel lessons and open notes. Follow all of it; do not work from memory of an earlier session.',
+  '2. Call check_job to see what is missing or breaks the template rules.',
+  '3. Fix only what is yours to fix (scenes, captions, image jobs, notes) with the write tools. Anything marked owner "creator" (footage, approvals, verdicts, picking a template or format) goes into your review instead.',
+  '4. Call check_job again, then post_review: what you changed, what still breaks the template, and the one next step for the creator.',
+  'Never invent gameplay results, mechanics, secrets, quotes or verdicts. If the brief lacks facts or footage, say so in post_review instead of guessing.',
+  'If a write returns "Context changed", the creator edited the template, format, idea or cut: call get_brief again before continuing.'
+].join('\n');
+const server = new McpServer({ name: 'dreamscript', version: '0.3.0' }, { instructions: GUIDE });
 
 // Every call is appended to production/<ep>/activity.json so the Studio (live mode) can show what the agent is doing.
-const READS = new Set(['list_templates', 'get_template', 'list_voices', 'get_episode', 'list_scenes', 'validate_episode', 'list_notes']);
+const READS = new Set(['list_templates', 'get_template', 'list_voices', 'get_episode', 'list_scenes', 'validate_episode', 'list_notes', 'list_image_jobs', 'get_brief', 'check_job']);
 async function logActivity(episode, name, args, res) {
   const file = P('production', episode, 'activity.json');
   await serial(file, async () => {
     const log = (await exists(file)) ? await readJson(file) : [];
     const { episode: _e, ...rest } = args || {};
-    const detail = name === 'update_scene' ? rest.id + ': ' + Object.keys(rest).filter((k) => k !== 'id').join(', ') : JSON.stringify(rest).slice(0, 90);
-    log.push({ at: new Date().toISOString(), by: 'agent', tool: name, kind: READS.has(name) ? 'read' : 'write', scene: rest.id || null, detail: detail === '{}' ? '' : detail, error: !!(res && res.isError) });
+    const detail = name === 'start_image_job' ? rest.key + ': ' + (rest.note || '') : name === 'submit_image' ? rest.key + ' · ' + (rest.model || 'image') : name === 'update_scene' ? rest.id + ': ' + Object.keys(rest).filter((k) => k !== 'id').join(', ') : JSON.stringify(rest).slice(0, 90);
+    log.push({ at: new Date().toISOString(), by: 'agent', tool: name, kind: READS.has(name) ? 'read' : 'write', scene: rest.id || rest.key || null, detail: detail === '{}' ? '' : detail, error: !!(res && res.isError) });
     await writeJson(file, log.slice(-200));
   }).catch(() => {});
 }
-const tool = (name, desc, shape, fn) => server.tool(name, desc, shape, async (args) => { const res = await fn(args); await logActivity((args && args.episode) || 'ep01', name, args, res); return res; });
+// Context the agent must have loaded before writing: template, format, idea and cut. Comes from session.json (written by the Studio and Template Hub) and episode.json.
+const readSession = async (episode) => { const f = P('production', episode, 'session.json'); return (await exists(f)) ? readJson(f).catch(() => ({})) : {}; };
+const activeCtx = (s, ep) => {
+  const st = s.studio || {}, hub = s.hub || {}, hubNewer = (hub.at || '') > (st.at || ''), c = (ep.template === 'shorts' ? ep.shorts?.concept : ep.concept) || ep.concept || {};
+  return { template: (hubNewer ? hub.template : st.template) || st.template || hub.template || c.template || null, format: (hubNewer ? hub.format : st.format) || hub.format || st.format || null, cut: ep.template, idea: st.idea || c.idea || '', game: st.game || c.game || '' };
+};
+const contextSig = async (episode) => { try { const [s, ep] = await Promise.all([readSession(episode), readJson(epPath(episode))]); return JSON.stringify(activeCtx(s, ep)); } catch { return 'none'; } };
+const briefed = {};
+// Same history/ snapshots as the Studio server, so an agent edit can always be undone from the Studio's History menu.
+async function snapshot(episode) {
+  try {
+    const prev = await readFile(epPath(episode), 'utf8'), hd = P('production', episode, 'history');
+    await mkdir(hd, { recursive: true });
+    const all = (await readdir(hd)).filter((n) => /^episode-\d{13}\.json$/.test(n)).sort(), last = all.at(-1);
+    if (last && Date.now() - +last.slice(8, 21) < 120000) return;
+    if (last && (await readFile(path.join(hd, last), 'utf8')) === prev) return;
+    await writeFile(path.join(hd, `episode-${Date.now()}.json`), prev, 'utf8');
+    for (const n of all.slice(0, Math.max(0, all.length - 39))) await unlink(path.join(hd, n)).catch(() => {});
+  } catch {}
+}
+const tool = (name, desc, shape, fn) => server.tool(name, desc, shape, async (args) => {
+  const episode = (args && args.episode) || 'ep01';
+  let res;
+  if (!READS.has(name) && briefed[episode] !== await contextSig(episode)) res = fail('Context changed or not loaded yet (template, episode format, idea or cut). Call get_brief, then retry.');
+  else { if (!READS.has(name) && name !== 'post_review') await snapshot(episode); res = await fn(args); if (name === 'set_template' && !res.isError) briefed[episode] = await contextSig(episode); }
+  await logActivity(episode, name, args, res);
+  return res;
+});
 
 tool('list_templates', 'List the niche channel templates (Roblox Horror, Kids Story, Manhwa Recap, JDM Cars, Fleet Formation, News Brief).', {},
   async () => { const n = await readJson(P('templates', 'niches.json')); return ok(n.templates.map((t) => ({ id: t.id, label: t.label, concept: t.concept, voice: t.voice.id }))); });
@@ -186,5 +222,125 @@ tool('add_note', 'Leave a note for the creator on a scene, e.g. when only they c
     ep.notes = [...(ep.notes || []), n];
     return ok(n);
   }));
+
+// Image jobs: the Studio ("Agent · MCP" engine) queues frames in episode.json; the agent generates them with its own image tool.
+const frameKeys = (ep) => [...Object.keys(ep.frames || {}).map((k) => [k, ep.frames[k]]), ...allScenes(ep).map((s) => [s.id, s.frame])];
+const getFrame = (ep, key) => (key === 'char' || key.startsWith('thumb') ? (ep.frames || {})[key] : allScenes(ep).find((s) => s.id === key)?.frame);
+const setFrame = (ep, key, fr) => { if (key === 'char' || key.startsWith('thumb')) ep.frames = { ...(ep.frames || {}), [key]: fr }; else allScenes(ep).find((s) => s.id === key).frame = fr; };
+const KIND = { char: 'character reference sheet' };
+
+tool('list_image_jobs', 'Images the creator queued in the Studio. Each job has the full prompt, size, aspect and (for scenes) the approved character sheet to use as reference. Generate the character sheet first if it is queued.', { episode: episodeArg },
+  async ({ episode }) => {
+    const ep = await readEpisode(episode);
+    const jobs = frameKeys(ep).filter(([, fr]) => fr && (fr.status === 'queued' || fr.status === 'working'))
+      .map(([key, fr]) => ({ key, kind: KIND[key] || (key.startsWith('thumb') ? 'thumbnail' : 'scene'), status: fr.status, prompt: fr.prompt, width: fr.width, height: fr.height, aspect: fr.aspect, reference: fr.reference || null, queuedAt: fr.queuedAt }));
+    return ok(jobs.sort((a, b) => (a.key === 'char' ? -1 : b.key === 'char' ? 1 : 0)));
+  });
+
+tool('start_image_job', 'Tell the creator what you are doing on a job; the card shows the note live. Call again to update it (e.g. "trying again, face drifted").', { episode: episodeArg, key: z.string(), note: z.string().max(140) },
+  async ({ episode, key, note }) => editEpisode(episode, (ep) => {
+    const fr = getFrame(ep, key);
+    if (!fr) return fail(`No queued image for ${key}`);
+    setFrame(ep, key, { ...fr, status: 'working', agentNote: note, startedAt: fr.startedAt || new Date().toISOString() });
+    return ok({ key, status: 'working', note });
+  }));
+
+tool('submit_image', 'Attach the generated image to a job. Pass either file (a PNG/JPG/WEBP path you saved, absolute or relative to the project root) or base64. The creator approves or rejects it in the Studio.', {
+  episode: episodeArg, key: z.string(), file: z.string().optional(), base64: z.string().optional(), mime: z.enum(['image/png', 'image/jpeg', 'image/webp']).default('image/png'), model: z.string().max(60).describe('Model or tool used, e.g. gemini-2.5-flash-image')
+}, async ({ episode, key, file, base64, mime, model }) => {
+  if (!/^[\w-]+$/.test(key)) return fail('Bad key');
+  if (!file && !base64) return fail('Pass file or base64');
+  const ext = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp' }[file ? ({ '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' }[path.extname(file).toLowerCase()] || 'image/png') : mime];
+  const dir = P('production', episode, 'frames'), out = path.join(dir, key + ext);
+  const src = file ? path.resolve(ROOT, file) : null;
+  if (src && !(await exists(src))) return fail(`File not found: ${file}`);
+  return editEpisode(episode, async (ep) => {
+    const fr = getFrame(ep, key);
+    if (!fr) return fail(`No queued image for ${key}`);
+    await mkdir(dir, { recursive: true });
+    if (src) await copyFile(src, out);
+    else await writeFile(out, Buffer.from(base64.replace(/^data:[^,]+,/, ''), 'base64'));
+    const rel = path.relative(ROOT, out).split(path.sep).join('/');
+    const { agentNote, startedAt, ...rest } = fr;
+    setFrame(ep, key, { ...rest, status: 'review', engine: 'agent', model, url: rel + '?v=' + Date.now(), doneAt: new Date().toISOString() });
+    return ok({ key, saved: rel, status: 'review', next: 'The creator reviews it in the Studio.' });
+  });
+});
+
+tool('fail_image_job', 'Give up on a job and tell the creator why in one sentence (no image tool, safety refusal, quota).', { episode: episodeArg, key: z.string(), error: z.string().max(160) },
+  async ({ episode, key, error }) => editEpisode(episode, (ep) => {
+    const fr = getFrame(ep, key);
+    if (!fr) return fail(`No queued image for ${key}`);
+    const { agentNote, startedAt, ...rest } = fr;
+    setFrame(ep, key, { ...rest, status: 'error', error: 'Agent: ' + error });
+    return ok({ key, status: 'error' });
+  }));
+
+tool('get_brief', 'START HERE. Everything the creator set up: their idea, the active channel template (rules, structure, compliance), the chosen episode format with the global channel lock and handoff checklist, channel lessons, where they are in the Studio, open notes and image status. Required before any edit.', { episode: episodeArg },
+  async ({ episode }) => {
+    const [s, ep, n] = await Promise.all([readSession(episode), readEpisode(episode), readJson(P('templates', 'niches.json'))]);
+    const ctx = activeCtx(s, ep), t = n.templates.find((x) => x.id === ctx.template) || null, F = t && t.formats;
+    const fmt = F ? F.list.find((x) => x.id === ctx.format) || null : null;
+    const cut = ep.template, L = cutOf(ep, cut), concept = (cut === 'shorts' ? ep.shorts.concept : ep.concept) || ep.concept || null;
+    const images = frameKeys(ep).reduce((a, [, fr]) => { const k = fr ? fr.status : 'none'; a[k] = (a[k] || 0) + 1; return a; }, {});
+    briefed[episode] = JSON.stringify(ctx);
+    return ok({
+      creator: { idea: ctx.idea || '(not written yet)', game: ctx.game, studioStep: s.studio?.step || null, lessons: s.studio?.lessons || [] },
+      template: t ? { id: t.id, label: t.label, concept: t.concept, audience: t.audience, hook: t.hook, structure: cut === 'shorts' ? t.structure?.short : t.structure?.long, subject: t.subject, visual: t.visual, motion: t.motion, voice: t.voice, thumbnail: t.thumbnail, compliance: t.compliance } : 'No template picked. Ask the creator to choose one in Template Hub.',
+      format: fmt ? { ...fmt, globalLock: F.globalLock, handoff: F.handoff, handoffRule: F.handoffRule } : F ? 'No episode format picked. Ask the creator to pick one in Template Hub → Episode formats. Options: ' + F.list.map((x) => x.id + ' ' + x.name).join(', ') : null,
+      episode: { title: cut === 'shorts' ? ep.shorts.title : ep.title, cut, rules: ep.templates[cut].rules, concept, scenes: L.length, directionOnly: L.filter((x) => x.narrationIsDirection).map((x) => x.id), images },
+      openNotes: (ep.notes || []).filter((x) => x.status === 'open'),
+      yourLastReview: s.agentReview || null,
+      next: 'Call check_job, fix what is yours, check_job again, then post_review.'
+    });
+  });
+
+tool('check_job', 'Check the episode against the active template, the episode format and the creator\'s idea. Returns issues per scene with an owner (agent or creator) and the format\'s accuracy rules. Run before and after your edits.', { episode: episodeArg, cut: cutArg },
+  async ({ episode, cut }) => {
+    const [s, ep, n] = await Promise.all([readSession(episode), readEpisode(episode), readJson(P('templates', 'niches.json'))]);
+    const ctx = activeCtx(s, ep), t = n.templates.find((x) => x.id === ctx.template) || null, c = cut || ep.template, L = cutOf(ep, c), rules = ep.templates[c].rules, issues = [];
+    const add = (scene, rule, problem, owner = 'agent') => issues.push({ scene, rule, problem, owner });
+    if (!t) add(null, 'template', 'No template picked in Template Hub', 'creator');
+    if (t?.formats && !ctx.format) add(null, 'format', 'No episode format picked in Template Hub', 'creator');
+    if (!ctx.idea) add(null, 'idea', 'No idea written in Studio step 1', 'creator');
+    const total = L.reduce((a, x) => a + secs(x.time), 0);
+    if (total < rules.targetSec[0] || total > rules.targetSec[1]) add(null, 'length', `${total}s is outside ${rules.targetSec[0]}–${rules.targetSec[1]}s`);
+    if (L[0] && secs(L[0].time) > rules.hookSec) add(L[0].id, 'hook', `Hook is ${secs(L[0].time)}s, max ${rules.hookSec}s`);
+    const ch = (ep.frames || {}).char;
+    if (!ch || ch.status !== 'approved') add('char', 'image', ch?.status === 'review' ? 'Character sheet waiting for approval' : 'Character sheet not made yet', ch?.status === 'review' ? 'creator' : 'agent');
+    for (const x of L) {
+      const sec = secs(x.time), w = words(x.narration);
+      if (words(x.onScreen) > 6) add(x.id, 'caption', 'Caption over 6 words');
+      if (x.narrationIsDirection) add(x.id, 'narration', 'Narration is still a direction');
+      else if (sec && w / sec > 3) add(x.id, 'pacing', `${w} words in ${sec}s (over 3 words/s)`);
+      if (rules.changeEverySec && sec > rules.changeEverySec[1] * (c === 'shorts' ? 1.8 : 3)) add(x.id, 'pacing', `${sec}s without a picture change`);
+      const gameplay = !(x.gen && x.gen.source === 'generated'), has = await exists(P(x.footage));
+      if (gameplay && !has) add(x.id, 'footage', `Record ${x.footage}`, 'creator');
+      if (x.kind === 'myth' && x.verdict && x.verdict !== 'pending' && !has) add(x.id, 'accuracy', 'Verdict set without footage', 'creator');
+      const fr = x.frame;
+      if (!fr) add(x.id, 'image', 'No image yet');
+      else if (fr.status === 'review') add(x.id, 'image', 'Image waiting for approval', 'creator');
+      else if (fr.status !== 'approved') add(x.id, 'image', 'Image ' + fr.status);
+    }
+    for (const note of (ep.notes || []).filter((x) => x.status === 'open')) add(note.scene, 'note', note.text);
+    const F = t?.formats;
+    return ok({ cut: c, seconds: total, template: t?.id || null, format: ctx.format, issues,
+      agentCanFix: issues.filter((i) => i.owner === 'agent').length, needsCreator: issues.filter((i) => i.owner === 'creator').map((i) => (i.scene ? i.scene + ': ' : '') + i.problem),
+      accuracyRules: F?.globalLock?.accuracy || t?.compliance || null });
+  });
+
+tool('post_review', 'Show your analysis to the creator in the Studio storyboard: a short summary, findings per scene, and the one next step. Replaces your previous review.', {
+  episode: episodeArg, summary: z.string().max(600), items: z.array(z.object({ scene: z.string().optional(), text: z.string().max(240) })).max(12).default([]), next: z.string().max(200).optional()
+}, async ({ episode, summary, items, next }) => {
+  const f = P('production', episode, 'session.json');
+  return serial(f, async () => {
+    const s = await readSession(episode);
+    s.agentReview = { at: new Date().toISOString(), summary, items, next: next || '' };
+    await writeJson(f, s);
+    return ok(s.agentReview);
+  });
+});
+
+server.prompt('guide_episode', 'Guided pass over the current episode: brief, check, fix, review.', {}, () => ({ messages: [{ role: 'user', content: { type: 'text', text: GUIDE + '\n\nStart now: call get_brief for ep01.' } }] }));
 
 await server.connect(new StdioServerTransport());

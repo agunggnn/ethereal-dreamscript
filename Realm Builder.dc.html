@@ -120,7 +120,36 @@
         <span style="font:600 11px 'JetBrains Mono',monospace;color:#2F6B45;letter-spacing:0.08em">REALM</span>
         <input value="{{ spec.name }}" onChange="{{ onName }}" style="height:40px;padding:0 12px;border-radius:11px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:15px;font-weight:700">
         <textarea value="{{ spec.concept }}" onChange="{{ onConcept }}" rows="2" placeholder="One line: what is this wallpaper?" style="resize:vertical;padding:10px 12px;border-radius:11px;border:1px solid rgba(28,40,48,0.16);background:#FFFFFF;color:#1C2830;font-size:14px;line-height:1.45"></textarea>
-        <sc-for list="{{ chipGroups }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#4F5D66">{{ g.label }}</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.onClick }}" style="height:30px;padding:0 11px;border-radius:15px;border:none;background:{{ o.bg }};color:{{ o.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div></div></sc-for>
+        <!-- VISUAL STYLE SELECTOR WITH EXAMPLE IMAGES -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;font-weight:700;color:#4F5D66">IMAGE STYLE · {{ curStyle.label }}</span>
+            <span style="font-size:11px;font-weight:700;color:#2F6B45;background:rgba(47,107,69,0.1);padding:2px 8px;border-radius:6px">{{ curStyle.tag }}</span>
+          </div>
+
+          <!-- Active Style Live Visual Preview Card -->
+          <div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1.5px solid #C9A45C;box-shadow:0 6px 18px rgba(40,60,80,0.18);background:#1C2830">
+            <img src="{{ curStyle.thumb }}" alt="{{ curStyle.label }}" style="width:100%;height:100%;object-fit:cover;display:block">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(28,40,48,0.88) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px">
+              <span style="font-size:13.5px;font-weight:800;color:#FFFDF7;text-shadow:0 1px 3px rgba(0,0,0,0.6)">{{ curStyle.label }}</span>
+              <span style="font-size:11px;color:rgba(255,253,247,0.9);line-height:1.35;text-shadow:0 1px 2px rgba(0,0,0,0.6)">{{ curStyle.desc }}</span>
+            </div>
+          </div>
+
+          <!-- 12-Style Interactive Visual Thumbnail Grid -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:185px;overflow-y:auto;padding-right:2px">
+            <sc-for list="{{ styleCards }}" as="sc" hint-placeholder-count="12">
+              <button onClick="{{ sc.onClick }}" title="{{ sc.title }}" style="position:relative;border-radius:8px;overflow:hidden;padding:0;border:{{ sc.border }};background:#1C2830;cursor:pointer;aspect-ratio:16/9;display:flex;align-items:flex-end;box-shadow:{{ sc.shadow }}">
+                <img src="{{ sc.thumb }}" alt="{{ sc.label }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+                <div style="position:relative;z-index:2;width:100%;background:{{ sc.overlay }};padding:3px 2px;display:flex;align-items:center;justify-content:center">
+                  <span style="font-size:10px;font-weight:800;color:{{ sc.textColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.label }}</span>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-for list="{{ chipGroups }}" as="g" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#4F5D66">{{ g.label }}</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.onClick }}" style="height:30px;padding:0 11px;border-radius:15px;border:none;background:{{ o.bg }};color:{{ o.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div></div></sc-for>
         <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;color:#4F5D66;flex:1">Palette (main first)</span><sc-for list="{{ palette }}" as="c" hint-placeholder-count="3"><input type="color" value="{{ c.value }}" onChange="{{ c.onChange }}" style="width:36px;height:32px;border:none;border-radius:8px;background:none;padding:0;cursor:pointer"></sc-for></div>
       </div>
 
@@ -163,8 +192,114 @@ const LC = Object.fromEntries(LAYERS.map(l => [l[0], l[2]])), LN = Object.fromEn
 const MOTIONS = [['still', 'Still', 'Stays fixed. Mountains and buildings stay still so the loop feels anchored.'], ['drift', 'Drift', 'Slow sideways movement: clouds, mist, sand haze.'], ['flow', 'Flow', 'Moves along its length: water, rivers, waterfalls, auroras. In Loop Studio it becomes a line; motion runs left to right, redraw it to change direction.'], ['ripple', 'Ripple', 'Surface shimmer in place: lakes, reflections, heat haze.'], ['glow', 'Glow / flicker', 'Light pulses in place: windows, lanterns, fire, crystals, stars.'], ['sway', 'Sway', 'Gentle back-and-forth: trees, grass, banners, hanging lights.'], ['fall', 'Fall', 'Particles fall through the box: snow, rain, petals, sand.'], ['rise', 'Rise', 'Particles rise: embers, fireflies, spores, steam.']];
 const MH = Object.fromEntries(MOTIONS.map(m => [m[0], m[2]]));
 const QUICK = [['Mountain', 'far', 'still', [0.2, 0.2, 0.6, 0.45], 'mountain range with clear peaks'], ['Sky', 'sky', 'drift', [0, 0, 1, 0.42], ''], ['Water', 'near', 'ripple', [0, 0.66, 1, 0.34], 'calm water with reflections'], ['Light', 'mid', 'glow', [0.66, 0.55, 0.08, 0.09], 'warm light source'], ['Tree', 'near', 'sway', [0.04, 0.4, 0.2, 0.5], ''], ['Building', 'mid', 'still', [0.6, 0.4, 0.2, 0.25], ''], ['Mist', 'fx', 'drift', [0.05, 0.5, 0.9, 0.14], 'soft low mist band'], ['Particles', 'fx', 'rise', [0.1, 0.2, 0.8, 0.6], 'small floating glowing particles'], ['Custom', 'mid', 'still', [0.4, 0.4, 0.2, 0.2], '']];
-const STYLES = ['Painterly fantasy', 'Anime background', 'Photoreal', 'Pixel art', 'Watercolor'], TIMES = ['Dawn', 'Midday', 'Golden hour', 'Dusk', 'Night'], MOODS = ['Calm', 'Dreamy', 'Mysterious', 'Epic', 'Cozy', 'Melancholic'];
-const STYLE_TXT = { 'Painterly fantasy': 'painterly fantasy concept art, soft brush texture, rich atmospheric depth', 'Anime background': 'hand-painted anime background art, clean shapes, soft cel lighting', 'Photoreal': 'photorealistic landscape photography, natural light, high detail', 'Pixel art': 'detailed 16-bit pixel art, limited palette, crisp pixels', 'Watercolor': 'loose watercolor illustration, paper texture, soft edges' };
+const STYLE_CONFIG = {
+  'Painterly fantasy': {
+    id: 'painterly',
+    label: 'Painterly Fantasy',
+    thumb: 'assets/styles/style_painterly.jpg',
+    tag: 'Classic RPG / Elden Ring',
+    desc: 'Rich impasto brushwork, atmospheric depth, grand high-fantasy vista with soft painterly texture.',
+    prompt: 'painterly fantasy concept art, soft brush texture, rich atmospheric depth, vibrant palette, masterwork digital painting'
+  },
+  'Anime background': {
+    id: 'anime',
+    label: 'Anime Background',
+    thumb: 'assets/styles/style_anime.jpg',
+    tag: 'Makoto Shinkai & Ghibli',
+    desc: 'Luminous skies, sweeping clouds, clean cel-shaded silhouettes, vibrant saturated hues.',
+    prompt: 'hand-painted anime background art, clean cel lighting, luminous sky, sweeping volumetric clouds, vibrant colors'
+  },
+  'Photoreal Landscape': {
+    id: 'photoreal',
+    label: 'Photoreal Landscape',
+    thumb: 'assets/styles/style_photoreal.jpg',
+    tag: '8K National Geographic RAW',
+    desc: '35mm lens photography, natural daylight, crisp organic geological details, high dynamic range.',
+    prompt: 'photorealistic landscape photography, 35mm lens, natural daylight, crisp organic detail, high dynamic range'
+  },
+  'Cyberpunk Neon': {
+    id: 'cyberpunk',
+    label: 'Cyberpunk Neon',
+    thumb: 'assets/styles/style_cyberpunk.jpg',
+    tag: 'Tech-Noir & Synthwave',
+    desc: 'Rain-slicked reflective surfaces, glowing neon signs, dark futuristic skyscrapers, atmospheric fog.',
+    prompt: 'cyberpunk tech-noir city, glowing neon signs, rain-slicked reflective surfaces, volumetric fog, dark futuristic skyscrapers'
+  },
+  'Cinematic 3D': {
+    id: 'cinematic3d',
+    label: 'Cinematic 3D',
+    thumb: 'assets/styles/style_cinematic3d.jpg',
+    tag: 'Unreal Engine 5 & Octane',
+    desc: 'Volumetric god rays, ray-traced ambient occlusion, photoreal physical depth, cinematic lighting.',
+    prompt: 'cinematic 3D render, Unreal Engine 5 aesthetic, volumetric god rays, ray-traced global illumination, shallow depth of field'
+  },
+  '16-Bit Pixel Art': {
+    id: 'pixel',
+    label: '16-Bit Pixel Art',
+    thumb: 'assets/styles/style_pixel.jpg',
+    tag: 'SNES & Octopath Traveler',
+    desc: 'Nostalgic 16-bit JRPG aesthetic, hand-placed pixel clusters, atmospheric dithering, limited palette.',
+    prompt: 'detailed 16-bit pixel art, nostalgic JRPG background, limited color palette, clean hand-placed pixels, atmospheric dithering'
+  },
+  'Watercolor & Gouache': {
+    id: 'watercolor',
+    label: 'Watercolor & Gouache',
+    thumb: 'assets/styles/style_watercolor.jpg',
+    tag: 'Cold Press Paper & Washes',
+    desc: 'Loose translucent pigment washes, natural paper grain, soft bleeding water edges, serene mood.',
+    prompt: 'loose watercolor and gouache illustration, cold-press paper grain, translucent pigment washes, soft bleeding water edges'
+  },
+  'Solarpunk Bio-City': {
+    id: 'solarpunk',
+    label: 'Solarpunk Bio-City',
+    thumb: 'assets/styles/style_solarpunk.jpg',
+    tag: 'Green Utopian Architecture',
+    desc: 'Curved white architecture entwined with lush vertical gardens, crystalline solar domes, golden sun.',
+    prompt: 'solarpunk utopian city, lush hanging terrace gardens, organic curved architecture, crystalline solar glass, bright warm sunlight'
+  },
+  'Dark Gothic & Eldritch': {
+    id: 'darkgothic',
+    label: 'Dark Gothic & Eldritch',
+    thumb: 'assets/styles/style_darkgothic.jpg',
+    tag: 'Bloodborne & Dark Fantasy',
+    desc: 'Ominous gothic spires, moonlit ruins, swirling ethereal mist, weathered stone, eerie romantic mood.',
+    prompt: 'dark gothic fantasy landscape, ominous moonlit cathedral spires, swirling ethereal fog, dark weathered stone, eerie romantic mood'
+  },
+  'Studio Ghibli Pastoral': {
+    id: 'ghibli',
+    label: 'Studio Ghibli Pastoral',
+    thumb: 'assets/styles/style_ghibli.jpg',
+    tag: 'Warm Peaceful Nostalgia',
+    desc: 'Rolling wildflower hills, cozy rustic cottage, soft summer breeze, warm nostalgic countryside.',
+    prompt: 'Studio Ghibli inspired pastoral landscape, gentle rolling wildflower hills, cozy rustic cottage, warm nostalgic summer afternoon, soft breeze'
+  },
+  'Ukiyo-e Woodblock': {
+    id: 'ukiyoe',
+    label: 'Ukiyo-e Woodblock',
+    thumb: 'assets/styles/style_ukiyoe.jpg',
+    tag: 'Classical Japanese Print',
+    desc: 'Stylized waves and clouds, bold sumi ink outlines, mineral pigments, traditional washi texture.',
+    prompt: 'classical Japanese ukiyo-e woodblock print, bold sumi ink outlines, stylized cloud patterns, mineral pigment washes, washi paper texture'
+  },
+  'Retro Lo-Fi Vaporwave': {
+    id: 'vaporwave',
+    label: 'Retro Lo-Fi Vaporwave',
+    thumb: 'assets/styles/style_vaporwave.jpg',
+    tag: '80s Synth Dusk & Neon Sun',
+    desc: 'Pastel cyan and magenta gradient sky, glowing grid horizon, palm silhouettes, soft VHS tape haze.',
+    prompt: 'retro synthwave aesthetic, 80s lo-fi sunset, pastel neon cyan and magenta gradient sky, soft VHS scanline haze, nostalgic mood'
+  }
+};
+const STYLE_ALIASES = { 'Photoreal': 'Photoreal Landscape', 'Pixel art': '16-Bit Pixel Art', 'Watercolor': 'Watercolor & Gouache' };
+const resolveStyle = (s) => STYLE_ALIASES[s] || (STYLE_CONFIG[s] ? s : 'Painterly fantasy');
+const STYLES = Object.keys(STYLE_CONFIG);
+const STYLE_TXT = {
+  ...Object.fromEntries(Object.entries(STYLE_CONFIG).map(([k, v]) => [k, v.prompt])),
+  'Photoreal': STYLE_CONFIG['Photoreal Landscape'].prompt,
+  'Pixel art': STYLE_CONFIG['16-Bit Pixel Art'].prompt,
+  'Watercolor': STYLE_CONFIG['Watercolor & Gouache'].prompt
+};
+const TIMES = ['Dawn', 'Midday', 'Golden hour', 'Dusk', 'Night'], MOODS = ['Calm', 'Dreamy', 'Mysterious', 'Epic', 'Cozy', 'Melancholic'];
 const MOOD = { Calm: [64, 'D major', 'calm peaceful'], Dreamy: [70, 'F major', 'dreamy ethereal'], Mysterious: [66, 'A minor', 'mysterious dark'], Epic: [84, 'D minor', 'epic cinematic'], Cozy: [74, 'G major', 'warm cozy'], Melancholic: [62, 'E minor', 'melancholic sad'] };
 const SOUNDS = [[/mountain|peak|cliff|rock|canyon/i, 'low cello drone', 'cello'], [/water|lake|river|sea|ocean|wave|waterfall|rain|pond/i, 'flowing piano arpeggios', 'piano'], [/fire|lantern|candle|torch|cabin|window|lamp|light/i, 'warm analog pad', 'synthesizer'], [/snow|ice|crystal|frost/i, 'glass bells', 'bell'], [/star|aurora|galaxy|moon|night/i, 'shimmering high pads', 'pad'], [/tree|forest|grass|leaf|garden|meadow/i, 'soft wooden flute', 'flute'], [/city|neon|street|tower|building|castle|temple|ruin/i, 'distant wordless choir', 'choir'], [/mist|fog|cloud|wind|sand|dune|desert|sky/i, 'airy wind texture', 'ambient'], [/bird|wing|feather/i, 'light plucked harp', 'harp']];
 const uid = () => 'r' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
@@ -465,7 +600,24 @@ class Component extends DCLogic {
         toggleMust: () => this.patchEl(selE.id, { must: !selE.must }), mustLabel: selE.must ? 'Required' : 'Optional', mustBg: selE.must ? '#2F6B45' : 'rgba(28,40,48,0.08)', mustFg: selE.must ? '#FFFFFF' : '#1C2830',
         remove: () => { this.patch(r => ({ elements: r.elements.filter(e => e.id !== selE.id) })); this.setState({ sel: null }); } } : { color: '#2F6B45' },
       onName: (e) => this.patch({ name: e.target.value }), onConcept: (e) => this.patch({ concept: e.target.value }), onAvoid: (e) => this.patch({ avoid: e.target.value }),
-      chipGroups: [['Style', 'style', STYLES], ['Time', 'time', TIMES], ['Mood', 'mood', MOODS]].map(([label, k, opts]) => ({ label, opts: opts.map(o => ({ label: o, ...on(sp[k] === o), onClick: () => this.patch({ [k]: o }) })) })),
+      curStyle: (() => {
+        const k = resolveStyle(sp.style);
+        return STYLE_CONFIG[k] || STYLE_CONFIG['Painterly fantasy'];
+      })(),
+      styleCards: Object.entries(STYLE_CONFIG).map(([k, cfg]) => {
+        const isSel = resolveStyle(sp.style) === k;
+        return {
+          label: cfg.label,
+          thumb: cfg.thumb,
+          title: cfg.label + ' — ' + cfg.desc,
+          border: isSel ? '2px solid #2F6B45' : '1px solid rgba(28,40,48,0.15)',
+          shadow: isSel ? '0 0 0 2px #C9A45C, 0 4px 12px rgba(47,107,69,0.3)' : 'none',
+          overlay: isSel ? 'rgba(47,107,69,0.85)' : 'rgba(28,40,48,0.7)',
+          textColor: '#FFFDF7',
+          onClick: () => this.patch({ style: k })
+        };
+      }),
+      chipGroups: [['Time', 'time', TIMES], ['Mood', 'mood', MOODS]].map(([label, k, opts]) => ({ label, opts: opts.map(o => ({ label: o, ...on(sp[k] === o), onClick: () => this.patch({ [k]: o }) })) })),
       palette: sp.palette.map((c, i) => ({ value: c, onChange: (e) => this.patch(r => ({ palette: r.palette.map((x, j) => j === i ? e.target.value : x) })) })),
       modeOpts: [['ambient', 'Ambient'], ['lofi', 'Lo-fi'], ['song', 'Song (YuE)']].map(([k, label]) => ({ label, ...on(mu.mode === k), onClick: () => this.patch(r => ({ music: { ...(r.music || {}), mode: k } })) })),
       loopOpts: [30, 60, 120].map(n => ({ label: n + 's', ...on(mu.loop === n), onClick: () => this.patch({ loop: n }) })),

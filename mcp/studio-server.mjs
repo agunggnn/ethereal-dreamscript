@@ -5,6 +5,7 @@
 // Writes: production/realms/<id>.json, <id>.job.json, <id>.<ext> (Realm Builder);
 // production/<ep>/episode.json (+ history/ snapshots), session.json (UI state the agent reads), frames/<key>.<ext>
 import http from 'node:http';
+import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, stat, realpath, mkdir, readdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
@@ -16,7 +17,7 @@ const KEEP = 40, EVERY_MS = 120000;
 // Only answer to our own host names, so a DNS-rebinding page can't read or write the project. Add a tunnel's host with STUDIO_HOSTS.
 const HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`, ...(process.env.STUDIO_HOSTS || '').split(',').map((h) => h.trim().toLowerCase()).filter(Boolean)]);
 // Also the allowlist: other file types are never served.
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.jsx': 'text/javascript', '.json': 'application/json', '.md': 'text/markdown; charset=utf-8', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.aac': 'audio/aac', '.mp4': 'video/mp4', '.webm': 'video/webm', '.srt': 'text/plain; charset=utf-8' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.jsx': 'text/javascript', '.json': 'application/json', '.md': 'text/markdown; charset=utf-8', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.aac': 'audio/aac', '.mp4': 'video/mp4', '.webm': 'video/webm', '.srt': 'text/plain; charset=utf-8' };
 
 const send = (res, code, body, type = 'application/json', headers = {}) => { res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store', ...headers }); res.end(body); };
 const json = (res, code, d, headers = {}) => send(res, code, JSON.stringify(d), 'application/json', headers);
@@ -61,7 +62,16 @@ http.createServer(async (req, res) => {
       const [, kind, id] = rm, dir = path.join(ROOT, 'production', 'realms');
       await mkdir(dir, { recursive: true });
       if (kind === 'realm' && req.method === 'PUT') { const d = JSON.parse(await body(req)); if (!Array.isArray(d.elements)) return json(res, 400, { error: 'not a realm' }); await writeFile(path.join(dir, id + '.json'), JSON.stringify(d, null, 2) + '\n', 'utf8'); return json(res, 200, { saved: true }); }
-      if (kind === 'realmjob' && req.method === 'PUT') { const d = JSON.parse(await body(req)); await writeFile(path.join(dir, id + '.job.json'), JSON.stringify({ ...d, status: 'queued' }, null, 2) + '\n', 'utf8'); return json(res, 200, { queued: true }); }
+      if (kind === 'realmjob' && req.method === 'PUT') {
+        const d = JSON.parse(await body(req));
+        const jobFile = path.join(dir, id + '.job.json');
+        await writeFile(jobFile, JSON.stringify({ ...d, status: 'queued' }, null, 2) + '\n', 'utf8');
+        try {
+          const worker = spawn('python', [path.join(ROOT, 'mcp', 'process_realm_job.py'), jobFile], { cwd: ROOT, detached: true, stdio: 'ignore' });
+          worker.unref();
+        } catch (err) {}
+        return json(res, 200, { queued: true });
+      }
       if (kind === 'realmjob' && req.method === 'DELETE') { await unlink(path.join(dir, id + '.job.json')).catch(() => {}); return json(res, 200, { deleted: true }); }
       if (kind === 'realmimg' && req.method === 'PUT') {
         const d = /^data:(image\/(png|jpeg|webp));base64,(.+)$/s.exec(await body(req));

@@ -9,3 +9,6 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 production/realms/*.jpg
+*.mp4
+aegis/*.mp4
+production/realms/*.mp4

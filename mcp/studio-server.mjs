@@ -62,16 +62,7 @@ http.createServer(async (req, res) => {
       const [, kind, id] = rm, dir = path.join(ROOT, 'production', 'realms');
       await mkdir(dir, { recursive: true });
       if (kind === 'realm' && req.method === 'PUT') { const d = JSON.parse(await body(req)); if (!Array.isArray(d.elements)) return json(res, 400, { error: 'not a realm' }); await writeFile(path.join(dir, id + '.json'), JSON.stringify(d, null, 2) + '\n', 'utf8'); return json(res, 200, { saved: true }); }
-      if (kind === 'realmjob' && req.method === 'PUT') {
-        const d = JSON.parse(await body(req));
-        const jobFile = path.join(dir, id + '.job.json');
-        await writeFile(jobFile, JSON.stringify({ ...d, status: 'queued' }, null, 2) + '\n', 'utf8');
-        try {
-          const worker = spawn('python', [path.join(ROOT, 'mcp', 'process_realm_job.py'), jobFile], { cwd: ROOT, detached: true, stdio: 'ignore' });
-          worker.unref();
-        } catch (err) {}
-        return json(res, 200, { queued: true });
-      }
+      if (kind === 'realmjob' && req.method === 'PUT') { const d = JSON.parse(await body(req)); await writeFile(path.join(dir, id + '.job.json'), JSON.stringify({ ...d, status: 'queued' }, null, 2) + '\n', 'utf8'); return json(res, 200, { queued: true }); }
       if (kind === 'realmjob' && req.method === 'DELETE') { await unlink(path.join(dir, id + '.job.json')).catch(() => {}); return json(res, 200, { deleted: true }); }
       if (kind === 'realmimg' && req.method === 'PUT') {
         const d = /^data:(image\/(png|jpeg|webp));base64,(.+)$/s.exec(await body(req));

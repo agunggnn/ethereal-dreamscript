@@ -16,6 +16,21 @@ Write-Host "`nMCP config written to mcp\mcp-config.local.json (paste into Claude
 Write-Host "Claude Code:  claude mcp add dreamscript -e DREAMSCRIPT_ROOT=`"$root`" -- node `"$root\mcp\server.mjs`""
 Write-Host "Codex (~/.codex/config.toml):`n[mcp_servers.dreamscript]`ncommand = `"node`"`nargs = [`"$($root -replace '\\','\\')\\mcp\\server.mjs`"]`nenv = { DREAMSCRIPT_ROOT = `"$($root -replace '\\','\\')`" }"
 
+$csc = Get-ChildItem "C:\Windows\Microsoft.NET\Framework64\*\csc.exe" -ErrorAction SilentlyContinue | Select-Object -Last 1 -ExpandProperty FullName
+if ($csc -and (Test-Path "$root\mcp\launcher.cs")) {
+  $icoArg = if (Test-Path "$root\assets\icon.ico") { "/win32icon:`"$root\assets\icon.ico`"" } else { "" }
+  & $csc /nologo /target:winexe $icoArg /out:"$root\DreamscriptStudio.exe" /r:System.Windows.Forms.dll /r:System.Drawing.dll "$root\mcp\launcher.cs"
+  $sm = [Environment]::GetFolderPath("Programs")
+  $wsh = New-Object -ComObject WScript.Shell
+  $lnk = $wsh.CreateShortcut("$sm\Ethereal Dreamscript Studio.lnk")
+  $lnk.TargetPath = "$root\DreamscriptStudio.exe"
+  $lnk.WorkingDirectory = $root
+  if (Test-Path "$root\assets\icon.ico") { $lnk.IconLocation = "$root\assets\icon.ico,0" }
+  $lnk.Description = "Start Ethereal Dreamscript Studio in background and open UI"
+  $lnk.Save()
+  Write-Host "`nBuilt DreamscriptStudio.exe and added 'Ethereal Dreamscript Studio' to Start Menu launcher." -ForegroundColor Green
+}
+
 Write-Host "`nStarting Studio on http://localhost:4747/Home.dc.html  (Ctrl+C to stop)" -ForegroundColor Cyan
 Start-Process "http://localhost:4747/Home.dc.html"
 Push-Location "$root\mcp"; npm run studio; Pop-Location

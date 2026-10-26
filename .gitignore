@@ -12,3 +12,6 @@ production/realms/*.jpg
 *.mp4
 aegis/*.mp4
 production/realms/*.mp4
+mcp/studio-server.pid
+mcp/studio-server.log
+DreamscriptStudio.exe

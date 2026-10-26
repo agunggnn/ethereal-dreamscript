@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node server.mjs",
     "studio": "node studio-server.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "build:exe": "powershell -NoProfile -Command \"& 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' /nologo /target:winexe /win32icon:..\\assets\\icon.ico /out:..\\DreamscriptStudio.exe /r:System.Windows.Forms.dll /r:System.Drawing.dll launcher.cs\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",

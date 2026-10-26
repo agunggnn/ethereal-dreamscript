@@ -59,24 +59,24 @@
           <sc-for list="{{ walls }}" as="w" hint-placeholder-count="0"><div style="position:relative;flex:none;width:150px;aspect-ratio:16/9"><div onClick="{{ w.onClick }}" style="position:absolute;inset:0;border-radius:12px;cursor:pointer;background:{{ w.bg }};background-size:cover;background-position:center;box-shadow:{{ w.ring }}"></div><sc-if value="{{ w.isVideo }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:6px;bottom:6px;font-size:10px;font-weight:800;background:rgba(255,251,240,0.75);padding:2px 6px;border-radius:6px">VIDEO</span></sc-if><sc-if value="{{ w.canDelete }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.del }}" title="Move to Trash" style="position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(255,251,240,0.78);color:#1C2830;font-size:15px;line-height:26px;padding:0;cursor:pointer">×</button></sc-if></div></sc-for>
           <label style="flex:none;width:150px;aspect-ratio:16/9;border-radius:12px;cursor:pointer;background:rgba(28,40,48,0.06);border:1px dashed rgba(28,40,48,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700">+ Upload<span style="font-size:11px;font-weight:500;color:rgba(28,40,48,0.72)">image or video</span><input type="file" accept="image/*,video/*" onChange="{{ onUpload }}" style="display:none"></label>
         </div>
-        <!-- COMPACT VISUAL STYLE SELECTOR -->
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <!-- BALANCED VISUAL STYLE SELECTOR -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px">
             <sc-for list="{{ styles }}" as="sy" hint-placeholder-count="12">
-              <button onClick="{{ sy.onClick }}" title="{{ sy.title }}" style="height:30px;padding:0 9px 0 4px;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;background:{{ sy.bg }};color:{{ sy.fg }};display:inline-flex;align-items:center;gap:6px">
-                <span style="width:26px;height:18px;border-radius:5px;background:{{ sy.thumbBg }};background-size:cover;background-position:center;flex:none;border:1px solid rgba(255,255,255,0.35)"></span>
-                <span>{{ sy.label }}</span>
+              <button onClick="{{ sy.onClick }}" title="{{ sy.title }}" style="padding:0;border-radius:10px;overflow:hidden;border:{{ sy.border }};background:{{ sy.bg }};color:{{ sy.fg }};box-shadow:{{ sy.shadow }};cursor:pointer;display:flex;flex-direction:column;text-align:left">
+                <div style="width:100%;height:72px;background:{{ sy.thumbBg }};background-size:cover;background-position:center"></div>
+                <span style="padding:5px 8px;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%">{{ sy.label }}</span>
               </button>
             </sc-for>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:10px;background:rgba(28,40,48,0.05);border:1px solid rgba(201,164,92,0.45)">
-            <div style="flex:none;width:88px;height:50px;border-radius:7px;background:{{ curStyle.bg }};background-size:cover;background-position:center;border:1px solid rgba(201,164,92,0.65)"></div>
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1">
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:12px;background:rgba(28,40,48,0.05);border:1px solid rgba(201,164,92,0.5)">
+            <div style="flex:none;width:144px;height:81px;border-radius:8px;background:{{ curStyle.bg }};background-size:cover;background-position:center;border:1.5px solid rgba(201,164,92,0.75);box-shadow:0 4px 12px rgba(28,40,48,0.14)"></div>
+            <div style="display:flex;flex-direction:column;gap:4px;min-width:0;flex:1">
               <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-                <span style="font-size:12.5px;font-weight:800;color:#1C2830">{{ curStyle.label }}</span>
-                <span style="font-size:10.5px;font-weight:700;color:{{ accent }};background:rgba(42,106,152,0.12);padding:1px 6px;border-radius:5px">{{ curStyle.tag }}</span>
+                <span style="font-size:13.5px;font-weight:800;color:#1C2830">{{ curStyle.label }}</span>
+                <span style="font-size:11px;font-weight:700;color:{{ accent }};background:rgba(42,106,152,0.12);padding:2px 7px;border-radius:6px">{{ curStyle.tag }}</span>
               </div>
-              <span style="font-size:11.5px;color:rgba(28,40,48,0.75);line-height:1.35">{{ curStyle.desc }}</span>
+              <span style="font-size:12px;color:rgba(28,40,48,0.78);line-height:1.4">{{ curStyle.desc }}</span>
             </div>
           </div>
         </div>
@@ -775,13 +775,19 @@ class Component extends DCLogic {
         const entry = STYLES[s.style] || STYLES.painterly;
         return { label: entry[0], bg: 'url("' + entry[2] + '")', tag: entry[3], desc: entry[4] };
       })(),
-      styles: Object.entries(STYLES).map(([id, [label, prompt, thumb, tag, desc]]) => ({
-        label,
-        thumbBg: 'url("' + thumb + '")',
-        title: label + ' — ' + desc,
-        ...sel(s.style === id),
-        onClick: () => this.setState({ style: id })
-      })),
+      styles: Object.entries(STYLES).map(([id, [label, prompt, thumb, tag, desc]]) => {
+        const isSel = s.style === id;
+        return {
+          label,
+          thumbBg: 'url("' + thumb + '")',
+          title: label + ' — ' + desc,
+          border: isSel ? '2px solid #2A6A98' : '1px solid rgba(28,40,48,0.14)',
+          shadow: isSel ? '0 0 0 2px #C9A45C, 0 4px 10px rgba(42,106,152,0.22)' : 'none',
+          bg: isSel ? '#1C2830' : '#FFFFFF',
+          fg: isSel ? '#FFFBF0' : '#1C2830',
+          onClick: () => this.setState({ style: id })
+        };
+      }),
       improve: () => this.improvePrompt(), improveLabel: s.improving ? 'Improving…' : '✦ Improve prompt',
       engines: [['pollinations', 'Free'], ['app', 'Gemini app · free'], ['gemini', 'Gemini API']].map(([id, label]) => ({ label, bg: s.engine === id ? '#1C2830' : 'transparent', fg: s.engine === id ? '#FFFBF0' : 'rgba(28,40,48,0.86)', onClick: () => { try { localStorage.setItem('ds_img_engine', id); } catch (e) {} this.setState({ engine: id }); } })),
       needsKey: s.engine === 'gemini', geminiKey: s.geminiKey, onKey: (e) => { const v = e.target.value.trim(); try { localStorage.setItem('ds_gemini_key', v); } catch (er) {} this.setState({ geminiKey: v }); },

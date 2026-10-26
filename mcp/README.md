@@ -63,6 +63,9 @@ Call `get_episode`, then `validate_episode`.
 | `validate_episode` | Checks length against the target, captions, direction-only lines, missing footage, and verdicts without footage |
 | `list_notes`, `resolve_note`, `add_note` | Your review notes on scenes. The agent fixes them and replies |
 | `synthesize_voice` | Runs edge-tts for each scene and writes `production/<ep>/voice/<cut>/<id>.mp3` and `.srt`. It records the duration and flags lines too long for their slot |
+| `get_brief`, `check_job`, `post_review` | Guided flow: the creator's context, issues per scene with an owner, and the review shown in the Studio (see "Guided agent") |
+| `list_image_jobs`, `start_image_job`, `submit_image`, `fail_image_job` | Image jobs queued from the Studio (see "Image jobs") |
+| `list_realm_jobs`, `update_realm_job`, `finish_realm_job` | Wallpaper jobs from Realm Builder (see "Realm jobs") |
 
 Agents can't set verdicts. A person sets them in the Studio after watching the uncut footage.
 
@@ -107,4 +110,4 @@ Realm Builder locks a wallpaper as elements: id, label, detail, box [x,y,w,h], d
 - The agent calls `list_realm_jobs`, then `update_realm_job` (a note shown live on the canvas), then `finish_realm_job` with the image and a check for every element id. The server refuses a finish without a full check.
 - Realm tools skip the get_brief guard because each job carries its full context.
 
-Tool count: 14 original + 4 image + 3 guide + 3 realm = 24. Add `production/*/session.json` and `production/*/history/` to `.gitignore`.
+Tool count: 14 original + 4 image + 3 guide + 3 realm = 24. `production/*/session.json` and `production/*/history/` are already in `.gitignore`.

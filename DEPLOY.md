@@ -1,7 +1,7 @@
 # Deploy and push
 
 ## 1. Put it on this PC
-1. Unzip the download into `E:\GitHub\ethereal-dreamscript`.
+1. Clone the repo (`git clone https://github.com/agunggnn/ethereal-dreamscript.git`) or unzip a download into any folder. Paths below are relative to that folder.
 2. In PowerShell, from that folder:
    ```
    powershell -ExecutionPolicy Bypass -File .\setup.ps1
@@ -10,11 +10,12 @@
    - installs the MCP server and edge-tts
    - writes `mcp\mcp-config.local.json`
    - prints the Claude Code and Codex commands
+   - builds `DreamscriptStudio.exe` and a Start Menu shortcut (needs the .NET Framework compiler that ships with Windows)
    - opens http://localhost:4747/Home.dc.html (live mode)
 3. Later, to start it again: `cd mcp; npm run studio`.
 
 ## 2. Push to GitHub
-Create an empty repo first, e.g. `agunggnn/ethereal-dreamscript`, then:
+The remote is `https://github.com/agunggnn/ethereal-dreamscript.git`. For a fresh copy, create an empty repo first, then:
 ```
 git init
 git add .

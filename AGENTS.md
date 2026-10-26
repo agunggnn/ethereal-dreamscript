@@ -59,7 +59,7 @@ Episode id is `ep01` unless the creator says otherwise.
 Run the server from **this** folder so `DREAMSCRIPT_ROOT` points here:
 - **Gemini CLI** (`~/.gemini/settings.json` or `.gemini/settings.json` in this repo):
   ```json
-  { "mcpServers": { "dreamscript": { "command": "node", "args": ["mcp/server.mjs"], "cwd": "E:/GitHub/ethereal-dreamscript", "env": { "DREAMSCRIPT_ROOT": "E:/GitHub/ethereal-dreamscript" } } } }
+  { "mcpServers": { "dreamscript": { "command": "node", "args": ["mcp/server.mjs"], "cwd": "<repo>", "env": { "DREAMSCRIPT_ROOT": "<repo>" } } } }
   ```
   Remove or disable any `media-fabric` entry there while you work on this repo. `.geminiignore` in this repo hides media-fabric files from Gemini's file search.
 - **Claude Code:** `claude mcp add dreamscript -e DREAMSCRIPT_ROOT=<repo> -- node <repo>/mcp/server.mjs`
